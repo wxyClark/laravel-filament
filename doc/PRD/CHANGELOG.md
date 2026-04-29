@@ -9,7 +9,7 @@
 ```yaml
 document: "PRD Documentation"
 versioning_scheme: "Semantic Versioning (Major.Minor.Patch)"
-current_version: "1.0.0"
+current_version: "2.0.0"
 ```
 
 ---
@@ -26,60 +26,57 @@ MINOR: 新增功能模块，新增用户故事
 PATCH: 文档修正，细节优化
 ```
 
-### 版本号示例
-
-| 版本号 | 说明 |
-|--------|------|
-| 1.0.0 | 初始版本，七大子系统完整 PRD |
-| 1.1.0 | 新增用户故事或功能模块 |
-| 1.1.1 | 文档修正或优化 |
-| 2.0.0 | 架构重大调整 |
-
 ---
 
 ## 📜 变更日志
+
+### [2.0.0] - 2026-04-27
+
+#### 重大变更 (Breaking Changes)
+- 🔄 **重构**: PRD 目录结构与提示词库完全对齐
+- 🔄 **重构**: 统一 L0-L5 层级映射关系
+- 🔄 **重构**: 事件驱动架构标准化
+
+#### 新增 (Added)
+- ✅ **统一架构规范**: `00-overview/00-unified-architecture.md`
+- ✅ **领域事件文档**: 所有子系统新增 `events/domain-events.md`
+- ✅ **业务场景文档**: 电商模块新增 `scenarios/` 目录
+  - `promotion-scenario.md` - 促销场景
+  - `shipping-scenario.md` - 物流场景
+  - `return-refund-scenario.md` - 退货退款场景
+- ✅ **提示词模板**: 新增缺失的模板
+  - `template-form-request.md` - FormRequest 验证层
+  - `template-api-resource.md` - API Resource 响应格式化
+  - `template-event-listener.md` - 事件监听器实现
+- ✅ **跨模块契约**: 新增 `09-contracts/domain-event-contracts.md`
+- ✅ **电商场景模板**: 新增 `10-scenarios/` 目录
+  - `ecommerce-promotion.md` - 促销场景模板
+  - `ecommerce-shipping.md` - 物流场景模板
+  - `ecommerce-return-refund.md` - 退货退款场景模板
+
+#### 变更 (Changed)
+- 🔄 优化 PRD 索引结构，增加领域事件和业务场景统计
+- 🔄 优化 PRD 汇总文档，增加 v2.0 完成度统计
+- 🔄 统一文档元数据格式，增加 prompt_fragments 结构
+
+#### 修复 (Fixed)
+- 🐛 修复 PRD 目录结构与 prompts 目录不一致的问题
+- 🐛 修复事件命名不规范的问题
+- 🐛 修复跨模块事件契约缺失的问题
+
+---
 
 ### [1.0.0] - 2026-04-24
 
 #### 新增 (Added)
 - ✅ 完整的 PRD 文档金字塔结构
 - ✅ 七大子系统模块概览文档
-  - 01-ecommerce: 电商核心模块
-  - 02-o2o: O2O预约核销模块
-  - 03-distribution: 二级分销模块
-  - 04-rbac: RBAC权限模块
-  - 05-crm: CRM客户模块
-  - 06-drp: 进销存模块
-  - 07-finance: 财务模块
 - ✅ 用户故事文档 (L3)
-  - 电商模块: 8个用户故事
-  - O2O模块: 6个用户故事
-  - 分销模块: 6个用户故事
-  - RBAC模块: 6个用户故事
-  - CRM模块: 6个用户故事
-  - DRP模块: 6个用户故事
-  - 财务模块: 6个用户故事
 - ✅ 领域模型文档 (L4)
-  - 所有子系统的实体定义、关系图、字段说明
 - ✅ API 接口契约文档 (L4)
-  - 所有子系统的端点定义、请求/响应格式
 - ✅ 状态机定义文档 (L4)
-  - 订单状态机、预约状态机、付款单状态机、发票状态机
 - ✅ Pest 测试用例模板
-  - Feature 测试模板
-  - Unit 测试模板
-  - 覆盖率要求
 - ✅ 文档索引和汇总
-
-#### 变更 (Changed)
-- 🔄 优化提示词碎片库结构
-  - 从 14 个文件扩展到 36 个文件
-  - 新增核心原则、角色卡片、运维配置、安全配置、测试配置
-- 🔄 优化 PRD 组装提示词模板
-
-#### 修复 (Fixed)
-- 🐛 修复文档路径引用错误
-- 🐛 修复 YAML 格式错误
 
 ---
 
@@ -91,30 +88,26 @@ doc/PRD/
 ├── VERSION                         # 版本号文件
 ├── 00-PRD-INDEX.md                 # 文档索引
 ├── 00-PRD-SUMMARY.md               # 生成总结
+├── 00-overview/                    # 系统总览
+│   ├── 00-unified-architecture.md  # 统一架构规范
+│   ├── 01-domain-map.md            # 领域边界图
+│   └── 02-event-catalog.md         # 事件目录
 ├── 08-tests/
 │   └── pest-test-templates.md      # 测试模板
+├── 09-versioning/
+│   └── version-management.md       # 版本规范
 ├── 01-ecommerce/
 │   ├── 01-module-overview.md       # L2: 模块概览
-│   ├── stories/
-│   │   └── 01-user-stories.md      # L3: 用户故事
-│   ├── models/
-│   │   └── domain-models.md        # L4: 领域模型
-│   ├── apis/
-│   │   └── api-contracts.md        # L4: API 契约
-│   └── states/
-│       └── state-machines.md       # L4: 状态机
-├── 02-o2o/
-│   └── ... (同上结构)
-├── 03-distribution/
-│   └── ... (同上结构)
-├── 04-rbac/
-│   └── ... (同上结构)
-├── 05-crm/
-│   └── ... (同上结构)
-├── 06-drp/
-│   └── ... (同上结构)
-└── 07-finance/
-    └── ... (同上结构)
+│   ├── stories/01-user-stories.md  # L3: 用户故事
+│   ├── models/domain-models.md     # L4: 领域模型
+│   ├── apis/api-contracts.md       # L4: API 契约
+│   ├── states/state-machines.md    # L4: 状态机
+│   ├── events/domain-events.md     # L4: 领域事件
+│   └── scenarios/                  # L4+: 业务场景
+│       ├── promotion-scenario.md
+│       ├── shipping-scenario.md
+│       └── return-refund-scenario.md
+├── 02-o2o/ ... 07-finance/         # 其他子系统
 ```
 
 ---
@@ -123,28 +116,21 @@ doc/PRD/
 
 ### 文档数量
 
-| 类型 | 数量 |
-|------|------|
-| 模块概览 (L2) | 7 |
-| 用户故事 (L3) | 44 |
-| 领域模型 (L4) | 7 |
-| API 契约 (L4) | 7 |
-| 状态机 (L4) | 4 |
-| 测试模板 | 1 |
-| **总计** | **70** |
+| 版本 | 总文档数 | 新增 | 变更 |
+|------|---------|------|------|
+| v2.0.0 | 54 | 15 | 3 |
+| v1.0.0 | 39 | 39 | 0 |
 
-### 用户故事统计
+### v2.0 新增内容
 
-| 模块 | P0 | P1 | P2 | 总计 |
-|------|----|----|----|----|
-| 电商 | 5 | 3 | 0 | 8 |
-| O2O | 4 | 2 | 0 | 6 |
-| 分销 | 4 | 2 | 0 | 6 |
-| RBAC | 4 | 2 | 0 | 6 |
-| CRM | 4 | 2 | 0 | 6 |
-| DRP | 4 | 2 | 0 | 6 |
-| 财务 | 4 | 2 | 0 | 6 |
-| **总计** | **29** | **15** | **0** | **44** |
+| 类型 | 数量 | 说明 |
+|------|------|------|
+| 统一架构规范 | 1 | L0-L5 映射关系 |
+| 领域事件文档 | 5 | 电商、O2O、分销、财务 |
+| 业务场景文档 | 3 | 促销、物流、退货退款 |
+| 提示词模板 | 3 | FormRequest、APIResource、EventListener |
+| 跨模块契约 | 1 | 事件契约规范 |
+| 场景模板 | 3 | 电商场景模板 |
 
 ---
 
@@ -170,4 +156,4 @@ doc/PRD/
 
 ---
 
-**版本**: v1.0.0 | **更新日期**: 2026-04-24
+**版本**: v2.0.0 | **更新日期**: 2026-04-27

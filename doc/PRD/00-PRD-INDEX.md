@@ -11,6 +11,7 @@ graph TB
     subgraph "L1: 模块主线 (Overview)"
         INDEX[00-PRD-INDEX.md<br/>总览与模块关系]
         SUMMARY[00-PRD-SUMMARY.md<br/>生成总结]
+        ARCH[00-unified-architecture.md<br/>统一架构]
     end
     
     subgraph "L2: 子系统主线"
@@ -28,6 +29,8 @@ graph TB
         MODELS[models/<br/>领域模型]
         APIS[apis/<br/>API接口]
         STATES[states/<br/>状态机]
+        EVENTS[events/<br/>领域事件]
+        SCENARIOS[scenarios/<br/>业务场景]
     end
     
     subgraph "L5: 验收标准"
@@ -40,8 +43,9 @@ graph TB
         VERSPEC[09-versioning/<br/>版本规范]
     end
     
+    ARCH --> INDEX & SUMMARY
     INDEX & SUMMARY --> ECOM & O2O & DIST & RBAC & CRM & DRP & FIN
-    ECOM & O2O & DIST & RBAC & CRM & DRP & FIN --> STORIES & MODELS & APIS & STATES
+    ECOM & O2O & DIST & RBAC & CRM & DRP & FIN --> STORIES & MODELS & APIS & STATES & EVENTS & SCENARIOS
     STORIES --> TESTS
     VER & CHANGELOG & VERSPEC --> INDEX
 ```
@@ -50,15 +54,15 @@ graph TB
 
 ## 📊 子系统清单
 
-| 编号 | 子系统 | 目录 | 实体数 | API数 | 用户故事 | 状态机 |
-|------|--------|------|--------|-------|---------|--------|
-| 01 | 电商核心 | `01-ecommerce/` | 5 | 14 | 8 | ✅ 订单状态机 |
-| 02 | O2O预约核销 | `02-o2o/` | 3 | 8 | 6 | ✅ 预约状态机 |
-| 03 | 二级分销 | `03-distribution/` | 4 | 7 | 6 | ❌ |
-| 04 | RBAC权限 | `04-rbac/` | 6 | 12 | 6 | ❌ |
-| 05 | CRM客户 | `05-crm/` | 4 | 11 | 6 | ❌ |
-| 06 | 进销存 | `06-drp/` | 7 | 14 | 6 | ❌ |
-| 07 | 财务 | `07-finance/` | 5 | 17 | 6 | ✅ 付款/发票状态机 |
+| 编号 | 子系统 | 目录 | 实体数 | API数 | 用户故事 | 状态机 | 领域事件 | 业务场景 |
+|------|--------|------|--------|-------|---------|--------|---------|---------|
+| 01 | 电商核心 | `01-ecommerce/` | 15 | 20 | 8 | ✅ | ✅ | ✅ |
+| 02 | O2O预约核销 | `02-o2o/` | 5 | 8 | 6 | ✅ | ✅ | - |
+| 03 | 二级分销 | `03-distribution/` | 4 | 7 | 6 | - | ✅ | - |
+| 04 | RBAC权限 | `04-rbac/` | 6 | 12 | 6 | - | - | - |
+| 05 | CRM客户 | `05-crm/` | 4 | 11 | 6 | - | - | - |
+| 06 | 进销存 | `06-drp/` | 7 | 14 | 6 | - | - | - |
+| 07 | 财务 | `07-finance/` | 5 | 17 | 6 | ✅ | ✅ | - |
 
 ---
 
@@ -75,8 +79,14 @@ graph TB
 │   └── domain-models.md       # 领域模型 (L4)
 ├── apis/
 │   └── api-contracts.md       # API接口契约 (L4)
-└── states/
-    └── state-machines.md      # 状态机定义 (L4)
+├── states/
+│   └── state-machines.md      # 状态机定义 (L4)
+├── events/
+│   └── domain-events.md       # 领域事件 (L4)
+└── scenarios/
+    ├── promotion-scenario.md  # 促销场景 (L4+)
+    ├── shipping-scenario.md   # 物流场景 (L4+)
+    └── return-refund-scenario.md  # 退货退款场景 (L4+)
 ```
 
 ---
@@ -99,6 +109,14 @@ graph TB
 | `08-tests/pest-test-templates.md` | Pest 测试模板 | L5 |
 | `09-versioning/version-management.md` | 版本管理规范 | 版本管理 |
 
+### 00-overview 系统总览
+
+| 文件 | 说明 | 层级 |
+|------|------|------|
+| `00-unified-architecture.md` | 统一架构规范 | L1 |
+| `01-domain-map.md` | 领域边界图 | L1 |
+| `02-event-catalog.md` | 事件目录 | L1 |
+
 ### 01-ecommerce 电商核心
 
 | 文件 | 说明 | 层级 |
@@ -108,6 +126,10 @@ graph TB
 | `models/domain-models.md` | 领域模型 | L4 |
 | `apis/api-contracts.md` | API 契约 | L4 |
 | `states/state-machines.md` | 状态机 | L4 |
+| `events/domain-events.md` | 领域事件 | L4 |
+| `scenarios/promotion-scenario.md` | 促销场景 | L4+ |
+| `scenarios/shipping-scenario.md` | 物流场景 | L4+ |
+| `scenarios/return-refund-scenario.md` | 退货退款场景 | L4+ |
 
 ### 02-o2o O2O预约核销
 
@@ -118,6 +140,7 @@ graph TB
 | `models/domain-models.md` | 领域模型 | L4 |
 | `apis/api-contracts.md` | API 契约 | L4 |
 | `states/state-machines.md` | 状态机 | L4 |
+| `events/domain-events.md` | 领域事件 | L4 |
 
 ### 03-distribution 二级分销
 
@@ -127,6 +150,7 @@ graph TB
 | `stories/01-user-stories.md` | 用户故事 (6个) | L3 |
 | `models/domain-models.md` | 领域模型 | L4 |
 | `apis/api-contracts.md` | API 契约 | L4 |
+| `events/domain-events.md` | 领域事件 | L4 |
 
 ### 04-rbac RBAC权限
 
@@ -164,6 +188,7 @@ graph TB
 | `models/domain-models.md` | 领域模型 | L4 |
 | `apis/api-contracts.md` | API 契约 | L4 |
 | `states/state-machines.md` | 状态机 | L4 |
+| `events/domain-events.md` | 领域事件 | L4 |
 
 ---
 
@@ -172,10 +197,11 @@ graph TB
 ### 按开发阶段
 | 阶段 | 推荐阅读顺序 |
 |------|-------------|
-| **架构设计** | 00-PRD-INDEX → 各子系统 01-module-overview |
+| **架构设计** | 00-overview/00-unified-architecture → 各子系统 01-module-overview |
 | **数据库设计** | 各子系统 models/domain-models |
 | **API开发** | 各子系统 apis/api-contracts |
-| **业务逻辑** | 各子系统 states/state-machines |
+| **业务逻辑** | 各子系统 states/state-machines + events/domain-events |
+| **业务场景** | 各子系统 scenarios/ |
 | **后台页面** | 各子系统 stories/user-stories |
 | **测试编写** | 08-tests/pest-test-templates |
 
@@ -183,9 +209,10 @@ graph TB
 | 任务类型 | 引用碎片 |
 |---------|---------|
 | 创建迁移文件 | models/domain-models + @template-migration-generation |
-| 实现服务层 | states/state-machines + @template-service-layer |
-| 构建API | apis/api-contracts + @template-dto-conversion |
-| 生成Filament | stories/user-stories + @filament-ui-designer |
+| 实现服务层 | states/state-machines + events/domain-events + @template-service-layer |
+| 构建API | apis/api-contracts + @template-dto-conversion + @template-api-resource |
+| 生成Filament | stories/user-stories + @template-filament-resource |
+| 实现事件监听 | events/domain-events + @template-event-listener |
 | 编写测试 | stories/user-stories + 08-tests/pest-test-templates |
 
 ---
@@ -207,10 +234,15 @@ graph TB
 - 包含验收标准
 - 便于理解业务价值
 
-### L4: 需求碎片 (models/apis/states/)
+### L4: 需求碎片 (models/apis/states/events/)
 - 结构化、机器可读
 - 可直接组装到提示词模板
 - 便于生成代码
+
+### L4+: 业务场景 (scenarios/)
+- 跨实体的完整业务流程
+- 包含领域模型、API、状态机、事件的组合
+- 便于理解复杂业务
 
 ### L5: 验收标准 (08-tests/)
 - Pest 测试用例模板
@@ -224,15 +256,19 @@ graph TB
 | 标签 | 相关文档 |
 |------|---------|
 | `#商品` | 01-ecommerce/models, 01-ecommerce/stories |
-| `#订单` | 01-ecommerce/models, 01-ecommerce/states |
-| `#预约` | 02-o2o/models, 02-o2o/states |
-| `#分销` | 03-distribution/models, 03-distribution/stories |
+| `#订单` | 01-ecommerce/models, 01-ecommerce/states, 01-ecommerce/events |
+| `#预约` | 02-o2o/models, 02-o2o/states, 02-o2o/events |
+| `#分销` | 03-distribution/models, 03-distribution/stories, 03-distribution/events |
 | `#权限` | 04-rbac/models, 04-rbac/stories |
 | `#客户` | 05-crm/models, 05-crm/stories |
 | `#库存` | 06-drp/models, 06-drp/stories |
-| `#财务` | 07-finance/models, 07-finance/states |
+| `#财务` | 07-finance/models, 07-finance/states, 07-finance/events |
+| `#促销` | 01-ecommerce/scenarios/promotion-scenario |
+| `#物流` | 01-ecommerce/scenarios/shipping-scenario |
+| `#退货退款` | 01-ecommerce/scenarios/return-refund-scenario |
 | `#测试` | 08-tests/pest-test-templates |
+| `#事件` | */events/domain-events |
 
 ---
 
-**版本**: v1.0.0 | **更新日期**: 2026-04-24
+**版本**: v2.0.0 | **更新日期**: 2026-04-27
