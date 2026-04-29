@@ -1,5 +1,7 @@
 # 任务模板：FormRequest 验证层
 
+> **v2.0: 强制设计原理解释**
+
 ## 用途说明
 规范 HTTP 请求的参数校验逻辑，实现请求数据的验证与标准化。
 
@@ -8,68 +10,70 @@
 - 表单提交的数据校验
 - 复杂的验证规则（条件验证、自定义规则）
 
+---
+
 ## 标准内容块
+
 ```markdown
 # 任务：为 {Feature} 创建 FormRequest
 
 ## 角色
 @{Role}
 
-## 开发原则
-1. **单一职责**: 每个 FormRequest 只处理一个接口的验证
-2. **规则清晰**: 使用 Laravel 验证规则链，规则顺序：类型 → 范围 → 唯一性 → 自定义
-3. **错误消息**: 提供友好的中文错误消息
-4. **授权逻辑**: 在 authorize() 方法中处理权限校验
-5. **数据清理**: 使用 validated() 获取已清洗的数据
+## 要求
+1. **单一职责**：每个 FormRequest 只处理一个接口的验证
+2. **规则清晰**：使用 Laravel 验证规则链，规则顺序：类型 → 范围 → 唯一性 → 自定义
+3. **错误消息**：提供友好的中文错误消息
+4. **授权逻辑**：在 authorize() 方法中处理权限校验
+5. **数据清理**：使用 validated() 获取已清洗的数据
 
-## 输出格式
+---
+
+## 🎯 设计方案（必须解释）
+
+### 1. 验证规则设计
+| 字段 | 类型 | 规则 | 错误消息 | 设计原因 |
+|------|------|------|---------|---------|
+| {field} | {type} | {rules} | {message} | {reason} |
+
+### 2. 条件验证
+| 条件 | 触发规则 | 设计原因 |
+|------|---------|---------|
+| {condition} | {rules} | {reason} |
+
+### 3. 自定义验证
+| 验证名称 | 逻辑 | 设计原因 |
+|----------|------|---------|
+| {name} | {logic} | {reason} |
+
+### 4. 授权逻辑
+| 场景 | 权限 | 设计原因 |
+|------|------|---------|
+| {scenario} | {permission} | {reason} |
+
+### 5. 性能考虑
+- 验证耗时: ?
+- 数据库查询: ?
+
+---
+
+## 💻 代码实现
+
+### FormRequest 代码
 ```php
 <?php
-
 declare(strict_types=1);
 
-namespace App\Http\Requests\{Domain};
-
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
-
-class {Feature}Request extends FormRequest
-{
-    public function authorize(): bool
-    {
-        // 权限校验
-        return $this->user()->can('{permission}');
-    }
-
-    public function rules(): array
-    {
-        return [
-            // 验证规则
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            // 中文错误消息
-        ];
-    }
-
-    /**
-     * 获取已验证的数据（强类型）
-     */
-    public function validatedData(): array
-    {
-        return $this->validated();
-    }
-}
+// FormRequest 代码
 ```
 
-## 示例参考
-参考项目中的 `app/Http/Requests/StoreOrderRequest.php`
+### 代码解释
+解释关键设计决策：
+1. 为什么选择这些验证规则？
+2. 如何处理条件验证？
+3. 授权逻辑如何设计？
 ```
 
-## 关联组件
-- 上游: Controller
-- 下游: DTO (Data Transfer Object)
-- 关联: @template-dto-conversion
+---
+
+**版本**: v2.0 | **更新日期**: 2026-04-27

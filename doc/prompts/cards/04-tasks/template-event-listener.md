@@ -1,5 +1,7 @@
 # 任务模板：事件监听器实现
 
+> **v2.0: 强制设计原理解释**
+
 ## 用途说明
 规范领域事件的监听与处理逻辑，实现事件驱动的异步解耦。
 
@@ -8,63 +10,69 @@
 - 跨模块的异步通信
 - 副作用的异步执行（通知、日志、统计等）
 
+---
+
 ## 标准内容块
+
 ```markdown
 # 任务：为 {Event} 创建监听器
 
 ## 角色
 @{Role}
 
-## 开发原则
-1. **单一职责**: 每个监听器只处理一个事件的一个方面
-2. **幂等性**: 监听器必须支持重复执行而不产生副作用
-3. **异常隔离**: 监听器内部异常不应影响事件触发者
-4. **异步优先**: 优先使用队列监听器，避免阻塞主流程
-5. **日志记录**: 关键操作必须记录日志
+## 要求
+1. **单一职责**：每个监听器只处理一个事件的一个方面
+2. **幂等性**：监听器必须支持重复执行而不产生副作用
+3. **异常隔离**：监听器内部异常不应影响事件触发者
+4. **异步优先**：优先使用队列监听器，避免阻塞主流程
+5. **日志记录**：关键操作必须记录日志
 
-## 输出格式
+---
+
+## 🎯 设计方案（必须解释）
+
+### 1. 监听器职责
+用自己的话描述这个监听器的核心职责。
+
+### 2. 处理逻辑
+| 步骤 | 操作 | 数据变化 | 设计原因 |
+|------|------|---------|---------|
+| {step} | {operation} | {change} | {reason} |
+
+### 3. 异常处理
+| 异常类型 | 处理策略 | 设计原因 |
+|----------|---------|---------|
+| {type} | {strategy} | {reason} |
+
+### 4. 幂等性设计
+| 场景 | 幂等策略 | 设计原因 |
+|------|---------|---------|
+| {scenario} | {strategy} | {reason} |
+
+### 5. 性能考虑
+- 执行时间: ?
+- 队列配置: ?
+- 重试策略: ?
+
+---
+
+## 💻 代码实现
+
+### 监听器代码
 ```php
 <?php
-
 declare(strict_types=1);
 
-namespace App\Listeners\{Domain};
-
-use App\Events\{Domain}\{EventName};
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Log;
-
-class {ListenerName} implements ShouldQueue
-{
-    public int $tries = 3;
-    
-    public int $backoff = 60;
-
-    public function handle({EventName} $event): void
-    {
-        // 处理逻辑
-        Log::info('{ListenerName} 处理事件', [
-            'event' => $event->getEventClass(),
-            // 事件数据...
-        ]);
-    }
-
-    public function failed(\Throwable $exception): void
-    {
-        Log::error('{ListenerName} 处理失败', [
-            'exception' => $exception->getMessage(),
-        ]);
-    }
-}
+// 监听器代码
 ```
 
-## 关联组件
-- 上游: Domain Event
-- 下游: Queue (RabbitMQ)
-- 关联: @template-event-listener
+### 代码解释
+解释关键设计决策：
+1. 为什么选择异步处理？
+2. 如何保证幂等性？
+3. 异常如何处理？
 ```
 
-## 关联组件
-- 上游: Domain Event
-- 下游: Queue/RabbitMQ
-- 关联: @event-driven
+---
+
+**版本**: v2.0 | **更新日期**: 2026-04-27

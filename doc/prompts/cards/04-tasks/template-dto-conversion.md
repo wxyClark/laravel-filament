@@ -1,5 +1,7 @@
 # 任务模板：DTO 数据转换 (Data Transfer Object)
 
+> **v2.0: 强制设计原理解释**
+
 ## 用途说明
 规范从 HTTP Request 到业务逻辑层的数据传递方式，实现不可变性。
 
@@ -7,29 +9,65 @@
 - 处理复杂的表单提交数据。
 - 在 Service 层之间传递标准化数据结构。
 
+---
+
 ## 标准内容块
+
 ```markdown
 # 任务：为 {Feature} 创建 DTO
+
+## 角色
+@{Role}
 
 ## 要求
 1. **只读属性**：使用 `readonly class` 定义 DTO。
 2. **静态构造器**：提供 `fromRequest(StoreXxxRequest $request)` 静态方法。
 3. **类型映射**：确保所有属性都有严格的类型声明（如 `public readonly int $customerId`）。
 
-## 示例参考
-```php
-readonly class OrderCreateData {
-    public function __construct(
-        public readonly int $customerId,
-        public readonly array $items,
-    ) {}
+---
 
-    public static function fromRequest(StoreOrderRequest $request): self {
-        return new self(
-            customerId: $request->user()->id,
-            items: $request->validated('items'),
-        );
-    }
-}
+## 🎯 设计方案（必须解释）
+
+### 1. DTO 职责
+用自己的话描述这个 DTO 的核心职责。
+
+### 2. 属性设计
+| 属性名 | 类型 | 说明 | 设计原因 |
+|--------|------|------|---------|
+| {property} | {type} | {desc} | {reason} |
+
+### 3. 数据来源
+| 属性 | 来源 | 转换逻辑 |
+|------|------|---------|
+| {property} | {source} | {logic} |
+
+### 4. 使用场景
+- 场景1: {场景描述}
+- 场景2: {场景描述}
+
+### 5. 性能考虑
+- 内存占用: ?
+- 序列化性能: ?
+
+---
+
+## 💻 代码实现
+
+### DTO 代码
+```php
+<?php
+declare(strict_types=1);
+
+// DTO 代码
 ```
+
+### 代码解释
+解释关键设计决策：
+1. 为什么选择 readonly class？
+2. 属性类型如何选择？
+3. 如何处理嵌套数据？
 ```
+
+---
+
+**版本**: v2.0 | **更新日期**: 2026-04-27

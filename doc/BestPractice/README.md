@@ -1,89 +1,183 @@
 # 📘 BestPractice 最佳用法指南
 
-> **基于 doc/ 目录文档** | **两种最佳用法** | **快速开发可用系统**
+> **基于 doc/ 目录文档** | **强制面试模式** | **设计原理解释 + Code Review**
 
 ---
 
 ## 📋 文档结构
 
 ```
-doc/BestPractice/
-├── 00-overview.md                    # 本文档（总结）
-├── 01-prd-to-code.md                 # 用法一：基于 PRD 快速开发
-├── 02-new-requirement-workflow.md     # 用法二：新需求的提示词设计
-├── 03-prompt-assembly-quickref.md    # 提示词组装速查手册
-└── 04-ai-ide-integration.md          # AI IDE 集成指南
+doc/
+├── BestPractice/                    # 最佳实践指南
+│   ├── README.md                    # 本文档（总结）
+│   ├── 00-overview.md               # 三种用法对比总结
+│   ├── 01-prd-to-code.md            # 用法一：基于 PRD 快速开发
+│   ├── 02-new-requirement-workflow.md    # 用法二：新需求的提示词设计
+│   ├── 03-prompt-assembly-quickref.md    # 提示词组装速查手册
+│   ├── 04-ai-ide-integration.md     # AI IDE 集成指南
+│   └── 05-p9-interviewer-mode.md    # 用法三：P9 面试官模式
+│
+└── design/                          # 系统架构与设计
+    ├── 01-architecture-spec.md      # 系统架构规范
+    └── 02-testing-strategy.md       # 软件测试方案与最佳实践
 ```
 
 ---
 
-## 🎯 两种最佳用法
+## 🎯 核心理念
 
-### 用法一：基于 PRD 快速开发可用系统
+### 每一次开发任务都是一次技术面试
+
+> "不仅要写出代码，更要讲清楚为什么这样设计"
+
+### 强制规则
+
+```yaml
+rules:
+  - rule: "每次开发前必须解释设计方案"
+    description: "在写代码前，先说明整体设计思路"
+    
+  - rule: "每个关键决策必须解释原因"
+    description: "为什么选择这个方案而不是其他方案"
+    
+  - rule: "必须说明数据流向"
+    description: "数据从哪里来，到哪里去，如何转换"
+    
+  - rule: "必须说明异常处理"
+    description: "边界情况、错误处理、降级策略"
+    
+  - rule: "必须说明性能考虑"
+    description: "时间复杂度、空间复杂度、并发处理"
+    
+  - rule: "代码完成后必须进行 Code Review"
+    description: "审查代码质量、设计合理性、性能、安全"
+```
+
+---
+
+## 🔄 强制工作流程
+
+```mermaid
+graph TD
+    A[接收开发任务] --> B[设计方案解释]
+    B --> C{方案是否合理}
+    C -->|否| B
+    C -->|是| D[代码实现]
+    D --> E[代码解释]
+    E --> F[Code Review]
+    F --> G{审查通过}
+    G -->|否| H[修复问题]
+    H --> D
+    G -->|是| I[完成]
+```
+
+---
+
+## 📝 强制输出格式
+
+### 每次开发必须输出
+
+```markdown
+## 🎯 设计方案
+
+### 1. 需求理解
+{用自己的话复述需求，确认理解正确}
+
+### 2. 整体架构
+{画出架构图或数据流图}
+
+### 3. 核心设计决策
+| 决策点 | 选择方案 | 为什么选择 | 为什么不用其他方案 |
+|--------|---------|-----------|-------------------|
+| {决策1} | {方案A} | {原因} | {方案B的缺点} |
+
+### 4. 数据模型设计
+{ER图或表结构设计}
+
+### 5. 接口设计
+{API接口定义}
+
+### 6. 异常处理
+{边界情况和错误处理策略}
+
+### 7. 性能考虑
+{时间复杂度、并发处理、缓存策略}
+
+---
+
+## 💻 代码实现
+
+### 1. 核心代码
+{实现代码}
+
+### 2. 代码解释
+{解释关键代码的设计思路}
+
+---
+
+## 🔍 Code Review
+
+### 审查报告
+{代码审查结果}
+```
+
+---
+
+## 🎭 三种用法
+
+### 用法一：基于 PRD 快速开发
 
 **适用场景**: 项目启动初期，已有 PRD 文档
 
 **核心流程**:
 ```
-PRD 文档（已有） → 按模块拆解 → 选择提示词碎片 → 组装提示词 → AI 生成代码 → 人工验证 → 迭代优化
+PRD 文档（已有） → 按模块拆解 → 设计方案解释 → 代码实现 → Code Review
 ```
-
-**关键原则**:
-1. 按 PRD 用户故事粒度开发
-2. 每次只做一个小功能
-3. 生成后立即验证
-4. 增量迭代，逐步完善
 
 **详细指南**: [01-prd-to-code.md](./01-prd-to-code.md)
 
 ---
 
-### 用法二：新需求的提示词设计与组装
+### 用法二：新需求的提示词设计
 
 **适用场景**: 收到新需求后，快速定义需求并开发实现
 
 **核心流程**:
 ```
-新需求输入 → 需求拆解 → PRD 文档生成 → 提示词碎片选择 → 组装提示词 → AI 生成代码 → 验证迭代
+新需求输入 → 需求拆解 → PRD 生成 → 设计方案解释 → 代码实现 → Code Review
 ```
-
-**关键原则**:
-1. 先定义需求（PRD），再生成代码
-2. 按 L2→L3→L4 的顺序渐进生成 PRD
-3. 每次只生成一个小功能
-4. 生成后立即验证
 
 **详细指南**: [02-new-requirement-workflow.md](./02-new-requirement-workflow.md)
 
 ---
 
-## 🚀 快速开始
+### 用法三：P9 面试官模式
 
-### 场景 A：项目刚启动，已有 PRD
+**适用场景**: 需要技术决策、希望提升技术思维的任务
 
-```bash
-# 1. 查看 PRD 文档
-cat doc/PRD/01-ecommerce/01-module-overview.md
-
-# 2. 选择一个用户故事
-cat doc/PRD/01-ecommerce/stories/01-user-stories.md#US-EC-001
-
-# 3. 组装提示词生成代码
-# 参考 doc/BestPractice/01-prd-to-code.md
+**核心流程**:
+```
+开发者提出需求 → P9 面试官提问 → 开发者回答 → 开发者提供方案 → P9 面试官评估优化 → 代码实现 → Code Review
 ```
 
-### 场景 B：收到新需求
+**详细指南**: [05-p9-interviewer-mode.md](./05-p9-interviewer-mode.md)
 
-```bash
-# 1. 记录需求
-# 参考 doc/BestPractice/02-new-requirement-workflow.md
+---
 
-# 2. 生成 PRD 文档
-# 按 L2→L3→L4 顺序生成
+## 🧪 测试方案
 
-# 3. 组装提示词生成代码
-# 参考 doc/BestPractice/03-prompt-assembly-quickref.md
-```
+### 完整测试策略文档
+
+**位置**: [doc/design/02-testing-strategy.md](../design/02-testing-strategy.md)
+
+**核心内容**:
+- ✅ 测试金字塔设计（Unit 70% + Integration 25% + E2E 5%）
+- ✅ 数据库迁移管理方案（避免清空生产库）
+- ✅ DDD 分层测试实践（Service/API/Filament）
+- ✅ CI/CD 集成方案（GitHub Actions）
+- ✅ 性能与安全测试
+
+**快速参考 Skill**: [.ai/skills/testing-best-practices/SKILL.md](../../.ai/skills/testing-best-practices/SKILL.md)
 
 ---
 
@@ -98,4 +192,4 @@ cat doc/PRD/01-ecommerce/stories/01-user-stories.md#US-EC-001
 
 ---
 
-**版本**: v1.0 | **更新日期**: 2026-04-27
+**版本**: v3.0 | **更新日期**: 2026-04-27
