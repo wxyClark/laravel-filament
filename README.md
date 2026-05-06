@@ -8,7 +8,72 @@ Laravel 12 + Filament 3.x 前后端不分离 AI 开发项目
 
 ## 🚀 快速开始
 
-### 环境要求
+### ⚡ 一键初始化（推荐）
+
+```bash
+# 运行自动初始化脚本（约 5-10 分钟）
+cd /home/clark/www/laravel-filament
+./init-project.sh
+
+# 创建管理员用户
+docker compose exec app php artisan make:filament-user
+
+# 访问应用
+# 前台: http://localhost:8082
+# Filament 后台: http://localhost:8082/admin
+# Telescope 调试: http://localhost:8082/telescope
+```
+
+**初始化脚本会自动完成**：
+- ✅ 安装 Filament 后台
+- ✅ 安装核心工具包（PHPStan, Pest, IDE Helper, Telescope）
+- ✅ 配置 RBAC 权限系统（spatie/laravel-permission）
+- ✅ 创建 DDD 目录结构
+- ✅ 生成 IDE Helper 文件
+- ✅ 运行静态分析和测试
+
+---
+
+## 📦 已安装的工具链
+
+### P0 优先级工具（已完成安装）
+
+| 工具 | 版本 | 用途 | 状态 |
+|------|------|------|------|
+| **PHPStan + Larastan** | 2.1.54 + 3.9.6 | 静态代码分析 | ✅ 已安装 |
+| **Pest PHP** | 3.8.6 | 现代化测试框架 | ✅ 已安装 |
+| **Laravel IDE Helper** | 3.7.0 | IDE 类型提示 | ✅ 已安装 |
+| **Laravel Telescope** | 5.20.0 | 调试面板 | ✅ 已安装 |
+| **Spatie Permission** | 6.25.0 | RBAC 权限控制 | ✅ 已安装 |
+
+详细安装报告请查看：[doc/TOOLCHAIN_INSTALLATION_REPORT.md](doc/TOOLCHAIN_INSTALLATION_REPORT.md)
+
+### 常用命令
+
+```bash
+# 静态分析
+docker compose exec app ./vendor/bin/phpstan analyse
+
+# 运行测试
+docker compose exec app ./vendor/bin/pest
+
+# 代码格式化
+docker compose exec app ./vendor/bin/pint
+
+# 重新生成 IDE Helper
+docker compose exec app php artisan ide-helper:generate
+docker compose exec app php artisan ide-helper:models --write
+
+# Telescope 数据管理
+docker compose exec app php artisan telescope:clear
+docker compose exec app php artisan telescope:prune --hours=24
+```
+
+---
+
+### 📋 手动安装（传统方式）
+
+#### 环境要求
 
 - Docker & Docker Compose V2
 - Node.js 18+ (用于 MCP 服务)
@@ -140,33 +205,61 @@ app/
 
 ## 📚 文档
 
+### 📊 项目审计与规划
+- [**项目审计报告**](doc/AUDIT_REPORT_2026-05-01.md) - 深度分析当前状态、工具链推荐、功能规划
+- [**快速初始化指南**](init-project.sh) - 一键安装核心工具包和配置环境
+
+### 📝 需求与设计
 - [PRD 需求文档](doc/PRD/00-PRD-INDEX.md)
 - [架构设计规范](doc/design/01-architecture-spec.md)
 - [测试策略](doc/design/02-testing-strategy.md)
 - [Laravel Boost 审计报告](doc/design/03-laravel-boost-audit-report.md)
+
+### 🎓 AI 辅助开发
 - [AI 开发最佳实践](doc/BestPractice/README.md)
+- [学科思维方法论](doc/Core/README.md)
+
+### 🐳 基础设施
 - [Docker 环境说明](docker/README.md)
 
 ---
 
 ## 🔧 常用命令
 
+### 项目初始化
 ```bash
+./init-project.sh                    # 一键初始化（推荐）
+```
+
+### Docker 操作
 # Docker 操作
 docker compose up -d                    # 启动服务
 docker compose down                     # 停止服务
 docker compose logs -f app              # 查看应用日志
 docker compose exec app bash            # 进入应用容器
 
-# Laravel Artisan
+### Laravel Artisan
+```bash
 docker compose exec app php artisan migrate          # 执行迁移
 docker compose exec app php artisan db:seed          # 填充数据
 docker compose exec app php artisan route:list       # 查看路由
 docker compose exec app php artisan queue:work       # 启动队列 worker
+docker compose exec app php artisan make:filament-user # 创建 Filament 管理员
+```
 
-# 测试
-docker compose exec app ./vendor/bin/pest            # 运行测试
+### 代码质量
+```bash
 docker compose exec app ./vendor/bin/pint            # 代码格式化
+docker compose exec app ./vendor/bin/phpstan analyse # 静态分析
+docker compose exec app ./vendor/bin/pest            # 运行测试
+docker compose exec app ./vendor/bin/pest --coverage # 测试覆盖率
+```
+
+### IDE Helper
+```bash
+docker compose exec app php artisan ide-helper:generate # 生成 Facade 提示
+docker compose exec app php artisan ide-helper:meta     # 生成 PhpStorm meta
+docker compose exec app php artisan ide-helper:models   # 生成模型属性提示
 ```
 
 ---
