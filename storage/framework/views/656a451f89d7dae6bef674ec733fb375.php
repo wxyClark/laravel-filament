@@ -1,82 +1,136 @@
-<?php if (isset($component)) { $__componentOriginalf45da69382bf4ac45a50b496dc82aa9a = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalf45da69382bf4ac45a50b496dc82aa9a = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.page.simple','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('filament-panels::page.simple'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-    <div class="custom-login-container">
-        <style>
-            .custom-login-container {
-                animation: fadeIn 0.6s ease-out;
-            }
-            @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .custom-login-header {
-                text-align: center;
-                margin-bottom: 2rem;
-            }
-            .custom-login-header h2 {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                font-size: 2rem;
-                font-weight: 700;
-                margin-bottom: 0.5rem;
-            }
-            .custom-login-header p {
-                color: #6b7280;
-                font-size: 0.95rem;
-            }
-            .fi-simple-main {
-                border-radius: 16px !important;
-                box-shadow: 0 20px 60px rgba(102, 126, 234, 0.15) !important;
-            }
-        </style>
-        
-        <div class="custom-login-header">
-            <h2><?php echo e(config('app.name', 'Laravel')); ?></h2>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员登录 - <?php echo e(config('app.name', 'Laravel')); ?></title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo h1 {
+            color: #667eea;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .logo p {
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        .error-message {
+            background: #fee;
+            border-left: 4px solid #f56565;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .error-message ul {
+            list-style: none;
+            color: #c53030;
+            font-size: 14px;
+        }
+        .error-message li {
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <h1><?php echo e(config('app.name', 'Laravel')); ?></h1>
             <p>管理员后台登录</p>
         </div>
 
-        <?php echo e($this->form); ?>
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(->any()): ?>
+            <div class="error-message">
+                <ul>
+                    <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = ->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as ): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li><?php echo e(); ?></li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                </ul>
+            </div>
+        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
+        <form method="POST" action="/admin/login">
+            <?php echo csrf_field(); ?>
+            
+            <div class="form-group">
+                <label for="email">邮箱地址</label>
+                <input id="email" type="email" name="email" value="<?php echo e(old('email')); ?>" required autofocus placeholder="请输入邮箱">
+            </div>
 
-        <?php if (isset($component)) { $__componentOriginal742ef35d02cb00943edd9ad8ebf61966 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal742ef35d02cb00943edd9ad8ebf61966 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'filament-panels::components.form.actions','data' => ['actions' => $this->getCachedFormActions(),'fullWidth' => $this->hasFullWidthFormActions()]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('filament-panels::form.actions'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes(['actions' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($this->getCachedFormActions()),'full-width' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($this->hasFullWidthFormActions())]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal742ef35d02cb00943edd9ad8ebf61966)): ?>
-<?php $attributes = $__attributesOriginal742ef35d02cb00943edd9ad8ebf61966; ?>
-<?php unset($__attributesOriginal742ef35d02cb00943edd9ad8ebf61966); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal742ef35d02cb00943edd9ad8ebf61966)): ?>
-<?php $component = $__componentOriginal742ef35d02cb00943edd9ad8ebf61966; ?>
-<?php unset($__componentOriginal742ef35d02cb00943edd9ad8ebf61966); ?>
-<?php endif; ?>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input id="password" type="password" name="password" required placeholder="请输入密码">
+            </div>
+
+            <button type="submit" class="btn-login">登录</button>
+        </form>
     </div>
- <?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginalf45da69382bf4ac45a50b496dc82aa9a)): ?>
-<?php $attributes = $__attributesOriginalf45da69382bf4ac45a50b496dc82aa9a; ?>
-<?php unset($__attributesOriginalf45da69382bf4ac45a50b496dc82aa9a); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginalf45da69382bf4ac45a50b496dc82aa9a)): ?>
-<?php $component = $__componentOriginalf45da69382bf4ac45a50b496dc82aa9a; ?>
-<?php unset($__componentOriginalf45da69382bf4ac45a50b496dc82aa9a); ?>
-<?php endif; ?>
+</body>
+</html>
 <?php /**PATH /var/www/html/resources/views/filament/pages/auth/login.blade.php ENDPATH**/ ?>
