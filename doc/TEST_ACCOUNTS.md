@@ -79,7 +79,21 @@ docker compose exec app ./vendor/bin/pest tests/Feature/Auth/
 
 ---
 
-## ⚠️ 注意事项
+## ⚠️ 重要提示
+
+### Filament 后台登录注意事项
+
+**Filament 登录页面依赖 JavaScript (Livewire)**
+
+1. **必须启用 JavaScript**：Filament 使用 Livewire 处理表单提交，浏览器必须启用 JavaScript
+2. **不要手动提交表单**：让 Livewire 自动处理，点击"登录"按钮即可
+3. **常见错误**：
+   - ❌ `MethodNotAllowedHttpException` - 通常是因为禁用了 JavaScript 或手动提交了表单
+   - ✅ 解决方案：确保浏览器启用了 JavaScript，刷新页面后正常点击登录按钮
+
+4. **清除浏览器缓存**：如果遇到问题，尝试清除浏览器缓存或使用无痕模式
+
+### 通用注意事项
 
 1. **生产环境**: 这些是测试账号，**切勿**在生产环境中使用
 2. **密码安全**: 实际项目中应使用强密码策略
