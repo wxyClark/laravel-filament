@@ -49,6 +49,7 @@
     45 => 'Pest\\Laravel\\PestServiceProvider',
     46 => 'RyanChandler\\BladeCaptureDirective\\BladeCaptureDirectiveServiceProvider',
     47 => 'Spatie\\Permission\\PermissionServiceProvider',
+    48 => 'App\\Providers\\Filament\\AdminPanelProvider',
   ),
   'eager' => 
   array (
@@ -85,6 +86,7 @@
     30 => 'Pest\\Laravel\\PestServiceProvider',
     31 => 'RyanChandler\\BladeCaptureDirective\\BladeCaptureDirectiveServiceProvider',
     32 => 'Spatie\\Permission\\PermissionServiceProvider',
+    33 => 'App\\Providers\\Filament\\AdminPanelProvider',
   ),
   'deferred' => 
   array (
