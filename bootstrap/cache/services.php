@@ -37,19 +37,20 @@
     33 => 'Filament\\Widgets\\WidgetsServiceProvider',
     34 => 'Kirschbaum\\PowerJoins\\PowerJoinsServiceProvider',
     35 => 'Laravel\\Boost\\BoostServiceProvider',
-    36 => 'Laravel\\Mcp\\Server\\McpServiceProvider',
-    37 => 'Laravel\\Roster\\RosterServiceProvider',
-    38 => 'Laravel\\Sail\\SailServiceProvider',
-    39 => 'Laravel\\Sentinel\\SentinelServiceProvider',
-    40 => 'Laravel\\Telescope\\TelescopeServiceProvider',
-    41 => 'Livewire\\LivewireServiceProvider',
-    42 => 'Carbon\\Laravel\\ServiceProvider',
-    43 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
-    44 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    45 => 'Pest\\Laravel\\PestServiceProvider',
-    46 => 'RyanChandler\\BladeCaptureDirective\\BladeCaptureDirectiveServiceProvider',
-    47 => 'Spatie\\Permission\\PermissionServiceProvider',
-    48 => 'App\\Providers\\Filament\\AdminPanelProvider',
+    36 => 'Laravel\\Breeze\\BreezeServiceProvider',
+    37 => 'Laravel\\Mcp\\Server\\McpServiceProvider',
+    38 => 'Laravel\\Roster\\RosterServiceProvider',
+    39 => 'Laravel\\Sail\\SailServiceProvider',
+    40 => 'Laravel\\Sentinel\\SentinelServiceProvider',
+    41 => 'Laravel\\Telescope\\TelescopeServiceProvider',
+    42 => 'Livewire\\LivewireServiceProvider',
+    43 => 'Carbon\\Laravel\\ServiceProvider',
+    44 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
+    45 => 'Termwind\\Laravel\\TermwindServiceProvider',
+    46 => 'Pest\\Laravel\\PestServiceProvider',
+    47 => 'RyanChandler\\BladeCaptureDirective\\BladeCaptureDirectiveServiceProvider',
+    48 => 'Spatie\\Permission\\PermissionServiceProvider',
+    49 => 'App\\Providers\\Filament\\AdminPanelProvider',
   ),
   'eager' => 
   array (
@@ -248,6 +249,7 @@
     'Barryvdh\\LaravelIdeHelper\\Console\\ModelsCommand' => 'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
     'Barryvdh\\LaravelIdeHelper\\Console\\MetaCommand' => 'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
     'Barryvdh\\LaravelIdeHelper\\Console\\EloquentCommand' => 'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider',
+    'Laravel\\Breeze\\Console\\InstallCommand' => 'Laravel\\Breeze\\BreezeServiceProvider',
     'Laravel\\Sail\\Console\\InstallCommand' => 'Laravel\\Sail\\SailServiceProvider',
     'Laravel\\Sail\\Console\\PublishCommand' => 'Laravel\\Sail\\SailServiceProvider',
   ),
@@ -293,6 +295,9 @@
     array (
     ),
     'Barryvdh\\LaravelIdeHelper\\IdeHelperServiceProvider' => 
+    array (
+    ),
+    'Laravel\\Breeze\\BreezeServiceProvider' => 
     array (
     ),
     'Laravel\\Sail\\SailServiceProvider' => 

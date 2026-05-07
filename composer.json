@@ -15,6 +15,7 @@
         "barryvdh/laravel-ide-helper": "^3.7",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
+        "laravel/breeze": "^2.4",
         "laravel/pint": "^1.14",
         "laravel/sail": "^1.26",
         "laravel/telescope": "^5.20",
