@@ -2,6 +2,23 @@
 
 > **版本**: v3.0 | **最后更新**: 2026-06-07
 
+## 用途说明
+项目初始化指南，配置 AI IDE 和提示词卡片系统。
+
+## 目录结构
+```
+doc/prompts/
+├── README.md              # 主文档（流程化使用最佳实践）
+├── cards/                 # 提示词卡片库（58 张）
+├── examples/              # 示例文件
+│   ├── project-baseline.md    # 项目基线模板
+│   └── assembly-examples.md   # 完整组装示例
+├── 00-init.md             # 本文件
+├── 01-design.md           # 原始设计方案
+├── 02-design-optimized.md # P9 优化方案
+└── 03-evaluation-report.md # 评估报告
+```
+
 ## 1. 创建laravel12项目
 ```bash
 composer create-project laravel/laravel laravel-filament
