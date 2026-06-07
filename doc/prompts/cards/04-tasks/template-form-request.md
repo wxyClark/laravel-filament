@@ -1,6 +1,6 @@
-# 任务模板：FormRequest 验证层
+# 任务模板：FormRequest 验证层 (Form Request Validation)
 
-> **v2.0: 强制设计原理解释**
+> **版本**: v3.0 | **层級**: L4 | **最后更新**: 2026-06-07
 
 ## 用途说明
 规范 HTTP 请求的参数校验逻辑，实现请求数据的验证与标准化。
@@ -10,70 +10,65 @@
 - 表单提交的数据校验
 - 复杂的验证规则（条件验证、自定义规则）
 
----
-
 ## 标准内容块
-
 ```markdown
 # 任务：为 {Feature} 创建 FormRequest
 
-## 角色
-@{Role}
+## L3: 角色设定
+系统架构师确保验证逻辑符合业务规则。
 
 ## 要求
 1. **单一职责**：每个 FormRequest 只处理一个接口的验证
-2. **规则清晰**：使用 Laravel 验证规则链，规则顺序：类型 → 范围 → 唯一性 → 自定义
+2. **规则清晰**：使用 Laravel 验证规则链，顺序：类型 → 范围 → 唯一性 → 自定义
 3. **错误消息**：提供友好的中文错误消息
 4. **授权逻辑**：在 authorize() 方法中处理权限校验
 5. **数据清理**：使用 validated() 获取已清洗的数据
 
----
-
 ## 🎯 设计方案（必须解释）
-
-### 1. 验证规则设计
-| 字段 | 类型 | 规则 | 错误消息 | 设计原因 |
-|------|------|------|---------|---------|
-| {field} | {type} | {rules} | {message} | {reason} |
-
-### 2. 条件验证
-| 条件 | 触发规则 | 设计原因 |
-|------|---------|---------|
-| {condition} | {rules} | {reason} |
-
-### 3. 自定义验证
-| 验证名称 | 逻辑 | 设计原因 |
-|----------|------|---------|
-| {name} | {logic} | {reason} |
-
-### 4. 授权逻辑
-| 场景 | 权限 | 设计原因 |
-|------|------|---------|
-| {scenario} | {permission} | {reason} |
-
-### 5. 性能考虑
-- 验证耗时: ?
-- 数据库查询: ?
-
----
+{验证规则设计、条件验证、自定义验证、授权逻辑、性能考虑}
 
 ## 💻 代码实现
-
-### FormRequest 代码
 ```php
 <?php
 declare(strict_types=1);
 
-// FormRequest 代码
+namespace App\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreOrderRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return auth()->check();
+    }
+
+    public function rules(): array
+    {
+        return [
+            'customer_name' => ['required', 'string', 'max:255'],
+            'items' => ['required', 'array', 'min:1'],
+            'items.*.product_id' => ['required', 'exists:products,id'],
+            'items.*.quantity' => ['required', 'integer', 'min:1'],
+            'items.*.price' => ['required', 'numeric', 'min:0'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'items.*.product_id.exists' => '请选择有效的商品',
+            'items.*.quantity.min' => '商品数量至少为 1',
+        ];
+    }
+}
 ```
 
-### 代码解释
-解释关键设计决策：
-1. 为什么选择这些验证规则？
-2. 如何处理条件验证？
-3. 授权逻辑如何设计？
+## L5: 验收标准
+- [ ] 验证规则完整覆盖所有字段
+- [ ] 有中文错误消息
+- [ ] authorize() 权限校验正确
+- [ ] 使用 validated() 获取清洗数据
+- [ ] 条件验证逻辑正确
 ```
-
----
-
-**版本**: v2.0 | **更新日期**: 2026-04-27
+```

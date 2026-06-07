@@ -1,173 +1,254 @@
-# 🐳 Laravel Filament Docker 配置
+# Laravel + Filament Docker 环境
 
-本目录包含 Laravel Filament 应用的 Docker 配置文件。
+## 📋 环境概述
 
-## 📁 目录结构
+本 Docker 环境包含以下服务：
 
-```
-docker/
-├── php/
-│   └── Dockerfile          # PHP 8.2-FPM 镜像定义
-├── nginx/
-│   └── default.conf        # Nginx 配置文件
-└── README.md               # 本文档
-```
+- **PHP 8.2-FPM**: Laravel 应用运行环境
+- **Nginx**: Web 服务器
+- **MySQL 8.0**: 数据库
+- **Redis**: 缓存和队列
+- **Mailpit**: 本地邮件测试
 
-## 🛠️ 技术栈
+## 🚀 快速开始
 
-- **PHP**: 8.2-FPM
-  - 扩展：Redis, AMQP, Bcmath, GD, OPcache
-  - 优化：生产级 OPcache 配置
-  
-- **Nginx**: Alpine 版本
-  - Laravel 伪静态规则
-  - 静态资源缓存策略
-
-## 🚀 使用方法
-
-### 构建镜像
+### 1. 启动环境
 
 ```bash
-cd /home/clark/www/laravel-filament
-docker compose build app
-```
+# 启动所有服务
+./docker.sh start
 
-### 启动应用
-
-```bash
+# 或使用 docker compose
 docker compose up -d
 ```
 
-### 进入容器
+### 2. 访问应用
+
+- **应用地址**: http://localhost:8080
+- **数据库**: localhost:3306
+- **Redis**: localhost:6379
+- **Mailpit UI**: http://localhost:8025
+
+### 3. 初始化 Laravel
 
 ```bash
-# 进入 PHP 容器
-docker compose exec app bash
+# 生成应用密钥
+./docker.sh artisan key:generate
 
-# 执行 Artisan 命令
-docker compose exec app php artisan migrate
+# 运行数据库迁移
+./docker.sh artisan migrate
+
+# 创建存储链接
+./docker.sh artisan storage:link
 ```
 
-### 查看日志
+## 📝 常用命令
+
+### 环境管理
 
 ```bash
-# 查看应用日志
+# 启动
+./docker.sh start
+
+# 停止
+./docker.sh stop
+
+# 重启
+./docker.sh restart
+
+# 查看状态
+./docker.sh status
+
+# 查看日志
+./docker.sh logs
+```
+
+### Laravel Artisan 命令
+
+```bash
+# 进入容器
+./docker.sh shell
+
+# 运行 artisan 命令
+./docker.sh artisan migrate
+./docker.sh artisan make:model User
+./docker.sh artisan make:controller UserController
+
+# 清理缓存
+./docker.sh artisan config:clear
+./docker.sh artisan cache:clear
+./docker.sh artisan route:clear
+
+# 重新构建缓存
+./docker.sh artisan config:cache
+./docker.sh artisan route:cache
+./docker.sh artisan view:cache
+```
+
+### Composer 命令
+
+```bash
+# 安装依赖
+./docker.sh composer install
+
+# 更新依赖
+./docker.sh composer update
+
+# 添加依赖
+./docker.sh composer require package-name
+```
+
+### Docker Compose 命令
+
+```bash
+# 查看服务状态
+docker compose ps
+
+# 查看日志
 docker compose logs -f app
-
-# 查看 Nginx 日志
 docker compose logs -f nginx
+docker compose logs -f mysql
+
+# 重启服务
+docker compose restart app
+
+# 停止并删除容器
+docker compose down
+
+# 重新构建镜像
+docker compose build --no-cache
+
+# 清理未使用的资源
+docker system prune -a
 ```
 
-## 🔗 依赖服务
+## 🔧 环境配置
 
-本应用依赖以下**共享基础设施**服务：
+### 修改端口
 
-| 服务 | 容器名 | 端口 | 说明 |
-|------|--------|------|------|
-| MySQL | infra-mysql | 3306 | 数据库服务 |
-| Redis | infra-redis | 6379 | 缓存服务 |
-| RabbitMQ | infra-rabbitmq | 5672 | 消息队列 |
-
-### 启动基础设施
-
-在使用本应用前，请确保基础设施已启动：
-
-```bash
-cd /home/clark/www/infrastructure
-docker compose up -d
-```
-
-详细文档：[基础设施 README](../../infrastructure/README.md)
-
-## ⚙️ 配置说明
-
-### PHP Dockerfile
-
-位置：`docker/php/Dockerfile`
-
-特性：
-- 基于 `php:8.2-fpm` 多阶段构建
-- 预装 Laravel 所需扩展
-- 启用 OPcache+JIT 生产优化
-- PHP JIT 支持
-- 常用 PHP 配置（时区、内存限制、文件上传）
-
-### Nginx 配置
-
-位置：`docker/nginx/default.conf`
-
-特性：
-- Laravel 路由重写规则
-- 静态资源缓存（30天）
-- PHP-FPM FastCGI 配置
-- 安全响应头（X-Frame-Options, CSP 等）
-- Gzip 压缩
-
-## 📝 环境变量
-
-在项目的 `.env` 文件中配置：
+编辑 `.env` 文件：
 
 ```env
-# 数据库（指向基础设施）
-DB_HOST=infra-mysql
+APP_PORT=8080
 DB_PORT=3306
-DB_DATABASE=db_laravel-filament
-DB_USERNAME=user_laravel-filament
-DB_PASSWORD=<从基础设施获取>
-
-# Redis（指向基础设施）
-REDIS_HOST=infra-redis
 REDIS_PORT=6379
-
-# RabbitMQ（指向基础设施）
-QUEUE_CONNECTION=rabbitmq
-RABBITMQ_HOST=infra-rabbitmq
-RABBITMQ_PORT=5672
+MAIL_PORT=1025
+MAIL_UI_PORT=8025
 ```
 
-## 💾 数据备份
+### 修改数据库配置
 
-**重要**：数据库备份请在**基础设施层**执行，不在本项目中。
-
-执行备份：
-```bash
-cd /home/clark/www/infrastructure
-./backup.sh
+```env
+DB_DATABASE=your_database
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
 ```
 
-详细文档：[基础设施备份指南](../../infrastructure/README.md#-数据备份)
+### 配置 Mailpit
 
-## 🆘 常见问题
+访问 http://localhost:8025 查看发送的邮件。
 
-### Q: 无法连接到数据库？
+## 🛠️ 开发工具
 
-A: 检查基础设施是否运行：
+### Portainer
+
+可视化 Docker 管理界面：http://localhost:9000
+
+首次访问需要创建管理员账户。
+
+### 常用开发命令
+
 ```bash
-docker ps | grep infra-mysql
+# 创建模型和迁移
+./docker.sh artisan make:model Article -m
+
+# 创建控制器
+./docker.sh artisan make:controller ArticleController
+
+# 创建 Filament Resource
+./docker.sh artisan make:filament-resource Article
+
+# 运行测试
+./docker.sh artisan test
+
+# 队列监听
+./docker.sh artisan queue:work
 ```
 
-### Q: 如何重启应用？
+## 📊 服务健康检查
 
-A: 
 ```bash
-docker compose restart
+# 检查所有服务状态
+docker compose ps
+
+# 检查特定服务
+docker inspect filament-app
+docker inspect filament-mysql
+docker inspect filament-redis
 ```
 
-### Q: 如何更新 PHP 扩展？
+## 🔍 故障排除
 
-A: 修改 `docker/php/Dockerfile`，然后重新构建：
+### 容器无法启动
+
 ```bash
-docker compose build app
+# 查看日志
+docker compose logs app
+docker compose logs mysql
+
+# 重新构建
+docker compose down
+docker compose build --no-cache
 docker compose up -d
 ```
 
-## 📚 相关文档
+### 权限问题
 
-- [基础设施管理](../../infrastructure/README.md)
-- [Portainer 操作指南](../../PORTAINER_STACKS_CREATION_GUIDE.md)
-- [Docker 最佳实践](./BEST_PRACTICES.md)
+```bash
+# 修复权限
+sudo chown -R $USER:$USER .
+chmod -R 755 storage bootstrap/cache
+```
 
----
+### 数据库连接问题
 
-**最后更新**: 2026-04-27  
-**维护者**: Laravel Filament Team
+```bash
+# 检查 MySQL 日志
+docker compose logs mysql
+
+# 重新创建数据库
+docker compose exec mysql mysql -u root -p -e "DROP DATABASE laravel; CREATE DATABASE laravel;"
+```
+
+## 📚 更多信息
+
+- [Laravel 文档](https://laravel.com/docs)
+- [Filament 文档](https://filamentadmin.com/docs/)
+- [Docker 文档](https://docs.docker.com/)
+- [Portainer 文档](https://docs.portainer.io/)
+
+## ⚠️ 注意事项
+
+1. 首次启动需要构建镜像，可能需要几分钟时间
+2. 确保端口 8080、3306、6379、9000、1025、8025 未被占用
+3. 定期清理 Docker 资源以节省磁盘空间
+4. 生产环境请修改默认密码和密钥
+
+## 🎯 推荐工作流
+
+1. **开发时**: `./docker.sh start` 启动环境
+2. **编写代码**: 使用 IDE 编辑项目文件
+3. **测试**: http://localhost:8080
+4. **查看邮件**: http://localhost:8025
+5. **管理 Docker**: http://localhost:9000
+6. **结束时**: `./docker.sh stop` 停止环境
+
+## 📞 获取帮助
+
+```bash
+# 查看帮助
+./docker.sh help
+
+# 查看服务状态
+./docker.sh status
+```

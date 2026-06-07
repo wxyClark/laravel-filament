@@ -1,8 +1,7 @@
 # 📚 提示词碎片库 (Prompt Cards Library)
 
-> **版本**: v2.0  
-> **更新日期**: 2026-04-24  
-> **说明**: 基于 MiMo 评估报告优化后的完整提示词碎片库
+> **版本**: v3.0 | **最后更新**: 2026-06-07  
+> **说明**: 基于 v2.0 评估报告优化，统一卡片格式，扩充领域约束，新增 Laravel 12 规范
 
 ---
 
@@ -10,58 +9,82 @@
 
 ```
 cards/
-├── 00-core/                    # 核心原则层 (L1)
-│   ├── type-safety-immutability.md
-│   ├── tdd-guidelines.md
-│   ├── dependency-injection.md      [新增]
-│   ├── error-handling.md            [新增]
-│   └── event-driven.md              [新增]
+├── 00-core/                    # 核心原则层 (L1) — 5 张
+│   ├── type-safety-immutability.md    # 类型安全与不可变性
+│   ├── tdd-guidelines.md              # 测试驱动开发
+│   ├── dependency-injection.md         # 依赖注入
+│   ├── error-handling.md              # 异常处理规范
+│   └── event-driven.md                # 事件驱动设计
 │
-├── 01-roles/                   # 角色定义层 (L3)
-│   ├── system-architect.md          [新增]
-│   ├── product-architect.md
-│   ├── trade-engineer.md
-│   ├── asset-manager.md
-│   ├── filament-ui-designer.md
-│   ├── dba-expert.md                [新增]
-│   ├── qa-engineer.md               [新增]
-│   ├── devops-engineer.md           [新增]
-│   ├── security-expert.md           [新增]
-│   └── frontend-developer.md        [新增]
+├── 02-context/               # 上下文注入层 (L2) — 3 张
+│   ├── laravel-12-standards.md         # Laravel 12 最佳实践 [新增]
+│   ├── project-metadata-injection.md  # 项目元数据感知
+│   └── filament-best-practices.md     # Filament 3.x 最佳实践
 │
-├── 02-context/                 # 上下文注入层 (L2)
-│   ├── project-metadata-injection.md
-│   └── filament-best-practices.md
+├── 01-roles/                 # 角色定义层 (L3) — 12 张
+│   ├── system-architect.md              # 系统架构师 [新增]
+│   ├── product-architect.md             # 商品域架构师
+│   ├── trade-engineer.md                # 交易工程师
+│   ├── asset-manager.md                 # 资产管家
+│   ├── filament-ui-designer.md          # Filament UI 设计师
+│   ├── dba-expert.md                    # DBA 专家
+│   ├── qa-engineer.md                   # QA 工程师
+│   ├── devops-engineer.md               # DevOps 工程师
+│   ├── security-expert.md               # 安全专家
+│   ├── frontend-developer.md            # 前端开发工程师
+│   ├── code-reviewer.md                 # Code Review 专家
+│   └── tech-interviewer.md              # P9 技术面试官（L2.5 强制层）
 │
-├── 03-domains/                 # 领域约束层 (L2+)
-│   ├── constraint-o2o-timeslot-locking.md
-│   └── constraint-distribution-commission.md
+├── 03-domains/               # 领域约束层 (L2+) — 4 张
+│   ├── constraint-distribution-commission.md  # 分销佣金递归计算
+│   ├── constraint-o2o-timeslot-locking.md     # O2O 时间片冲突检测
+│   ├── constraint-inventory-concurrency.md    # 电商库存并发扣减 [新增]
+│   └── constraint-rbac-hierarchy.md           # RBAC 权限层级控制 [新增]
 │
-├── 04-tasks/                   # 任务模板层 (L4)
-│   ├── template-migration-generation.md
-│   ├── template-service-layer.md
-│   ├── template-dto-conversion.md
-│   └── template-filament-resource.md
+├── 04-tasks/                 # 任务模板层 (L4) — 15 张
+│   ├── template-migration-generation.md         # 数据库迁移生成
+│   ├── template-service-layer.md                # 服务层实现
+│   ├── template-dto-conversion.md               # DTO 数据转换
+│   ├── template-filament-resource.md            # Filament 资源页面
+│   ├── template-form-request.md                 # FormRequest 验证层
+│   ├── template-api-resource.md                 # API Resource 响应格式化
+│   ├── template-event-listener.md               # 事件监听器实现
+│   ├── template-test-coverage.md                # 测试用例编写
+│   ├── template-technical-interview.md          # 技术面试引导
+│   ├── template-code-review.md                  # Code Review 审查
+│   ├── template-requirement-analysis.md         # 需求分析与定义
+│   ├── template-test-design.md                  # 软件测试设计
+│   ├── template-architecture-design.md          # 架构设计
+│   ├── template-database-design.md              # 数据库设计
+│   └── template-php-development.md              # PHP 开发规范
 │
-├── 05-ops/                     # 运维相关 [新增]
-│   ├── monitoring-telescope.md
-│   ├── queue-horizon.md
-│   └── deployment-checklist.md
+├── 05-ops/                   # 运维层 (L4+) — 3 张
+│   ├── deployment-checklist.md              # 部署检查清单
+│   ├── monitoring-telescope.md              # Telescope 监控配置
+│   └── queue-horizon.md                     # Horizon 队列监控
 │
-├── 06-security/                # 安全相关 [新增]
-│   ├── auth-sanctum.md
-│   ├── authorization-gate.md
-│   └── sql-injection-prevention.md
+├── 06-security/              # 安全层 (L4+) — 3 张
+│   ├── authorization-gate.md                # 权限控制 (Gates & Policies)
+│   ├── auth-sanctum.md                      # API 认证配置 (Sanctum)
+│   └── sql-injection-prevention.md          # SQL 注入防护
 │
-├── 07-testing/                 # 测试相关 [新增]
-│   ├── pest-unit-test.md
-│   ├── pest-feature-test.md
-│   └── test-data-factory.md
+├── 07-testing/               # 测试层 (L4+) — 3 张
+│   ├── pest-feature-test.md                 # Pest 功能测试
+│   ├── pest-unit-test.md                    # Pest 单元测试
+│   └── test-data-factory.md                 # 数据工厂 (Model Factories)
 │
-├── 08-assembly/                # 组装模板 [新增]
-│   ├── assembly-formula.md
-│   ├── meta-prompt-generator.md
-│   └── prompt-composer.md
+├── 08-assembly/              # 组装模板 — 3 张
+│   ├── assembly-formula.md                  # 组装公式 v3.0
+│   ├── meta-prompt-generator.md             # 母提示词模板
+│   └── prompt-composer.md                   # 组合器指南
+│
+├── 09-contracts/             # 事件契约 — 1 张
+│   └── domain-event-contracts.md            # 跨模块事件契约
+│
+├── 10-scenarios/             # 业务场景 — 3 张
+│   ├── ecommerce-promotion.md               # 电商促销
+│   ├── ecommerce-shipping.md                # 电商物流
+│   └── ecommerce-return-refund.md           # 电商退货退款
 │
 └── README.md                   # 本文件
 ```
@@ -70,86 +93,27 @@ cards/
 
 ## 📊 碎片统计
 
-| 目录 | 文件数量 | 用途 |
-|------|---------|------|
-| 00-core/ | 5 | 核心原则定义 |
-| 01-roles/ | 10 | 角色定义卡片 |
-| 02-context/ | 2 | 上下文注入 |
-| 03-domains/ | 2 | 领域约束 |
-| 04-tasks/ | 4 | 任务模板 |
-| 05-ops/ | 3 | 运维规范 |
-| 06-security/ | 3 | 安全规范 |
-| 07-testing/ | 3 | 测试模板 |
-| 08-assembly/ | 3 | 组装指南 |
-| **总计** | **35** | - |
+| 目录 | 文件数 | 层级 | 用途 |
+|------|--------|------|------|
+| 00-core/ | 5 | L1 | 核心原则 |
+| 02-context/ | 3 | L2 | 上下文规范 |
+| 01-roles/ | 12 | L3 | 角色定义 |
+| 03-domains/ | 4 | L2+ | 领域约束 |
+| 04-tasks/ | 15 | L4 | 任务模板 |
+| 05-ops/ | 3 | L4+ | 运维规范 |
+| 06-security/ | 3 | L4+ | 安全规范 |
+| 07-testing/ | 3 | L4+ | 测试模板 |
+| 08-assembly/ | 3 | Meta | 组装指南 |
+| 09-contracts/ | 1 | L2+ | 事件契约 |
+| 10-scenarios/ | 3 | L5+ | 业务场景 |
+| **总计** | **58** | | |
 
 ---
 
-## 🎯 五层组装模型
-
-```mermaid
-graph TB
-    subgraph "L0: 元数据感知 (自动注入)"
-        L0_1[项目结构]
-        L0_2[技术栈版本]
-        L0_3[现有模型]
-    end
-    
-    subgraph "L1: 核心原则 (00-core/)"
-        L1_1[type-safety-immutability]
-        L1_2[tdd-guidelines]
-        L1_3[dependency-injection]
-        L1_4[error-handling]
-        L1_5[event-driven]
-    end
-    
-    subgraph "L2: 上下文规范 (02-context/)"
-        L2_1[project-metadata-injection]
-        L2_2[filament-best-practices]
-    end
-    
-    subgraph "L3: 角色注入 (01-roles/)"
-        L3_1[system-architect]
-        L3_2[product-architect]
-        L3_3[trade-engineer]
-        L3_4[asset-manager]
-        L3_5[filament-ui-designer]
-        L3_6[dba-expert]
-        L3_7[qa-engineer]
-        L3_8[devops-engineer]
-        L3_9[security-expert]
-        L3_10[frontend-developer]
-    end
-    
-    subgraph "L2+: 领域约束 (03-domains/)"
-        L2P_1[o2o-timeslot-locking]
-        L2P_2[distribution-commission]
-    end
-    
-    subgraph "L4: 任务模板 (04-tasks/)"
-        L4_1[migration-generation]
-        L4_2[service-layer]
-        L4_3[dto-conversion]
-        L4_4[filament-resource]
-    end
-    
-    subgraph "L5: 验收标准 (自动生成)"
-        L5_1[验收检查清单]
-    end
-    
-    L0_1 --> L1_1
-    L1_1 --> L2_1
-    L2_1 --> L3_1
-    L3_1 --> L4_1
-    L4_1 --> L5_1
-```
-
----
-
-## 🔄 组装公式
+## 🎯 五层组装模型 (v3.0)
 
 ```
-完整 Prompt = L0 + L1 + L2 + L3 + [L2+] + L4 + L5
+完整 Prompt = L0 + L1 + L2 + L2.5(强制) + L3 + L4 + L5
 ```
 
 | 层级 | 名称 | 来源 | 必需 |
@@ -157,10 +121,19 @@ graph TB
 | L0 | 元数据感知 | 自动注入 | ✅ |
 | L1 | 核心原则 | 00-core/ | ✅ |
 | L2 | 上下文规范 | 02-context/ | ✅ |
+| L2.5 | 设计原理解释 | tech-interviewer | ✅ |
 | L3 | 角色注入 | 01-roles/ | ✅ |
 | L2+ | 领域约束 | 03-domains/ | ❌ |
 | L4 | 任务模板 | 04-tasks/ | ✅ |
 | L5 | 验收标准 | 自动生成 | ✅ |
+
+---
+
+## 🔄 组装公式
+
+```
+完整 Prompt = L0 + L1 + L2 + L2.5(强制) + L3 + [L2+] + L4 + L5
+```
 
 ---
 
@@ -174,81 +147,51 @@ graph TB
 | 余额/积分/佣金 | AssetManager | - |
 | 系统架构/模块设计 | SystemArchitect | - |
 | API 接口开发 | TradeEngineer | SystemArchitect |
-| 安全审计/权限 | SecurityExpert | - |
+| 安全/权限/认证 | SecurityExpert | - |
 | 测试用例编写 | QAEngineer | - |
 | 部署/监控/CI/CD | DevOpsEngineer | - |
 | Livewire 组件 | FrontendDeveloper | FilamentUIDesigner |
+| 代码审查 | CodeReviewer | QAEngineer |
 
 ---
 
 ## 🚀 快速开始
 
-### 方式 1: 使用母提示词模板
+### 手动组装
 
-1. 复制 `08-assembly/meta-prompt-generator.md` 的内容
-2. 发送给 AI IDE (Lingma/Trae/Cursor)
-3. 输入你的自然语言需求
-4. AI 会自动组装完整的结构化提示词
+1. 阅读 `assembly-formula.md` 了解组装公式
+2. 根据需求从各层选择对应卡片
+3. 按 L0→L5 顺序组合
+4. 使用 `prompt-composer.md` 矩阵快速查找
 
-### 方式 2: 手动组装
+### 自动组装
 
-1. 分析任务类型，选择合适的角色
-2. 根据复杂度选择核心原则
-3. 如涉及特定领域，添加领域约束
-4. 选择对应的任务模板
-5. 按组装公式组合
-
-### 组装示例
-
-```markdown
-# 任务：创建订单服务
-
-## L0: 项目上下文
-- 技术栈: Laravel 12 + Filament 3.x
-- 现有模型: @list_dir('app/Models')
-
-## L1: 核心原则
-{type-safety-immutability.md 内容}
-{dependency-injection.md 内容}
-{error-handling.md 内容}
-
-## L2: 上下文规范
-{filament-best-practices.md 内容}
-
-## L3: 角色设定
-{trade-engineer.md 内容}
-
-## L4: 任务指令
-请创建 OrderService 服务类...
-
-## L5: 验收标准
-- [ ] 所有方法有类型声明
-- [ ] 使用构造函数注入
-- [ ] 资金操作在事务中
-- [ ] 状态变更触发事件
-```
+1. 将 `meta-prompt-generator.md` 发送给 AI
+2. 输入自然语言需求
+3. AI 自动检索并组装最优提示词
 
 ---
 
-## 📈 优化记录
+## 📈 v2.0 → v3.0 变更日志
 
-### v2.0 (2026-04-24)
-- 新增 5 个核心原则卡片
-- 新增 6 个角色卡片
-- 新增 05-ops/ 目录 (3个运维卡片)
-- 新增 06-security/ 目录 (3个安全卡片)
-- 新增 07-testing/ 目录 (3个测试卡片)
-- 新增 08-assembly/ 目录 (3个组装指南)
-- 角色覆盖率从 33% 提升至 100%
-- 碎片库完整度从 60% 提升至 95%
-
-### v1.0 (2026-04-23)
-- 初始版本
-- 14 个基础卡片
-- 4 个角色卡片
-- 5 个目录
+| 变更 | 说明 |
+|------|------|
+| **新增** | `laravel-12-standards.md` 上下文卡 |
+| **新增** | `system-architect.md` 角色卡 |
+| **新增** | `constraint-inventory-concurrency.md` 领域约束 |
+| **新增** | `constraint-rbac-hierarchy.md` 领域约束 |
+| **新增** | `code-reviewer.md` 角色卡（从任务卡提升为角色卡） |
+| **新增** | `tech-interviewer.md` 作为 L2.5 强制层 |
+| **新增** | `template-api-resource.md` 任务模板 |
+| **新增** | `template-event-listener.md` 任务模板 |
+| **新增** | `template-form-request.md` 任务模板 |
+| **新增** | `template-test-coverage.md` 任务模板 |
+| **新增** | `template-technical-interview.md` 任务模板 |
+| **统一** | 所有卡片增加 `> 版本/层级/更新` 行 |
+| **统一** | 标准内容块格式统一 |
+| **统一** | 组装公式 v3.0 引入 L2.5 强制设计解释 |
+| **更新** | 母提示词模板 v3.0 索引更新 |
 
 ---
 
-**维护者**: MiMo  
-**联系方式**: 如有问题请提交 Issue
+**版本**: v3.0 | **最后更新**: 2026-06-07

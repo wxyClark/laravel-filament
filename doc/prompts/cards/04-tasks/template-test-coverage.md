@@ -1,6 +1,6 @@
-# 任务模板：测试用例编写
+# 任务模板：测试用例编写 (Test Coverage)
 
-> **v2.0: 强制设计原理解释**
+> **版本**: v3.0 | **层級**: L4 | **最后更新**: 2026-06-07
 
 ## 用途说明
 规范测试用例的编写过程，确保测试覆盖率和测试质量。
@@ -10,15 +10,13 @@
 - 特性测试编写
 - 场景测试编写
 
----
-
 ## 标准内容块
-
 ```markdown
 # 任务：为 {Feature} 编写测试用例
 
-## 角色
-@{Role}
+## L3: 角色设定
+### QA工程师 (QAEngineer)
+专注测试策略、用例设计和质量保障。
 
 ## 要求
 1. **测试覆盖**：覆盖正常流程、边界条件、异常情况
@@ -26,53 +24,40 @@
 3. **断言完整**：验证数据库状态、响应格式、业务逻辑
 4. **测试独立**：每个测试用例独立运行，不依赖其他测试
 
----
-
 ## 🎯 设计方案（必须解释）
-
-### 1. 测试范围
-| 场景 | 测试类型 | 优先级 | 设计原因 |
-|------|---------|--------|---------|
-| {scenario} | {type} | {priority} | {reason} |
-
-### 2. 测试数据
-| 数据 | 来源 | 数量 | 设计原因 |
-|------|------|------|---------|
-| {data} | {source} | {count} | {reason} |
-
-### 3. 断言设计
-| 断言 | 类型 | 设计原因 |
-|------|------|---------|
-| {assertion} | {type} | {reason} |
-
-### 4. 边界条件
-| 条件 | 预期结果 | 设计原因 |
-|------|---------|---------|
-| {condition} | {expected} | {reason} |
-
-### 5. 性能考虑
-- 测试执行时间: ?
-- 数据库查询次数: ?
-
----
+{测试范围、测试数据、断言设计、边界条件、性能考虑}
 
 ## 💻 代码实现
-
-### 测试代码
 ```php
 <?php
 declare(strict_types=1);
 
-// 测试代码
+test('admin can create order', function () {
+    $admin = Admin::factory()->create();
+    $customer = Customer::factory()->create();
+    $product = Product::factory()->create(['stock' => 10]);
+
+    $response = $this->actingAs($admin)
+        ->postJson('/api/orders', [
+            'customer_id' => $customer->id,
+            'items' => [
+                ['product_id' => $product->id, 'quantity' => 2],
+            ],
+        ]);
+
+    $response->assertStatus(201)
+        ->assertJsonPath('order.customer_id', $customer->id);
+
+    expect(Order::where('customer_id', $customer->id))->exists();
+});
 ```
 
-### 代码解释
-解释关键设计决策：
-1. 为什么选择这些测试场景？
-2. 测试数据如何准备？
-3. 断言如何设计？
+## L5: 验收标准
+- [ ] 覆盖正常流程
+- [ ] 覆盖边界条件
+- [ ] 覆盖异常情况
+- [ ] 使用 Factory 创建测试数据
+- [ ] 断言完整
+- [ ] 测试独立可重复
 ```
-
----
-
-**版本**: v2.0 | **更新日期**: 2026-04-27
+```

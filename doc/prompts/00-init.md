@@ -1,5 +1,7 @@
 # 初始化项目
 
+> **版本**: v3.0 | **最后更新**: 2026-06-07
+
 ## 1. 创建laravel12项目
 ```bash
 composer create-project laravel/laravel laravel-filament

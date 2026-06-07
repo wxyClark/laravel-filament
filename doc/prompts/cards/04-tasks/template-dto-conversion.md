@@ -1,73 +1,62 @@
 # 任务模板：DTO 数据转换 (Data Transfer Object)
 
-> **v2.0: 强制设计原理解释**
+> **版本**: v3.0 | **层級**: L4 | **最后更新**: 2026-06-07
 
 ## 用途说明
 规范从 HTTP Request 到业务逻辑层的数据传递方式，实现不可变性。
 
 ## 适用场景
-- 处理复杂的表单提交数据。
-- 在 Service 层之间传递标准化数据结构。
-
----
+- 处理复杂的表单提交数据
+- 在 Service 层之间传递标准化数据结构
 
 ## 标准内容块
-
 ```markdown
 # 任务：为 {Feature} 创建 DTO
 
-## 角色
-@{Role}
+## L3: 角色设定
+系统架构师确保 DTO 设计符合 DDD 原则。
 
 ## 要求
-1. **只读属性**：使用 `readonly class` 定义 DTO。
-2. **静态构造器**：提供 `fromRequest(StoreXxxRequest $request)` 静态方法。
-3. **类型映射**：确保所有属性都有严格的类型声明（如 `public readonly int $customerId`）。
-
----
+1. **只读属性**：使用 `readonly class` 定义 DTO
+2. **静态构造器**：提供 `fromRequest(StoreXxxRequest $request)` 静态方法
+3. **类型映射**：确保所有属性有严格类型声明
 
 ## 🎯 设计方案（必须解释）
-
-### 1. DTO 职责
-用自己的话描述这个 DTO 的核心职责。
-
-### 2. 属性设计
-| 属性名 | 类型 | 说明 | 设计原因 |
-|--------|------|------|---------|
-| {property} | {type} | {desc} | {reason} |
-
-### 3. 数据来源
-| 属性 | 来源 | 转换逻辑 |
-|------|------|---------|
-| {property} | {source} | {logic} |
-
-### 4. 使用场景
-- 场景1: {场景描述}
-- 场景2: {场景描述}
-
-### 5. 性能考虑
-- 内存占用: ?
-- 序列化性能: ?
-
----
+{描述 DTO 职责、属性设计、数据来源、使用场景、性能考虑}
 
 ## 💻 代码实现
-
-### DTO 代码
 ```php
 <?php
 declare(strict_types=1);
 
-// DTO 代码
+namespace App\DTOs;
+
+readonly class CreateOrderData
+{
+    public function __construct(
+        public readonly int $customerId,
+        public readonly string $customerName,
+        public readonly float $totalAmount,
+        public readonly array $items = [],
+    ) {}
+
+    public static function from(array $data): self
+    {
+        return new self(
+            customerId: (int) $data['customer_id'],
+            customerName: (string) $data['customer_name'],
+            totalAmount: (float) $data['total_amount'],
+            items: $data['items'] ?? [],
+        );
+    }
+}
 ```
 
-### 代码解释
-解释关键设计决策：
-1. 为什么选择 readonly class？
-2. 属性类型如何选择？
-3. 如何处理嵌套数据？
+## L5: 验收标准
+- [ ] DTO 使用 readonly class
+- [ ] 有静态构造器 fromRequest
+- [ ] 所有属性有严格类型
+- [ ] 嵌套数据有对应 DTO 类
+- [ ] 类型转换正确
 ```
-
----
-
-**版本**: v2.0 | **更新日期**: 2026-04-27
+```

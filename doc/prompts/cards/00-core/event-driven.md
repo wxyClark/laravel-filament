@@ -1,5 +1,7 @@
 # 核心原则：事件驱动设计 (Event-Driven)
 
+> **版本**: v3.0 | **层級**: L1 | **最后更新**: 2026-06-07
+
 ## 用途说明
 规范领域事件的定义和使用，实现模块解耦和副作用分离。
 
@@ -7,20 +9,22 @@
 - 状态变更需要通知其他模块时
 - 需要触发异步任务时
 - 需要记录审计日志时
+- 跨模块通信时
 
 ## 标准内容块
 ```markdown
 ## 事件驱动规范
 
 ### 事件分类
-1. **领域事件 (Domain Events)**: 业务状态变更，如 `OrderCreated`
-2. **集成事件 (Integration Events)**: 跨限界上下文，如 `PaymentCompleted`
-3. **事件通知 (Notifications)**: 用户通知，如 `OrderShippedNotification`
+| 类型 | 说明 | 示例 | 是否异步 |
+|------|------|------|---------|
+| 领域事件 | 业务状态变更 | `OrderCreated` | 同步 |
+| 集成事件 | 跨限界上下文 | `PaymentCompleted` | 异步 |
+| 通知事件 | 用户通知 | `OrderShippedNotification` | 异步 |
 
 ### 事件类定义
 ```php
 <?php
-
 declare(strict_types=1);
 
 namespace App\Events;
@@ -43,7 +47,6 @@ class OrderCreated
 ### 事件监听器
 ```php
 <?php
-
 declare(strict_types=1);
 
 namespace App\Listeners;
@@ -61,11 +64,22 @@ class ProcessOrderCreated
 
     public function handle(OrderCreated $event): void
     {
-        // 扣减库存
         $this->inventoryService->decreaseStock($event->order);
-        
-        // 计算分销佣金
         $this->commissionService->calculate($event->order);
+    }
+}
+```
+
+### 异步监听器
+```php
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class ProcessOrderCreated implements ShouldQueue
+{
+    // 失败回调
+    public function failed(OrderCreated $event, Throwable $exception): void
+    {
+        Log::error("订单事件处理失败: {$exception->getMessage()}");
     }
 }
 ```
@@ -86,5 +100,6 @@ protected $listen = [
 - 监听器保持单一职责
 - 避免在监听器中修改原始聚合
 - 使用 `ShouldQueue` 实现异步处理
+- 关键事件必须有失败重试机制
 ```
 ```

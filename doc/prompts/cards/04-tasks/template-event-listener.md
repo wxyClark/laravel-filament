@@ -1,6 +1,6 @@
-# 任务模板：事件监听器实现
+# 任务模板：事件监听器实现 (Event Listener)
 
-> **v2.0: 强制设计原理解释**
+> **版本**: v3.0 | **层級**: L4 | **最后更新**: 2026-06-07
 
 ## 用途说明
 规范领域事件的监听与处理逻辑，实现事件驱动的异步解耦。
@@ -10,15 +10,12 @@
 - 跨模块的异步通信
 - 副作用的异步执行（通知、日志、统计等）
 
----
-
 ## 标准内容块
-
 ```markdown
 # 任务：为 {Event} 创建监听器
 
-## 角色
-@{Role}
+## L3: 角色设定
+系统架构师确保事件监听器符合事件驱动设计原则。
 
 ## 要求
 1. **单一职责**：每个监听器只处理一个事件的一个方面
@@ -27,52 +24,52 @@
 4. **异步优先**：优先使用队列监听器，避免阻塞主流程
 5. **日志记录**：关键操作必须记录日志
 
----
-
 ## 🎯 设计方案（必须解释）
-
-### 1. 监听器职责
-用自己的话描述这个监听器的核心职责。
-
-### 2. 处理逻辑
-| 步骤 | 操作 | 数据变化 | 设计原因 |
-|------|------|---------|---------|
-| {step} | {operation} | {change} | {reason} |
-
-### 3. 异常处理
-| 异常类型 | 处理策略 | 设计原因 |
-|----------|---------|---------|
-| {type} | {strategy} | {reason} |
-
-### 4. 幂等性设计
-| 场景 | 幂等策略 | 设计原因 |
-|------|---------|---------|
-| {scenario} | {strategy} | {reason} |
-
-### 5. 性能考虑
-- 执行时间: ?
-- 队列配置: ?
-- 重试策略: ?
-
----
+{监听器职责、处理逻辑、异常处理、幂等性设计、性能考虑}
 
 ## 💻 代码实现
-
-### 监听器代码
 ```php
 <?php
 declare(strict_types=1);
 
-// 监听器代码
+namespace App\Listeners;
+
+use App\Events\OrderCreated;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class SendOrderConfirmation implements ShouldQueue
+{
+    public function __construct(
+        protected NotificationService $notificationService,
+    ) {}
+
+    public function handle(OrderCreated $event): void
+    {
+        try {
+            $this->notificationService->sendOrderConfirmation(
+                $event->order,
+                $event->context
+            );
+        } catch (NotificationFailedException $e) {
+            Log::error("订单确认发送失败: {$e->getMessage()}", [
+                'order_id' => $event->order->id,
+            ]);
+        }
+    }
+
+    public function failed(OrderCreated $event, Throwable $exception): void
+    {
+        Log::error("队列监听器执行失败: {$exception->getMessage()}");
+    }
+}
 ```
 
-### 代码解释
-解释关键设计决策：
-1. 为什么选择异步处理？
-2. 如何保证幂等性？
-3. 异常如何处理？
+## L5: 验收标准
+- [ ] 监听器单一职责
+- [ ] 实现 ShouldQueue 异步执行
+- [ ] 有异常隔离处理
+- [ ] 有 failed() 方法
+- [ ] 有日志记录
+- [ ] 幂等性设计正确
 ```
-
----
-
-**版本**: v2.0 | **更新日期**: 2026-04-27
+```
