@@ -1,0 +1,51 @@
+{
+    "name": "Laravel Filament",
+    "version": "1.0.0",
+    "tasks": [
+        {
+            "label": "Pint: 格式化代码",
+            "type": "shell",
+            "command": "./vendor/bin/pint",
+            "group": {
+                "kind": "format",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "PHPStan: 静态分析",
+            "type": "shell",
+            "command": "./vendor/bin/phpstan analyse --no-progress",
+            "group": "build",
+            "problemMatcher": ["$php"]
+        },
+        {
+            "label": "Pest: 运行测试",
+            "type": "shell",
+            "command": "./vendor/bin/pest",
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "Pest: 带覆盖率测试",
+            "type": "shell",
+            "command": "./vendor/bin/pest --coverage",
+            "group": "test",
+            "problemMatcher": []
+        },
+        {
+            "label": "IDE Helper: 重新生成",
+            "type": "shell",
+            "command": "php artisan ide-helper:generate && php artisan ide-helper:models --write",
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "全量检查",
+            "type": "shell",
+            "command": "./scripts/check-code-quality.sh",
+            "group": "build",
+            "problemMatcher": []
+        }
+    ]
+}

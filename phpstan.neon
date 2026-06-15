@@ -3,9 +3,8 @@ parameters:
     paths:
         - app
         - database
+        - tests
     excludePaths:
-        - tests/*
-    ignoreErrors:
-        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::#'
-    bootstrapFiles:
-        - vendor/larastan/larastan/bootstrap.php
+        - vendor/
+        - storage/
+        - bootstrap/cache/

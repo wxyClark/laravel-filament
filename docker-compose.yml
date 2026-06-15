@@ -43,7 +43,7 @@ services:
       redis:
         condition: service_started
     healthcheck:
-      test: ["CMD", "php-fpm-healthcheck"]
+      test: ["CMD-SHELL", "php -r 'try { fsockopen(\"127.0.0.1\", 9000); exit(0); } catch (Exception $e) { exit(1); }'"]
       interval: 30s
       timeout: 10s
       retries: 3

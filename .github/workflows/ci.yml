@@ -1,0 +1,83 @@
+name: Laravel Filament CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: laravel_filament_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathuri/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, dom, fileinfo, mysql, redis, pdo_mysql
+          coverage: none
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Generate Key
+        run: php artisan key:generate
+
+      - name: Run Migrations
+        run: php artisan migrate --database=mysql
+
+      # 代码格式化检查
+      - name: Pint Code Style
+        run: ./vendor/bin/pint --test
+
+      # 静态分析
+      - name: PHPStan Static Analysis
+        run: ./vendor/bin/phpstan analyse --no-progress
+
+      # 运行测试
+      - name: Run Tests
+        run: ./vendor/bin/pest --parallel
+
+      # Filament 资源规范检查
+      - name: Filament Resource Convention Check
+        run: |
+          echo "Checking Filament resource conventions..."
+          find app/Infrastructure/Filament/Resources -name '*Resource.php' -print0 | while IFS= read -r -d '' file; do
+            # Check form() method exists
+            if ! grep -q "public static function form" "$file"; then
+              echo "::error::Missing form() method in $file"
+              exit 1
+            fi
+            # Check table() method exists
+            if ! grep -q "public static function table" "$file"; then
+              echo "::error::Missing table() method in $file"
+              exit 1
+            fi
+          done
+          echo "Filament conventions passed!"

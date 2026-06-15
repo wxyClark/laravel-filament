@@ -1,13 +1,16 @@
 <?php
 
 use App\Models\Admin;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 test('admin model can be instantiated', function () {
-    $admin = new Admin();
-    
+    $admin = new Admin;
+
     expect($admin)->toBeInstanceOf(Admin::class);
 });
 
@@ -18,7 +21,7 @@ test('admin table has required columns', function () {
         'email' => 'admin@example.com',
         'password' => bcrypt('password'),
     ]);
-    
+
     expect($admin->id)->not->toBeNull();
     expect($admin->name)->toBe('Test Admin');
     expect($admin->email)->toBe('admin@example.com');
@@ -30,14 +33,14 @@ test('admin email must be unique', function () {
         'email' => 'unique-admin@example.com',
         'password' => bcrypt('password'),
     ]);
-    
+
     // 尝试创建相同邮箱的管理员
     Admin::create([
         'name' => 'Admin 2',
         'email' => 'unique-admin@example.com',
         'password' => bcrypt('password'),
     ]);
-})->throws(\Illuminate\Database\QueryException::class);
+})->throws(QueryException::class);
 
 test('admin has remember token column', function () {
     $admin = Admin::create([
@@ -45,7 +48,7 @@ test('admin has remember token column', function () {
         'email' => 'remember-admin@example.com',
         'password' => bcrypt('password'),
     ]);
-    
+
     // 验证 remember_token 字段存在
     expect($admin->remember_token)->toBeNull();
 });
@@ -56,28 +59,28 @@ test('admin password is hashed', function () {
         'email' => 'hash-admin@example.com',
         'password' => 'plain-password',
     ]);
-    
+
     // 验证密码已哈希
     expect($admin->password)->not->toBe('plain-password');
     expect(password_verify('plain-password', $admin->password))->toBeTrue();
 });
 
 test('admin fillable attributes are correct', function () {
-    $admin = new Admin();
-    
+    $admin = new Admin;
+
     expect($admin->getFillable())->toContain('name', 'email', 'password');
 });
 
 test('admin hidden attributes are correct', function () {
-    $admin = new Admin();
-    
+    $admin = new Admin;
+
     expect($admin->getHidden())->toContain('password', 'remember_token');
 });
 
 test('admin implements FilamentUser interface', function () {
-    $admin = new Admin();
-    
-    expect($admin)->toBeInstanceOf(\Filament\Models\Contracts\FilamentUser::class);
+    $admin = new Admin;
+
+    expect($admin)->toBeInstanceOf(FilamentUser::class);
 });
 
 test('admin can access filament panel', function () {
@@ -86,9 +89,9 @@ test('admin can access filament panel', function () {
         'email' => 'panel@example.com',
         'password' => bcrypt('password'),
     ]);
-    
+
     // 创建一个 mock panel
-    $panel = \Mockery::mock(\Filament\Panel::class);
-    
+    $panel = Mockery::mock(Panel::class);
+
     expect($admin->canAccessPanel($panel))->toBeTrue();
 });

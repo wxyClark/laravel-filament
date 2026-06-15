@@ -1,0 +1,3376 @@
+[
+    {
+        "code": "110000",
+        "name": "北京市",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "beijing",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市"
+        ],
+        "sort": 1,
+        "parent_code": null
+    },
+    {
+        "code": "120000",
+        "name": "天津市",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "tianjin",
+        "merge_path": [
+            "中华人民共和国",
+            "天津市"
+        ],
+        "sort": 2,
+        "parent_code": null
+    },
+    {
+        "code": "130000",
+        "name": "河北省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "hebei",
+        "merge_path": [
+            "中华人民共和国",
+            "河北省"
+        ],
+        "sort": 3,
+        "parent_code": null
+    },
+    {
+        "code": "140000",
+        "name": "山西省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "shanxi",
+        "merge_path": [
+            "中华人民共和国",
+            "山西省"
+        ],
+        "sort": 4,
+        "parent_code": null
+    },
+    {
+        "code": "310000",
+        "name": "上海市",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "shanghai",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市"
+        ],
+        "sort": 5,
+        "parent_code": null
+    },
+    {
+        "code": "320000",
+        "name": "江苏省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "jiangsu",
+        "merge_path": [
+            "中华人民共和国",
+            "江苏省"
+        ],
+        "sort": 6,
+        "parent_code": null
+    },
+    {
+        "code": "330000",
+        "name": "浙江省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "zhejiang",
+        "merge_path": [
+            "中华人民共和国",
+            "浙江省"
+        ],
+        "sort": 7,
+        "parent_code": null
+    },
+    {
+        "code": "340000",
+        "name": "安徽省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "anhui",
+        "merge_path": [
+            "中华人民共和国",
+            "安徽省"
+        ],
+        "sort": 8,
+        "parent_code": null
+    },
+    {
+        "code": "350000",
+        "name": "福建省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "fujian",
+        "merge_path": [
+            "中华人民共和国",
+            "福建省"
+        ],
+        "sort": 9,
+        "parent_code": null
+    },
+    {
+        "code": "360000",
+        "name": "江西省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "jiangxi",
+        "merge_path": [
+            "中华人民共和国",
+            "江西省"
+        ],
+        "sort": 10,
+        "parent_code": null
+    },
+    {
+        "code": "370000",
+        "name": "山东省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "shandong",
+        "merge_path": [
+            "中华人民共和国",
+            "山东省"
+        ],
+        "sort": 11,
+        "parent_code": null
+    },
+    {
+        "code": "410000",
+        "name": "河南省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "henan",
+        "merge_path": [
+            "中华人民共和国",
+            "河南省"
+        ],
+        "sort": 12,
+        "parent_code": null
+    },
+    {
+        "code": "420000",
+        "name": "湖北省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "hubei",
+        "merge_path": [
+            "中华人民共和国",
+            "湖北省"
+        ],
+        "sort": 13,
+        "parent_code": null
+    },
+    {
+        "code": "430000",
+        "name": "湖南省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "hunan",
+        "merge_path": [
+            "中华人民共和国",
+            "湖南省"
+        ],
+        "sort": 14,
+        "parent_code": null
+    },
+    {
+        "code": "440000",
+        "name": "广东省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "guangdong",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省"
+        ],
+        "sort": 15,
+        "parent_code": null
+    },
+    {
+        "code": "450000",
+        "name": "广西壮族自治区",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "guangxizhuangzu",
+        "merge_path": [
+            "中华人民共和国",
+            "广西壮族自治区"
+        ],
+        "sort": 16,
+        "parent_code": null
+    },
+    {
+        "code": "460000",
+        "name": "海南省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "hainan",
+        "merge_path": [
+            "中华人民共和国",
+            "海南省"
+        ],
+        "sort": 17,
+        "parent_code": null
+    },
+    {
+        "code": "500000",
+        "name": "重庆市",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "chongqing",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市"
+        ],
+        "sort": 18,
+        "parent_code": null
+    },
+    {
+        "code": "510000",
+        "name": "四川省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "sichuan",
+        "merge_path": [
+            "中华人民共和国",
+            "四川省"
+        ],
+        "sort": 19,
+        "parent_code": null
+    },
+    {
+        "code": "520000",
+        "name": "贵州省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "guizhou",
+        "merge_path": [
+            "中华人民共和国",
+            "贵州省"
+        ],
+        "sort": 20,
+        "parent_code": null
+    },
+    {
+        "code": "530000",
+        "name": "云南省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "yunnan",
+        "merge_path": [
+            "中华人民共和国",
+            "云南省"
+        ],
+        "sort": 21,
+        "parent_code": null
+    },
+    {
+        "code": "540000",
+        "name": "西藏自治区",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "xizang",
+        "merge_path": [
+            "中华人民共和国",
+            "西藏自治区"
+        ],
+        "sort": 22,
+        "parent_code": null
+    },
+    {
+        "code": "610000",
+        "name": "陕西省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "shaanxi",
+        "merge_path": [
+            "中华人民共和国",
+            "陕西省"
+        ],
+        "sort": 23,
+        "parent_code": null
+    },
+    {
+        "code": "620000",
+        "name": "甘肃省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "gansu",
+        "merge_path": [
+            "中华人民共和国",
+            "甘肃省"
+        ],
+        "sort": 24,
+        "parent_code": null
+    },
+    {
+        "code": "630000",
+        "name": "青海省",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "qinghai",
+        "merge_path": [
+            "中华人民共和国",
+            "青海省"
+        ],
+        "sort": 25,
+        "parent_code": null
+    },
+    {
+        "code": "640000",
+        "name": "宁夏回族自治区",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "ningxia",
+        "merge_path": [
+            "中华人民共和国",
+            "宁夏回族自治区"
+        ],
+        "sort": 26,
+        "parent_code": null
+    },
+    {
+        "code": "650000",
+        "name": "新疆维吾尔自治区",
+        "level": "province",
+        "level_num": 2,
+        "parent_id": null,
+        "pinyin": "xinjiang",
+        "merge_path": [
+            "中华人民共和国",
+            "新疆维吾尔自治区"
+        ],
+        "sort": 27,
+        "parent_code": null
+    },
+    {
+        "code": "110100",
+        "name": "北京市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 1,
+        "pinyin": "beijing",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市"
+        ],
+        "sort": 1,
+        "parent_code": 110000
+    },
+    {
+        "code": "120100",
+        "name": "天津市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 17,
+        "pinyin": "tianjin",
+        "merge_path": [
+            "中华人民共和国",
+            "天津市",
+            "天津市"
+        ],
+        "sort": 1,
+        "parent_code": 120000
+    },
+    {
+        "code": "130100",
+        "name": "石家庄市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 28,
+        "pinyin": "shijiazhuang",
+        "merge_path": [
+            "中华人民共和国",
+            "河北省",
+            "石家庄市"
+        ],
+        "sort": 1,
+        "parent_code": 130000
+    },
+    {
+        "code": "140100",
+        "name": "太原市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 39,
+        "pinyin": "taiyuan",
+        "merge_path": [
+            "中华人民共和国",
+            "山西省",
+            "太原市"
+        ],
+        "sort": 1,
+        "parent_code": 140000
+    },
+    {
+        "code": "310100",
+        "name": "上海市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 49,
+        "pinyin": "shanghai",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市"
+        ],
+        "sort": 1,
+        "parent_code": 310000
+    },
+    {
+        "code": "320100",
+        "name": "南京市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 62,
+        "pinyin": "nanjing",
+        "merge_path": [
+            "中华人民共和国",
+            "江苏省",
+            "南京市"
+        ],
+        "sort": 1,
+        "parent_code": 320000
+    },
+    {
+        "code": "330100",
+        "name": "杭州市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 73,
+        "pinyin": "hangzhou",
+        "merge_path": [
+            "中华人民共和国",
+            "浙江省",
+            "杭州市"
+        ],
+        "sort": 1,
+        "parent_code": 330000
+    },
+    {
+        "code": "340100",
+        "name": "合肥市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 83,
+        "pinyin": "hefei",
+        "merge_path": [
+            "中华人民共和国",
+            "安徽省",
+            "合肥市"
+        ],
+        "sort": 1,
+        "parent_code": 340000
+    },
+    {
+        "code": "350100",
+        "name": "福州市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 93,
+        "pinyin": "fuzhou",
+        "merge_path": [
+            "中华人民共和国",
+            "福建省",
+            "福州市"
+        ],
+        "sort": 1,
+        "parent_code": 350000
+    },
+    {
+        "code": "360100",
+        "name": "南昌市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 103,
+        "pinyin": "nanchang",
+        "merge_path": [
+            "中华人民共和国",
+            "江西省",
+            "南昌市"
+        ],
+        "sort": 1,
+        "parent_code": 360000
+    },
+    {
+        "code": "370100",
+        "name": "济南市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 113,
+        "pinyin": "jinan",
+        "merge_path": [
+            "中华人民共和国",
+            "山东省",
+            "济南市"
+        ],
+        "sort": 1,
+        "parent_code": 370000
+    },
+    {
+        "code": "410100",
+        "name": "郑州市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 123,
+        "pinyin": "zhengzhou",
+        "merge_path": [
+            "中华人民共和国",
+            "河南省",
+            "郑州市"
+        ],
+        "sort": 1,
+        "parent_code": 410000
+    },
+    {
+        "code": "420100",
+        "name": "武汉市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 134,
+        "pinyin": "wuhan",
+        "merge_path": [
+            "中华人民共和国",
+            "湖北省",
+            "武汉市"
+        ],
+        "sort": 1,
+        "parent_code": 420000
+    },
+    {
+        "code": "430100",
+        "name": "长沙市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 144,
+        "pinyin": "changsha",
+        "merge_path": [
+            "中华人民共和国",
+            "湖南省",
+            "长沙市"
+        ],
+        "sort": 1,
+        "parent_code": 430000
+    },
+    {
+        "code": "440100",
+        "name": "广州市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 155,
+        "pinyin": "guangzhou",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "广州市"
+        ],
+        "sort": 1,
+        "parent_code": 440000
+    },
+    {
+        "code": "440300",
+        "name": "深圳市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 155,
+        "pinyin": "shenzhen",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "深圳市"
+        ],
+        "sort": 2,
+        "parent_code": 440000
+    },
+    {
+        "code": "450100",
+        "name": "南宁市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 173,
+        "pinyin": "nanning",
+        "merge_path": [
+            "中华人民共和国",
+            "广西壮族自治区",
+            "南宁市"
+        ],
+        "sort": 1,
+        "parent_code": 450000
+    },
+    {
+        "code": "460100",
+        "name": "海口市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 183,
+        "pinyin": "haikou",
+        "merge_path": [
+            "中华人民共和国",
+            "海南省",
+            "海口市"
+        ],
+        "sort": 1,
+        "parent_code": 460000
+    },
+    {
+        "code": "500100",
+        "name": "重庆市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 193,
+        "pinyin": "chongqing",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市"
+        ],
+        "sort": 1,
+        "parent_code": 500000
+    },
+    {
+        "code": "510100",
+        "name": "成都市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 205,
+        "pinyin": "chengdu",
+        "merge_path": [
+            "中华人民共和国",
+            "四川省",
+            "成都市"
+        ],
+        "sort": 1,
+        "parent_code": 510000
+    },
+    {
+        "code": "520100",
+        "name": "贵阳市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 215,
+        "pinyin": "guiyang",
+        "merge_path": [
+            "中华人民共和国",
+            "贵州省",
+            "贵阳市"
+        ],
+        "sort": 1,
+        "parent_code": 520000
+    },
+    {
+        "code": "530100",
+        "name": "昆明市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 225,
+        "pinyin": "kunming",
+        "merge_path": [
+            "中华人民共和国",
+            "云南省",
+            "昆明市"
+        ],
+        "sort": 1,
+        "parent_code": 530000
+    },
+    {
+        "code": "540100",
+        "name": "拉萨市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 235,
+        "pinyin": "lasa",
+        "merge_path": [
+            "中华人民共和国",
+            "西藏自治区",
+            "拉萨市"
+        ],
+        "sort": 1,
+        "parent_code": 540000
+    },
+    {
+        "code": "610100",
+        "name": "西安市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 245,
+        "pinyin": "xian",
+        "merge_path": [
+            "中华人民共和国",
+            "陕西省",
+            "西安市"
+        ],
+        "sort": 1,
+        "parent_code": 610000
+    },
+    {
+        "code": "620100",
+        "name": "兰州市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 255,
+        "pinyin": "lanzhou",
+        "merge_path": [
+            "中华人民共和国",
+            "甘肃省",
+            "兰州市"
+        ],
+        "sort": 1,
+        "parent_code": 620000
+    },
+    {
+        "code": "630100",
+        "name": "西宁市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 265,
+        "pinyin": "xining",
+        "merge_path": [
+            "中华人民共和国",
+            "青海省",
+            "西宁市"
+        ],
+        "sort": 1,
+        "parent_code": 630000
+    },
+    {
+        "code": "640100",
+        "name": "银川市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 275,
+        "pinyin": "yinchuan",
+        "merge_path": [
+            "中华人民共和国",
+            "宁夏回族自治区",
+            "银川市"
+        ],
+        "sort": 1,
+        "parent_code": 640000
+    },
+    {
+        "code": "650100",
+        "name": "乌鲁木齐市",
+        "level": "city",
+        "level_num": 3,
+        "parent_id": 285,
+        "pinyin": "wulumuqi",
+        "merge_path": [
+            "中华人民共和国",
+            "新疆维吾尔自治区",
+            "乌鲁木齐市"
+        ],
+        "sort": 1,
+        "parent_code": 650000
+    },
+    {
+        "code": "110101",
+        "name": "东城区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "dongchengqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "东城区"
+        ],
+        "sort": 1,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110102",
+        "name": "西城区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "xichengqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "西城区"
+        ],
+        "sort": 2,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110105",
+        "name": "朝阳区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "chaoyangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "朝阳区"
+        ],
+        "sort": 3,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110106",
+        "name": "丰台区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "fengtaiqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "丰台区"
+        ],
+        "sort": 4,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110107",
+        "name": "石景山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "shijingshanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "石景山区"
+        ],
+        "sort": 5,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110108",
+        "name": "海淀区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "haidianqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "海淀区"
+        ],
+        "sort": 6,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110109",
+        "name": "门头沟区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "mentougouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "门头沟区"
+        ],
+        "sort": 7,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110111",
+        "name": "房山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "fangshanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "房山区"
+        ],
+        "sort": 8,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110112",
+        "name": "通州区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "tongzhouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "通州区"
+        ],
+        "sort": 9,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110113",
+        "name": "顺义区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "shunyi",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "顺义区"
+        ],
+        "sort": 10,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110114",
+        "name": "昌平区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "changpingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "昌平区"
+        ],
+        "sort": 11,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110115",
+        "name": "大兴区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "daxingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "大兴区"
+        ],
+        "sort": 12,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110116",
+        "name": "怀柔区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "huairouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "怀柔区"
+        ],
+        "sort": 13,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110117",
+        "name": "平谷区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "pingguqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "平谷区"
+        ],
+        "sort": 14,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110118",
+        "name": "密云区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "miyunqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "密云区"
+        ],
+        "sort": 15,
+        "parent_code": "110100"
+    },
+    {
+        "code": "110119",
+        "name": "延庆区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 2,
+        "pinyin": "yanqingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "北京市",
+            "北京市",
+            "延庆区"
+        ],
+        "sort": 16,
+        "parent_code": "110100"
+    },
+    {
+        "code": "120101",
+        "name": "和平区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 18,
+        "pinyin": "hepingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "天津市",
+            "天津市",
+            "和平区"
+        ],
+        "sort": 1,
+        "parent_code": "120100"
+    },
+    {
+        "code": "120102",
+        "name": "河东区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 18,
+        "pinyin": "hedongqu",
+        "merge_path": [
+            "中华人民共和国",
+            "天津市",
+            "天津市",
+            "河东区"
+        ],
+        "sort": 2,
+        "parent_code": "120100"
+    },
+    {
+        "code": "120103",
+        "name": "河西区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 18,
+        "pinyin": "hexiqu",
+        "merge_path": [
+            "中华人民共和国",
+            "天津市",
+            "天津市",
+            "河西区"
+        ],
+        "sort": 3,
+        "parent_code": "120100"
+    },
+    {
+        "code": "120104",
+        "name": "南开区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 18,
+        "pinyin": "nankaiqu",
+        "merge_path": [
+            "中华人民共和国",
+            "天津市",
+            "天津市",
+            "南开区"
+        ],
+        "sort": 4,
+        "parent_code": "120100"
+    },
+    {
+        "code": "120105",
+        "name": "河北区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 18,
+        "pinyin": "hebei",
+        "merge_path": [
+            "中华人民共和国",
+            "天津市",
+            "天津市",
+            "河北区"
+        ],
+        "sort": 5,
+        "parent_code": "120100"
+    },
+    {
+        "code": "130102",
+        "name": "长安区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 29,
+        "pinyin": "chang'anqu",
+        "merge_path": [
+            "中华人民共和国",
+            "河北省",
+            "石家庄市",
+            "长安区"
+        ],
+        "sort": 1,
+        "parent_code": "130100"
+    },
+    {
+        "code": "130103",
+        "name": "桥西区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 29,
+        "pinyin": "qiaoxiqu",
+        "merge_path": [
+            "中华人民共和国",
+            "河北省",
+            "石家庄市",
+            "桥西区"
+        ],
+        "sort": 2,
+        "parent_code": "130100"
+    },
+    {
+        "code": "130104",
+        "name": "新华区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 29,
+        "pinyin": "xinhuaqu",
+        "merge_path": [
+            "中华人民共和国",
+            "河北省",
+            "石家庄市",
+            "新华区"
+        ],
+        "sort": 3,
+        "parent_code": "130100"
+    },
+    {
+        "code": "130105",
+        "name": "井陉矿区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 29,
+        "pinyin": "jingxingkuangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "河北省",
+            "石家庄市",
+            "井陉矿区"
+        ],
+        "sort": 4,
+        "parent_code": "130100"
+    },
+    {
+        "code": "130107",
+        "name": "裕华区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 29,
+        "pinyin": "yuhuaqu",
+        "merge_path": [
+            "中华人民共和国",
+            "河北省",
+            "石家庄市",
+            "裕华区"
+        ],
+        "sort": 5,
+        "parent_code": "130100"
+    },
+    {
+        "code": "140105",
+        "name": "小店区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 40,
+        "pinyin": "xiaodianqu",
+        "merge_path": [
+            "中华人民共和国",
+            "山西省",
+            "太原市",
+            "小店区"
+        ],
+        "sort": 1,
+        "parent_code": "140100"
+    },
+    {
+        "code": "140106",
+        "name": "迎泽区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 40,
+        "pinyin": "yingzequ",
+        "merge_path": [
+            "中华人民共和国",
+            "山西省",
+            "太原市",
+            "迎泽区"
+        ],
+        "sort": 2,
+        "parent_code": "140100"
+    },
+    {
+        "code": "140107",
+        "name": "杏花岭区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 40,
+        "pinyin": "xinghualingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "山西省",
+            "太原市",
+            "杏花岭区"
+        ],
+        "sort": 3,
+        "parent_code": "140100"
+    },
+    {
+        "code": "140108",
+        "name": "尖草坪区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 40,
+        "pinyin": "jiancaopingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "山西省",
+            "太原市",
+            "尖草坪区"
+        ],
+        "sort": 4,
+        "parent_code": "140100"
+    },
+    {
+        "code": "310101",
+        "name": "黄浦区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 50,
+        "pinyin": "huangpuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市",
+            "黄浦区"
+        ],
+        "sort": 1,
+        "parent_code": "310100"
+    },
+    {
+        "code": "310104",
+        "name": "徐汇区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 50,
+        "pinyin": "xuhuiqu",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市",
+            "徐汇区"
+        ],
+        "sort": 2,
+        "parent_code": "310100"
+    },
+    {
+        "code": "310105",
+        "name": "长宁区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 50,
+        "pinyin": "changningqu",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市",
+            "长宁区"
+        ],
+        "sort": 3,
+        "parent_code": "310100"
+    },
+    {
+        "code": "310106",
+        "name": "静安区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 50,
+        "pinyin": "jinganqu",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市",
+            "静安区"
+        ],
+        "sort": 4,
+        "parent_code": "310100"
+    },
+    {
+        "code": "310107",
+        "name": "普陀区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 50,
+        "pinyin": "putuoqu",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市",
+            "普陀区"
+        ],
+        "sort": 5,
+        "parent_code": "310100"
+    },
+    {
+        "code": "310109",
+        "name": "虹口区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 50,
+        "pinyin": "hongkouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市",
+            "虹口区"
+        ],
+        "sort": 6,
+        "parent_code": "310100"
+    },
+    {
+        "code": "310110",
+        "name": "杨浦区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 50,
+        "pinyin": "yangpuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市",
+            "杨浦区"
+        ],
+        "sort": 7,
+        "parent_code": "310100"
+    },
+    {
+        "code": "310112",
+        "name": "闵行区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 50,
+        "pinyin": "minhangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市",
+            "闵行区"
+        ],
+        "sort": 8,
+        "parent_code": "310100"
+    },
+    {
+        "code": "310113",
+        "name": "宝山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 50,
+        "pinyin": "baoshanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市",
+            "宝山区"
+        ],
+        "sort": 9,
+        "parent_code": "310100"
+    },
+    {
+        "code": "310114",
+        "name": "嘉定区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 50,
+        "pinyin": "jiadingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "上海市",
+            "上海市",
+            "嘉定区"
+        ],
+        "sort": 10,
+        "parent_code": "310100"
+    },
+    {
+        "code": "320102",
+        "name": "玄武区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 63,
+        "pinyin": "xuanwuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "江苏省",
+            "南京市",
+            "玄武区"
+        ],
+        "sort": 1,
+        "parent_code": "320100"
+    },
+    {
+        "code": "320104",
+        "name": "秦淮区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 63,
+        "pinyin": "qinhuaiqu",
+        "merge_path": [
+            "中华人民共和国",
+            "江苏省",
+            "南京市",
+            "秦淮区"
+        ],
+        "sort": 2,
+        "parent_code": "320100"
+    },
+    {
+        "code": "320105",
+        "name": "建邺区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 63,
+        "pinyin": "jianyequ",
+        "merge_path": [
+            "中华人民共和国",
+            "江苏省",
+            "南京市",
+            "建邺区"
+        ],
+        "sort": 3,
+        "parent_code": "320100"
+    },
+    {
+        "code": "320106",
+        "name": "鼓楼区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 63,
+        "pinyin": "gulouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "江苏省",
+            "南京市",
+            "鼓楼区"
+        ],
+        "sort": 4,
+        "parent_code": "320100"
+    },
+    {
+        "code": "320111",
+        "name": "浦口区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 63,
+        "pinyin": "pukouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "江苏省",
+            "南京市",
+            "浦口区"
+        ],
+        "sort": 5,
+        "parent_code": "320100"
+    },
+    {
+        "code": "330102",
+        "name": "上城区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 74,
+        "pinyin": "shangchengqu",
+        "merge_path": [
+            "中华人民共和国",
+            "浙江省",
+            "杭州市",
+            "上城区"
+        ],
+        "sort": 1,
+        "parent_code": "330100"
+    },
+    {
+        "code": "330103",
+        "name": "下城区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 74,
+        "pinyin": "xiachengqu",
+        "merge_path": [
+            "中华人民共和国",
+            "浙江省",
+            "杭州市",
+            "下城区"
+        ],
+        "sort": 2,
+        "parent_code": "330100"
+    },
+    {
+        "code": "330104",
+        "name": "江干区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 74,
+        "pinyin": "jiangganqu",
+        "merge_path": [
+            "中华人民共和国",
+            "浙江省",
+            "杭州市",
+            "江干区"
+        ],
+        "sort": 3,
+        "parent_code": "330100"
+    },
+    {
+        "code": "330105",
+        "name": "拱墅区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 74,
+        "pinyin": "gongshuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "浙江省",
+            "杭州市",
+            "拱墅区"
+        ],
+        "sort": 4,
+        "parent_code": "330100"
+    },
+    {
+        "code": "330106",
+        "name": "西湖区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 74,
+        "pinyin": "xihuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "浙江省",
+            "杭州市",
+            "西湖区"
+        ],
+        "sort": 5,
+        "parent_code": "330100"
+    },
+    {
+        "code": "330109",
+        "name": "萧山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 74,
+        "pinyin": "xiaoshanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "浙江省",
+            "杭州市",
+            "萧山区"
+        ],
+        "sort": 6,
+        "parent_code": "330100"
+    },
+    {
+        "code": "330110",
+        "name": "余杭区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 74,
+        "pinyin": "yuhangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "浙江省",
+            "杭州市",
+            "余杭区"
+        ],
+        "sort": 7,
+        "parent_code": "330100"
+    },
+    {
+        "code": "340102",
+        "name": "瑶海区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 84,
+        "pinyin": "yaohaiqu",
+        "merge_path": [
+            "中华人民共和国",
+            "安徽省",
+            "合肥市",
+            "瑶海区"
+        ],
+        "sort": 1,
+        "parent_code": "340100"
+    },
+    {
+        "code": "340103",
+        "name": "庐阳区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 84,
+        "pinyin": "luyangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "安徽省",
+            "合肥市",
+            "庐阳区"
+        ],
+        "sort": 2,
+        "parent_code": "340100"
+    },
+    {
+        "code": "340104",
+        "name": "蜀山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 84,
+        "pinyin": "shushanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "安徽省",
+            "合肥市",
+            "蜀山区"
+        ],
+        "sort": 3,
+        "parent_code": "340100"
+    },
+    {
+        "code": "340111",
+        "name": "包河区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 84,
+        "pinyin": "baohequ",
+        "merge_path": [
+            "中华人民共和国",
+            "安徽省",
+            "合肥市",
+            "包河区"
+        ],
+        "sort": 4,
+        "parent_code": "340100"
+    },
+    {
+        "code": "350102",
+        "name": "鼓楼区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 94,
+        "pinyin": "gulouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "福建省",
+            "福州市",
+            "鼓楼区"
+        ],
+        "sort": 1,
+        "parent_code": "350100"
+    },
+    {
+        "code": "350103",
+        "name": "台江区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 94,
+        "pinyin": "taijiangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "福建省",
+            "福州市",
+            "台江区"
+        ],
+        "sort": 2,
+        "parent_code": "350100"
+    },
+    {
+        "code": "350104",
+        "name": "仓山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 94,
+        "pinyin": "canshanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "福建省",
+            "福州市",
+            "仓山区"
+        ],
+        "sort": 3,
+        "parent_code": "350100"
+    },
+    {
+        "code": "350105",
+        "name": "马尾区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 94,
+        "pinyin": "malaiqu",
+        "merge_path": [
+            "中华人民共和国",
+            "福建省",
+            "福州市",
+            "马尾区"
+        ],
+        "sort": 4,
+        "parent_code": "350100"
+    },
+    {
+        "code": "350111",
+        "name": "闽侯区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 94,
+        "pinyin": "minhouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "福建省",
+            "福州市",
+            "闽侯区"
+        ],
+        "sort": 5,
+        "parent_code": "350100"
+    },
+    {
+        "code": "360102",
+        "name": "东湖区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 104,
+        "pinyin": "donghuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "江西省",
+            "南昌市",
+            "东湖区"
+        ],
+        "sort": 1,
+        "parent_code": "360100"
+    },
+    {
+        "code": "360103",
+        "name": "西湖区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 104,
+        "pinyin": "xihuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "江西省",
+            "南昌市",
+            "西湖区"
+        ],
+        "sort": 2,
+        "parent_code": "360100"
+    },
+    {
+        "code": "360104",
+        "name": "青云谱区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 104,
+        "pinyin": "qingyunpuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "江西省",
+            "南昌市",
+            "青云谱区"
+        ],
+        "sort": 3,
+        "parent_code": "360100"
+    },
+    {
+        "code": "360111",
+        "name": "红谷滩区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 104,
+        "pinyin": "honggutanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "江西省",
+            "南昌市",
+            "红谷滩区"
+        ],
+        "sort": 4,
+        "parent_code": "360100"
+    },
+    {
+        "code": "370102",
+        "name": "历下区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 114,
+        "pinyin": "lixiaqu",
+        "merge_path": [
+            "中华人民共和国",
+            "山东省",
+            "济南市",
+            "历下区"
+        ],
+        "sort": 1,
+        "parent_code": "370100"
+    },
+    {
+        "code": "370103",
+        "name": "市中区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 114,
+        "pinyin": "shizhongqu",
+        "merge_path": [
+            "中华人民共和国",
+            "山东省",
+            "济南市",
+            "市中区"
+        ],
+        "sort": 2,
+        "parent_code": "370100"
+    },
+    {
+        "code": "370104",
+        "name": "槐荫区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 114,
+        "pinyin": "huaiyinqu",
+        "merge_path": [
+            "中华人民共和国",
+            "山东省",
+            "济南市",
+            "槐荫区"
+        ],
+        "sort": 3,
+        "parent_code": "370100"
+    },
+    {
+        "code": "370105",
+        "name": "天桥区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 114,
+        "pinyin": "tianqiaoqu",
+        "merge_path": [
+            "中华人民共和国",
+            "山东省",
+            "济南市",
+            "天桥区"
+        ],
+        "sort": 4,
+        "parent_code": "370100"
+    },
+    {
+        "code": "370112",
+        "name": "历城区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 114,
+        "pinyin": "lichengqu",
+        "merge_path": [
+            "中华人民共和国",
+            "山东省",
+            "济南市",
+            "历城区"
+        ],
+        "sort": 5,
+        "parent_code": "370100"
+    },
+    {
+        "code": "410102",
+        "name": "中原区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 124,
+        "pinyin": "zhongyuanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "河南省",
+            "郑州市",
+            "中原区"
+        ],
+        "sort": 1,
+        "parent_code": "410100"
+    },
+    {
+        "code": "410103",
+        "name": "二七区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 124,
+        "pinyin": "'erqi",
+        "merge_path": [
+            "中华人民共和国",
+            "河南省",
+            "郑州市",
+            "二七区"
+        ],
+        "sort": 2,
+        "parent_code": "410100"
+    },
+    {
+        "code": "410104",
+        "name": "管城回族区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 124,
+        "pinyin": "guanchenghuizuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "河南省",
+            "郑州市",
+            "管城回族区"
+        ],
+        "sort": 3,
+        "parent_code": "410100"
+    },
+    {
+        "code": "410105",
+        "name": "金水区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 124,
+        "pinyin": "jinshuiqu",
+        "merge_path": [
+            "中华人民共和国",
+            "河南省",
+            "郑州市",
+            "金水区"
+        ],
+        "sort": 4,
+        "parent_code": "410100"
+    },
+    {
+        "code": "410106",
+        "name": "上街区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 124,
+        "pinyin": "shangjiequ",
+        "merge_path": [
+            "中华人民共和国",
+            "河南省",
+            "郑州市",
+            "上街区"
+        ],
+        "sort": 5,
+        "parent_code": "410100"
+    },
+    {
+        "code": "420102",
+        "name": "江岸区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 135,
+        "pinyin": "jiang'anqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖北省",
+            "武汉市",
+            "江岸区"
+        ],
+        "sort": 1,
+        "parent_code": "420100"
+    },
+    {
+        "code": "420103",
+        "name": "江汉区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 135,
+        "pinyin": "jianghanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖北省",
+            "武汉市",
+            "江汉区"
+        ],
+        "sort": 2,
+        "parent_code": "420100"
+    },
+    {
+        "code": "420104",
+        "name": "硚口区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 135,
+        "pinyin": "qiaokouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖北省",
+            "武汉市",
+            "硚口区"
+        ],
+        "sort": 3,
+        "parent_code": "420100"
+    },
+    {
+        "code": "420105",
+        "name": "汉阳区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 135,
+        "pinyin": "hanyangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖北省",
+            "武汉市",
+            "汉阳区"
+        ],
+        "sort": 4,
+        "parent_code": "420100"
+    },
+    {
+        "code": "420106",
+        "name": "武昌区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 135,
+        "pinyin": "wuchangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖北省",
+            "武汉市",
+            "武昌区"
+        ],
+        "sort": 5,
+        "parent_code": "420100"
+    },
+    {
+        "code": "420107",
+        "name": "青山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 135,
+        "pinyin": "qingshanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖北省",
+            "武汉市",
+            "青山区"
+        ],
+        "sort": 6,
+        "parent_code": "420100"
+    },
+    {
+        "code": "430102",
+        "name": "芙蓉区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 145,
+        "pinyin": "furongqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖南省",
+            "长沙市",
+            "芙蓉区"
+        ],
+        "sort": 1,
+        "parent_code": "430100"
+    },
+    {
+        "code": "430103",
+        "name": "天心区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 145,
+        "pinyin": "tianxinqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖南省",
+            "长沙市",
+            "天心区"
+        ],
+        "sort": 2,
+        "parent_code": "430100"
+    },
+    {
+        "code": "430104",
+        "name": "岳麓区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 145,
+        "pinyin": "yueluqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖南省",
+            "长沙市",
+            "岳麓区"
+        ],
+        "sort": 3,
+        "parent_code": "430100"
+    },
+    {
+        "code": "430111",
+        "name": "雨花区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 145,
+        "pinyin": "yuhuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖南省",
+            "长沙市",
+            "雨花区"
+        ],
+        "sort": 4,
+        "parent_code": "430100"
+    },
+    {
+        "code": "430112",
+        "name": "望城区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 145,
+        "pinyin": "wangchengqu",
+        "merge_path": [
+            "中华人民共和国",
+            "湖南省",
+            "长沙市",
+            "望城区"
+        ],
+        "sort": 5,
+        "parent_code": "430100"
+    },
+    {
+        "code": "440103",
+        "name": "荔湾区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 156,
+        "pinyin": "liwanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "广州市",
+            "荔湾区"
+        ],
+        "sort": 1,
+        "parent_code": "440100"
+    },
+    {
+        "code": "440104",
+        "name": "越秀区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 156,
+        "pinyin": "yuexiuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "广州市",
+            "越秀区"
+        ],
+        "sort": 2,
+        "parent_code": "440100"
+    },
+    {
+        "code": "440105",
+        "name": "海珠区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 156,
+        "pinyin": "haizhuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "广州市",
+            "海珠区"
+        ],
+        "sort": 3,
+        "parent_code": "440100"
+    },
+    {
+        "code": "440106",
+        "name": "天河区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 156,
+        "pinyin": "tianhequ",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "广州市",
+            "天河区"
+        ],
+        "sort": 4,
+        "parent_code": "440100"
+    },
+    {
+        "code": "440111",
+        "name": "白云区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 156,
+        "pinyin": "baiyunqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "广州市",
+            "白云区"
+        ],
+        "sort": 5,
+        "parent_code": "440100"
+    },
+    {
+        "code": "440112",
+        "name": "黄埔区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 156,
+        "pinyin": "huangpuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "广州市",
+            "黄埔区"
+        ],
+        "sort": 6,
+        "parent_code": "440100"
+    },
+    {
+        "code": "440113",
+        "name": "番禺区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 156,
+        "pinyin": "panyuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "广州市",
+            "番禺区"
+        ],
+        "sort": 7,
+        "parent_code": "440100"
+    },
+    {
+        "code": "440303",
+        "name": "罗湖区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 164,
+        "pinyin": "luohuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "深圳市",
+            "罗湖区"
+        ],
+        "sort": 1,
+        "parent_code": "440300"
+    },
+    {
+        "code": "440304",
+        "name": "福田区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 164,
+        "pinyin": "futianqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "深圳市",
+            "福田区"
+        ],
+        "sort": 2,
+        "parent_code": "440300"
+    },
+    {
+        "code": "440305",
+        "name": "南山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 164,
+        "pinyin": "nanshanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "深圳市",
+            "南山区"
+        ],
+        "sort": 3,
+        "parent_code": "440300"
+    },
+    {
+        "code": "440306",
+        "name": "宝安区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 164,
+        "pinyin": "bao'anqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "深圳市",
+            "宝安区"
+        ],
+        "sort": 4,
+        "parent_code": "440300"
+    },
+    {
+        "code": "440307",
+        "name": "龙岗区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 164,
+        "pinyin": "longgangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "深圳市",
+            "龙岗区"
+        ],
+        "sort": 5,
+        "parent_code": "440300"
+    },
+    {
+        "code": "440308",
+        "name": "盐田区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 164,
+        "pinyin": "yantianqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广东省",
+            "深圳市",
+            "盐田区"
+        ],
+        "sort": 6,
+        "parent_code": "440300"
+    },
+    {
+        "code": "450102",
+        "name": "兴宁区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 174,
+        "pinyin": "xingningqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广西壮族自治区",
+            "南宁市",
+            "兴宁区"
+        ],
+        "sort": 1,
+        "parent_code": "450100"
+    },
+    {
+        "code": "450103",
+        "name": "青秀区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 174,
+        "pinyin": "qingxiuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广西壮族自治区",
+            "南宁市",
+            "青秀区"
+        ],
+        "sort": 2,
+        "parent_code": "450100"
+    },
+    {
+        "code": "450105",
+        "name": "江南区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 174,
+        "pinyin": "jiangnanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广西壮族自治区",
+            "南宁市",
+            "江南区"
+        ],
+        "sort": 3,
+        "parent_code": "450100"
+    },
+    {
+        "code": "450107",
+        "name": "西乡塘区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 174,
+        "pinyin": "xixiangtangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "广西壮族自治区",
+            "南宁市",
+            "西乡塘区"
+        ],
+        "sort": 4,
+        "parent_code": "450100"
+    },
+    {
+        "code": "460105",
+        "name": "秀英区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 184,
+        "pinyin": "xiuyingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "海南省",
+            "海口市",
+            "秀英区"
+        ],
+        "sort": 1,
+        "parent_code": "460100"
+    },
+    {
+        "code": "460106",
+        "name": "龙华区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 184,
+        "pinyin": "longhuaqu",
+        "merge_path": [
+            "中华人民共和国",
+            "海南省",
+            "海口市",
+            "龙华区"
+        ],
+        "sort": 2,
+        "parent_code": "460100"
+    },
+    {
+        "code": "460108",
+        "name": "美兰区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 184,
+        "pinyin": "meilanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "海南省",
+            "海口市",
+            "美兰区"
+        ],
+        "sort": 3,
+        "parent_code": "460100"
+    },
+    {
+        "code": "460109",
+        "name": "琼山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 184,
+        "pinyin": "qiongschanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "海南省",
+            "海口市",
+            "琼山区"
+        ],
+        "sort": 4,
+        "parent_code": "460100"
+    },
+    {
+        "code": "500101",
+        "name": "万州区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 194,
+        "pinyin": "wanzhouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市",
+            "万州区"
+        ],
+        "sort": 1,
+        "parent_code": "500100"
+    },
+    {
+        "code": "500102",
+        "name": "涪陵区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 194,
+        "pinyin": "fulingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市",
+            "涪陵区"
+        ],
+        "sort": 2,
+        "parent_code": "500100"
+    },
+    {
+        "code": "500103",
+        "name": "渝中区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 194,
+        "pinyin": "yuzhongqu",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市",
+            "渝中区"
+        ],
+        "sort": 3,
+        "parent_code": "500100"
+    },
+    {
+        "code": "500104",
+        "name": "大渡口区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 194,
+        "pinyin": "dudangkouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市",
+            "大渡口区"
+        ],
+        "sort": 4,
+        "parent_code": "500100"
+    },
+    {
+        "code": "500105",
+        "name": "江北区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 194,
+        "pinyin": "jiangbei",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市",
+            "江北区"
+        ],
+        "sort": 5,
+        "parent_code": "500100"
+    },
+    {
+        "code": "500106",
+        "name": "沙坪坝区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 194,
+        "pinyin": "shapingbaqu",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市",
+            "沙坪坝区"
+        ],
+        "sort": 6,
+        "parent_code": "500100"
+    },
+    {
+        "code": "500107",
+        "name": "九龙坡区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 194,
+        "pinyin": "jiulongpoqu",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市",
+            "九龙坡区"
+        ],
+        "sort": 7,
+        "parent_code": "500100"
+    },
+    {
+        "code": "500108",
+        "name": "南岸区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 194,
+        "pinyin": "nan'anqu",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市",
+            "南岸区"
+        ],
+        "sort": 8,
+        "parent_code": "500100"
+    },
+    {
+        "code": "500109",
+        "name": "北碚区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 194,
+        "pinyin": "beibei",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市",
+            "北碚区"
+        ],
+        "sort": 9,
+        "parent_code": "500100"
+    },
+    {
+        "code": "500110",
+        "name": "綦江区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 194,
+        "pinyin": "qijiangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "重庆市",
+            "重庆市",
+            "綦江区"
+        ],
+        "sort": 10,
+        "parent_code": "500100"
+    },
+    {
+        "code": "510104",
+        "name": "锦江区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 206,
+        "pinyin": "jinjiangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "四川省",
+            "成都市",
+            "锦江区"
+        ],
+        "sort": 1,
+        "parent_code": "510100"
+    },
+    {
+        "code": "510105",
+        "name": "青羊区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 206,
+        "pinyin": "qingyangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "四川省",
+            "成都市",
+            "青羊区"
+        ],
+        "sort": 2,
+        "parent_code": "510100"
+    },
+    {
+        "code": "510106",
+        "name": "金牛区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 206,
+        "pinyin": "jinniuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "四川省",
+            "成都市",
+            "金牛区"
+        ],
+        "sort": 3,
+        "parent_code": "510100"
+    },
+    {
+        "code": "510107",
+        "name": "武侯区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 206,
+        "pinyin": "wuhouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "四川省",
+            "成都市",
+            "武侯区"
+        ],
+        "sort": 4,
+        "parent_code": "510100"
+    },
+    {
+        "code": "510108",
+        "name": "成华区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 206,
+        "pinyin": "chenghuaqu",
+        "merge_path": [
+            "中华人民共和国",
+            "四川省",
+            "成都市",
+            "成华区"
+        ],
+        "sort": 5,
+        "parent_code": "510100"
+    },
+    {
+        "code": "510112",
+        "name": "龙泉驿区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 206,
+        "pinyin": "longquanyi",
+        "merge_path": [
+            "中华人民共和国",
+            "四川省",
+            "成都市",
+            "龙泉驿区"
+        ],
+        "sort": 6,
+        "parent_code": "510100"
+    },
+    {
+        "code": "510114",
+        "name": "双流区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 206,
+        "pinyin": "shuangliuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "四川省",
+            "成都市",
+            "双流区"
+        ],
+        "sort": 7,
+        "parent_code": "510100"
+    },
+    {
+        "code": "510115",
+        "name": "郫都区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 206,
+        "pinyin": "pidouqu",
+        "merge_path": [
+            "中华人民共和国",
+            "四川省",
+            "成都市",
+            "郫都区"
+        ],
+        "sort": 8,
+        "parent_code": "510100"
+    },
+    {
+        "code": "520102",
+        "name": "南明区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 216,
+        "pinyin": "nanmingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "贵州省",
+            "贵阳市",
+            "南明区"
+        ],
+        "sort": 1,
+        "parent_code": "520100"
+    },
+    {
+        "code": "520103",
+        "name": "云岩区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 216,
+        "pinyin": "yunyanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "贵州省",
+            "贵阳市",
+            "云岩区"
+        ],
+        "sort": 2,
+        "parent_code": "520100"
+    },
+    {
+        "code": "520111",
+        "name": "花溪区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 216,
+        "pinyin": "huaxi",
+        "merge_path": [
+            "中华人民共和国",
+            "贵州省",
+            "贵阳市",
+            "花溪区"
+        ],
+        "sort": 3,
+        "parent_code": "520100"
+    },
+    {
+        "code": "520115",
+        "name": "乌当区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 216,
+        "pinyin": "wudangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "贵州省",
+            "贵阳市",
+            "乌当区"
+        ],
+        "sort": 4,
+        "parent_code": "520100"
+    },
+    {
+        "code": "530102",
+        "name": "五华区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 226,
+        "pinyin": "wuhuaqu",
+        "merge_path": [
+            "中华人民共和国",
+            "云南省",
+            "昆明市",
+            "五华区"
+        ],
+        "sort": 1,
+        "parent_code": "530100"
+    },
+    {
+        "code": "530103",
+        "name": "盘龙区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 226,
+        "pinyin": "panlongqu",
+        "merge_path": [
+            "中华人民共和国",
+            "云南省",
+            "昆明市",
+            "盘龙区"
+        ],
+        "sort": 2,
+        "parent_code": "530100"
+    },
+    {
+        "code": "530111",
+        "name": "官渡区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 226,
+        "pinyin": "guanduqu",
+        "merge_path": [
+            "中华人民共和国",
+            "云南省",
+            "昆明市",
+            "官渡区"
+        ],
+        "sort": 3,
+        "parent_code": "530100"
+    },
+    {
+        "code": "530112",
+        "name": "西山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 226,
+        "pinyin": "xishanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "云南省",
+            "昆明市",
+            "西山区"
+        ],
+        "sort": 4,
+        "parent_code": "530100"
+    },
+    {
+        "code": "530113",
+        "name": "东川区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 226,
+        "pinyin": "dongchuanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "云南省",
+            "昆明市",
+            "东川区"
+        ],
+        "sort": 5,
+        "parent_code": "530100"
+    },
+    {
+        "code": "530114",
+        "name": "呈贡区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 226,
+        "pinyin": "chenggongqu",
+        "merge_path": [
+            "中华人民共和国",
+            "云南省",
+            "昆明市",
+            "呈贡区"
+        ],
+        "sort": 6,
+        "parent_code": "530100"
+    },
+    {
+        "code": "540102",
+        "name": "城关区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 236,
+        "pinyin": "chengguanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "西藏自治区",
+            "拉萨市",
+            "城关区"
+        ],
+        "sort": 1,
+        "parent_code": "540100"
+    },
+    {
+        "code": "540103",
+        "name": "堆龙德庆区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 236,
+        "pinyin": "duilongdeqingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "西藏自治区",
+            "拉萨市",
+            "堆龙德庆区"
+        ],
+        "sort": 2,
+        "parent_code": "540100"
+    },
+    {
+        "code": "540108",
+        "name": "达孜区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 236,
+        "pinyin": "dazi",
+        "merge_path": [
+            "中华人民共和国",
+            "西藏自治区",
+            "拉萨市",
+            "达孜区"
+        ],
+        "sort": 3,
+        "parent_code": "540100"
+    },
+    {
+        "code": "610102",
+        "name": "新城区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 246,
+        "pinyin": "xinchengqu",
+        "merge_path": [
+            "中华人民共和国",
+            "陕西省",
+            "西安市",
+            "新城区"
+        ],
+        "sort": 1,
+        "parent_code": "610100"
+    },
+    {
+        "code": "610103",
+        "name": "碑林区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 246,
+        "pinyin": "beilin",
+        "merge_path": [
+            "中华人民共和国",
+            "陕西省",
+            "西安市",
+            "碑林区"
+        ],
+        "sort": 2,
+        "parent_code": "610100"
+    },
+    {
+        "code": "610104",
+        "name": "莲湖区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 246,
+        "pinyin": "lianhuqu",
+        "merge_path": [
+            "中华人民共和国",
+            "陕西省",
+            "西安市",
+            "莲湖区"
+        ],
+        "sort": 3,
+        "parent_code": "610100"
+    },
+    {
+        "code": "610111",
+        "name": "灞桥区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 246,
+        "pinyin": "baqiaoqu",
+        "merge_path": [
+            "中华人民共和国",
+            "陕西省",
+            "西安市",
+            "灞桥区"
+        ],
+        "sort": 4,
+        "parent_code": "610100"
+    },
+    {
+        "code": "610112",
+        "name": "未央区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 246,
+        "pinyin": "weiqiangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "陕西省",
+            "西安市",
+            "未央区"
+        ],
+        "sort": 5,
+        "parent_code": "610100"
+    },
+    {
+        "code": "610113",
+        "name": "雁塔区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 246,
+        "pinyin": "yantaqu",
+        "merge_path": [
+            "中华人民共和国",
+            "陕西省",
+            "西安市",
+            "雁塔区"
+        ],
+        "sort": 6,
+        "parent_code": "610100"
+    },
+    {
+        "code": "610114",
+        "name": "阎良区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 246,
+        "pinyin": "yanliangqu",
+        "merge_path": [
+            "中华人民共和国",
+            "陕西省",
+            "西安市",
+            "阎良区"
+        ],
+        "sort": 7,
+        "parent_code": "610100"
+    },
+    {
+        "code": "620102",
+        "name": "城关区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 256,
+        "pinyin": "chengguanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "甘肃省",
+            "兰州市",
+            "城关区"
+        ],
+        "sort": 1,
+        "parent_code": "620100"
+    },
+    {
+        "code": "620103",
+        "name": "七里河区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 256,
+        "pinyin": "qilihequ",
+        "merge_path": [
+            "中华人民共和国",
+            "甘肃省",
+            "兰州市",
+            "七里河区"
+        ],
+        "sort": 2,
+        "parent_code": "620100"
+    },
+    {
+        "code": "620104",
+        "name": "西固区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 256,
+        "pinyin": "xiguqu",
+        "merge_path": [
+            "中华人民共和国",
+            "甘肃省",
+            "兰州市",
+            "西固区"
+        ],
+        "sort": 3,
+        "parent_code": "620100"
+    },
+    {
+        "code": "620111",
+        "name": "红古区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 256,
+        "pinyin": "hongguqu",
+        "merge_path": [
+            "中华人民共和国",
+            "甘肃省",
+            "兰州市",
+            "红古区"
+        ],
+        "sort": 4,
+        "parent_code": "620100"
+    },
+    {
+        "code": "630102",
+        "name": "城东区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 266,
+        "pinyin": "chengdongqu",
+        "merge_path": [
+            "中华人民共和国",
+            "青海省",
+            "西宁市",
+            "城东区"
+        ],
+        "sort": 1,
+        "parent_code": "630100"
+    },
+    {
+        "code": "630103",
+        "name": "城中区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 266,
+        "pinyin": "chengzhongqu",
+        "merge_path": [
+            "中华人民共和国",
+            "青海省",
+            "西宁市",
+            "城中区"
+        ],
+        "sort": 2,
+        "parent_code": "630100"
+    },
+    {
+        "code": "630104",
+        "name": "城西区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 266,
+        "pinyin": "chengxi",
+        "merge_path": [
+            "中华人民共和国",
+            "青海省",
+            "西宁市",
+            "城西区"
+        ],
+        "sort": 3,
+        "parent_code": "630100"
+    },
+    {
+        "code": "630105",
+        "name": "大通县",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 266,
+        "pinyin": "datongxian",
+        "merge_path": [
+            "中华人民共和国",
+            "青海省",
+            "西宁市",
+            "大通县"
+        ],
+        "sort": 4,
+        "parent_code": "630100"
+    },
+    {
+        "code": "640104",
+        "name": "兴庆区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 276,
+        "pinyin": "xingqingqu",
+        "merge_path": [
+            "中华人民共和国",
+            "宁夏回族自治区",
+            "银川市",
+            "兴庆区"
+        ],
+        "sort": 1,
+        "parent_code": "640100"
+    },
+    {
+        "code": "640105",
+        "name": "西夏区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 276,
+        "pinyin": "xixiaqu",
+        "merge_path": [
+            "中华人民共和国",
+            "宁夏回族自治区",
+            "银川市",
+            "西夏区"
+        ],
+        "sort": 2,
+        "parent_code": "640100"
+    },
+    {
+        "code": "640106",
+        "name": "金凤区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 276,
+        "pinyin": "jinfengqu",
+        "merge_path": [
+            "中华人民共和国",
+            "宁夏回族自治区",
+            "银川市",
+            "金凤区"
+        ],
+        "sort": 3,
+        "parent_code": "640100"
+    },
+    {
+        "code": "650102",
+        "name": "天山区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 286,
+        "pinyin": "tianshanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "新疆维吾尔自治区",
+            "乌鲁木齐市",
+            "天山区"
+        ],
+        "sort": 1,
+        "parent_code": "650100"
+    },
+    {
+        "code": "650103",
+        "name": "沙依巴克区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 286,
+        "pinyin": "shayibakequ",
+        "merge_path": [
+            "中华人民共和国",
+            "新疆维吾尔自治区",
+            "乌鲁木齐市",
+            "沙依巴克区"
+        ],
+        "sort": 2,
+        "parent_code": "650100"
+    },
+    {
+        "code": "650104",
+        "name": "新区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 286,
+        "pinyin": "xidiqu",
+        "merge_path": [
+            "中华人民共和国",
+            "新疆维吾尔自治区",
+            "乌鲁木齐市",
+            "西市区"
+        ],
+        "sort": 3,
+        "parent_code": "650100"
+    },
+    {
+        "code": "650105",
+        "name": "头屯河区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 286,
+        "pinyin": "toutunhequ",
+        "merge_path": [
+            "中华人民共和国",
+            "新疆维吾尔自治区",
+            "乌鲁木齐市",
+            "头屯河区"
+        ],
+        "sort": 4,
+        "parent_code": "650100"
+    },
+    {
+        "code": "650106",
+        "name": "达坂城区",
+        "level": "district",
+        "level_num": 4,
+        "parent_id": 286,
+        "pinyin": "dabanqu",
+        "merge_path": [
+            "中华人民共和国",
+            "新疆维吾尔自治区",
+            "乌鲁木齐市",
+            "达坂城区"
+        ],
+        "sort": 5,
+        "parent_code": "650100"
+    }
+]

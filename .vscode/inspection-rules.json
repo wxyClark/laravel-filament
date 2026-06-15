@@ -1,0 +1,63 @@
+{
+    "recommendations": [
+        {
+            "id": "filament-resource-naming",
+            "severity": "warning",
+            "message": "Filament Resource 文件应命名为 [Entity]Resource.php",
+            "pattern": ".*Resource\\.php$",
+            "scope": "app/Infrastructure/Filament/Resources/**/*"
+        },
+        {
+            "id": "filament-no-business-logic",
+            "severity": "error",
+            "message": "Filament Resource 中禁止包含业务逻辑（DB::transaction, Mail::, Queue:: 等），应移至 Service 层",
+            "pattern": "(DB::transaction|Mail::|Queue::|Event::dispatch).*",
+            "scope": "app/Infrastructure/Filament/Resources/**/*Resource.php"
+        },
+        {
+            "id": "filament-page-naming",
+            "severity": "warning",
+            "message": "Filament Page 应命名为 List/Create/Edit/View[Entity]",
+            "pattern": "^(List|Create|Edit|View)",
+            "scope": "app/Infrastructure/Filament/Resources/**/Pages/*"
+        },
+        {
+            "id": "dto-readonly",
+            "severity": "error",
+            "message": "DTO 类必须使用 readonly 属性",
+            "pattern": "readonly class.*Data",
+            "scope": "app/**/Data/*"
+        },
+        {
+            "id": "enum-color-method",
+            "severity": "warning",
+            "message": "Filament 枚举应实现 color() 方法",
+            "pattern": "function color\\(\\): string",
+            "scope": "app/**/Enums/*"
+        },
+        {
+            "id": "decimal-for-money",
+            "severity": "error",
+            "message": "金额字段必须使用 DECIMAL 类型，禁止使用 FLOAT/DOUBLE",
+            "pattern": "decimal\\(",
+            "scope": "database/migrations/**/*"
+        },
+        {
+            "id": "soft-deletes-for-core",
+            "severity": "warning",
+            "message": "核心业务表应使用 SoftDeletes",
+            "pattern": "SoftDeletes",
+            "scope": "database/migrations/**/*"
+        }
+    ],
+    "codeActions": {
+        "auto-fix-pint": {
+            "command": "./vendor/bin/pint",
+            "message": "运行 Pint 自动修复代码风格问题"
+        },
+        "generate-filament-resource": {
+            "command": "php artisan make:filament-resource",
+            "message": "使用 Artisan 命令生成 Filament 资源"
+        }
+    }
+}

@@ -22,6 +22,7 @@ class AuthenticatedSessionController extends Controller
 
         if (Auth::guard('customer')->attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
+
             return redirect()->intended('/');
         }
 
@@ -35,6 +36,7 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('customer')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect('/');
     }
 }
