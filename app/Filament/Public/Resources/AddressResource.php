@@ -4,10 +4,12 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\AddressResource\Pages;
 use App\Models\Address;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Tables\Table;
 use Filament\Tables;
+use Filament\Tables\Table;
 
 class AddressResource extends Resource
 {
@@ -29,21 +31,21 @@ class AddressResource extends Resource
     {
         return $form
             ->schema([
-                \Filament\Forms\Components\Select::make('parent_id')
+                Select::make('parent_id')
                     ->label('上级地址')
                     ->options(Address::whereNull('parent_id')->pluck('name', 'id'))
                     ->reactive(),
-                \Filament\Forms\Components\TextInput::make('name')
+                TextInput::make('name')
                     ->label('地址名称')
                     ->required()
                     ->maxLength(255),
-                \Filament\Forms\Components\TextInput::make('code')
+                TextInput::make('code')
                     ->label('行政区划代码')
                     ->required()
                     ->maxLength(6)
                     ->pattern('/^\d{6}$/')
                     ->unique(Address::class, 'code', ignoreRecord: true),
-                \Filament\Forms\Components\Select::make('level')
+                Select::make('level')
                     ->label('层级')
                     ->required()
                     ->options([
@@ -52,14 +54,14 @@ class AddressResource extends Resource
                         'district' => '县级',
                     ])
                     ->default('province'),
-                \Filament\Forms\Components\TextInput::make('level_num')
+                TextInput::make('level_num')
                     ->label('层级编号')
                     ->numeric()
                     ->default(2),
-                \Filament\Forms\Components\TextInput::make('pinyin')
+                TextInput::make('pinyin')
                     ->label('拼音')
                     ->maxLength(255),
-                \Filament\Forms\Components\TextInput::make('sort')
+                TextInput::make('sort')
                     ->label('排序')
                     ->numeric()
                     ->default(0),

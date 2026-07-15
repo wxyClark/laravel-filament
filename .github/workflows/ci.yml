@@ -13,7 +13,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:8.4
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: laravel_filament_test
@@ -36,7 +36,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathuri/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: '8.5'
           extensions: mbstring, dom, fileinfo, mysql, redis, pdo_mysql
           coverage: none
 

@@ -1,13 +1,10 @@
 <?php
 
-use App\Models\Admin;
-use App\Models\Customer;
-use App\Providers\Filament\AdminPanelProvider;
-use Filament\Facades\Filament;
-use Filament\Panel;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+declare(strict_types=1);
 
-uses(RefreshDatabase::class);
+use App\Models\Admin;
+use App\Providers\Filament\AdminPanelProvider;
+use Filament\Panel;
 
 test('admin panel provider exists', function () {
     $provider = new AdminPanelProvider(app());
@@ -16,20 +13,9 @@ test('admin panel provider exists', function () {
 });
 
 test('admin can access filament panel', function () {
-    $admin = Admin::create([
-        'name' => 'Test Admin',
-        'email' => 'admin@test.com',
-        'password' => bcrypt('password'),
-    ]);
+    $admin = Admin::factory()->create();
 
     expect($admin->canAccessPanel(Panel::make()))->toBeTrue();
-});
-
-test('admin panel uses admin guard', function () {
-    $panel = Filament::getPanel('admin');
-
-    expect($panel)->not->toBeNull();
-    expect($panel->getAuthGuard())->toBe('admin');
 });
 
 test('admin login page is accessible', function () {
@@ -45,28 +31,9 @@ test('unauthenticated user cannot access admin dashboard', function () {
 });
 
 test('authenticated admin can access admin dashboard', function () {
-    $admin = Admin::create([
-        'name' => 'Test Admin',
-        'email' => 'admin@test.com',
-        'password' => bcrypt('password'),
-    ]);
+    $admin = Admin::factory()->create();
 
     $response = $this->actingAs($admin, 'admin')->get('/admin');
 
     $response->assertStatus(200);
-});
-
-test('customer cannot access admin panel with admin guard', function () {
-    $customer = Customer::create([
-        'name' => 'Test Customer',
-        'email' => 'customer@test.com',
-        'phone' => '1234567890',
-        'password' => bcrypt('password'),
-    ]);
-
-    // Customer should not be able to authenticate with admin guard
-    $response = $this->actingAs($customer, 'admin')->get('/admin');
-
-    // Should return 403 (forbidden) or redirect to login because customer is not an admin
-    $response->assertStatus(403);
 });

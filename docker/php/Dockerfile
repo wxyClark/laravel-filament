@@ -1,9 +1,9 @@
 # ============================================
 # PHP Dockerfile for Laravel + Filament
-# PHP 8.2 with FPM
+# PHP 8.5 with FPM
 # ============================================
 
-FROM docker.m.daocloud.io/library/php:8.2-fpm
+FROM php:8.5-fpm
 
 # 防止交互式提示
 ENV DEBIAN_FRONTEND=noninteractive
@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 安装 Composer
-COPY --from=docker.m.daocloud.io/library/composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # 设置工作目录
 WORKDIR /var/www/html

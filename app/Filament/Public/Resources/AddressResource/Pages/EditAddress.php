@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\AddressResource\Pages;
 
-use App\Filament\Resources\AddressResource;
 use Filament\Actions;
 use Filament\Forms\Form;
 use Filament\Resources\Pages\EditRecord;
@@ -25,6 +24,7 @@ class EditAddress extends EditRecord
     {
         return $this->mutateFormDataBeforeFillForm(function (array $data): array {
             $data['level'] = $data['level'] ?? 'province';
+
             return $data;
         });
     }
@@ -33,17 +33,19 @@ class EditAddress extends EditRecord
     {
         $record = $this->record;
         $data['level'] = $record->level ?? 'province';
+
         return $data;
     }
 
     public function mutateFormDataBeforeSave(array $data): array
     {
-        $data['level_num'] = match($data['level']) {
+        $data['level_num'] = match ($data['level']) {
             'province' => 2,
             'city' => 3,
             'district' => 4,
             default => 2,
         };
+
         return $data;
     }
 }

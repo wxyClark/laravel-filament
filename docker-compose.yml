@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   # ============================================
-  # Laravel Application (PHP 8.2-FPM)
+  # Laravel Application (PHP 8.5-FPM)
   # ============================================
   app:
     build:
@@ -53,7 +51,7 @@ services:
   # Nginx Web Server
   # ============================================
   nginx:
-    image: docker.m.daocloud.io/library/nginx:alpine
+    image: nginx:alpine
     container_name: filament-nginx
     restart: unless-stopped
     ports:
@@ -67,7 +65,7 @@ services:
       app:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost/"]
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -76,7 +74,7 @@ services:
   # MySQL 8.0 Database
   # ============================================
   mysql:
-    image: docker.m.daocloud.io/library/mysql:8.0
+    image: mysql:8.4
     container_name: filament-mysql
     restart: unless-stopped
     ports:
@@ -102,7 +100,7 @@ services:
   # Redis Cache
   # ============================================
   redis:
-    image: docker.m.daocloud.io/library/redis:alpine
+    image: redis:alpine
     container_name: filament-redis
     restart: unless-stopped
     ports:
@@ -123,7 +121,7 @@ services:
   # Composer (for running composer commands)
   # ============================================
   composer:
-    image: docker.m.daocloud.io/library/composer:latest
+    image: composer:latest
     container_name: filament-composer
     volumes:
       - .:/app

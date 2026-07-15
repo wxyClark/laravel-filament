@@ -21,12 +21,12 @@ test('auth config has admin guard', function () {
     expect($guards['admin']['provider'])->toBe('admins');
 });
 
-test('auth config has sanctum guard', function () {
+test('auth config has admin-api guard', function () {
     $guards = Config::get('auth.guards');
 
-    expect($guards)->toHaveKey('sanctum');
-    expect($guards['sanctum']['driver'])->toBe('sanctum');
-    expect($guards['sanctum']['provider'])->toBe('customers');
+    expect($guards)->toHaveKey('admin-api');
+    expect($guards['admin-api']['driver'])->toBe('jwt');
+    expect($guards['admin-api']['provider'])->toBe('admins');
 });
 
 test('auth config has customers provider', function () {

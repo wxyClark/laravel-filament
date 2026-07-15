@@ -1,93 +1,277 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Overtrue\Pinyin\Pinyin;
 
 class AddressSeeder extends Seeder
 {
+    private array $codeToId = [];
+
+    private Pinyin $pinyin;
+
     public function run(): void
     {
-        // 示例数据：中国行政区划
-        $data = [
-            // 国家
-            [
-                'id' => 1,
-                'parent_id' => null,
-                'name' => '中华人民共和国',
-                'code' => 'CHN',
-                'level' => 'country',
-                'level_num' => 1,
-                'pinyin' => 'zhonghuarenmingongheguo',
-                'merge_path' => json_encode(['中华人民共和国']),
-                'sort' => 0,
-            ],
-            // 省级
-            [
-                'id' => 2,
-                'parent_id' => 1,
-                'name' => '北京市',
-                'code' => '110000',
-                'level' => 'province',
-                'level_num' => 2,
-                'pinyin' => 'beijing',
-                'merge_path' => json_encode(['中华人民共和国', '北京市']),
-                'sort' => 0,
-            ],
-            [
-                'id' => 3,
-                'parent_id' => 1,
-                'name' => '上海市',
-                'code' => '310000',
-                'level' => 'province',
-                'level_num' => 2,
-                'pinyin' => 'shanghai',
-                'merge_path' => json_encode(['中华人民共和国', '上海市']),
-                'sort' => 0,
-            ],
-            // 市级
-            [
-                'id' => 4,
-                'parent_id' => 2,
-                'name' => '北京市',
-                'code' => '110100',
-                'level' => 'city',
-                'level_num' => 3,
-                'pinyin' => 'beijing',
-                'merge_path' => json_encode(['中华人民共和国', '北京市', '北京市']),
-                'sort' => 0,
-            ],
-            // 区级
-            [
-                'id' => 5,
-                'parent_id' => 4,
-                'name' => '东城区',
-                'code' => '110101',
-                'level' => 'district',
-                'level_num' => 4,
-                'pinyin' => 'dongchengqu',
-                'merge_path' => json_encode(['中华人民共和国', '北京市', '北京市', '东城区']),
-                'sort' => 0,
-            ],
-            [
-                'id' => 6,
-                'parent_id' => 4,
-                'name' => '西城区',
-                'code' => '110102',
-                'level' => 'district',
-                'level_num' => 4,
-                'pinyin' => 'xichengqu',
-                'merge_path' => json_encode(['中华人民共和国', '北京市', '北京市', '西城区']),
-                'sort' => 0,
+        $this->pinyin = app(Pinyin::class);
+
+        DB::table('addresses')->truncate();
+
+        $json = file_get_contents(database_path('seeders/pcas-code.json'));
+        $data = json_decode($json, true);
+
+        $this->addHongKongMacauTaiwan($data);
+
+        $flat = $this->flatten($data);
+
+        DB::transaction(function () use ($flat) {
+            $this->insertLevel($flat, 2);
+            $this->insertLevel($flat, 3);
+            $this->insertLevel($flat, 4);
+            $this->insertLevel($flat, 5);
+        });
+    }
+
+    private function addHongKongMacauTaiwan(array &$data): void
+    {
+        $data[] = [
+            'code' => '81',
+            'name' => '香港特别行政区',
+            'children' => [
+                ['code' => '8100', 'name' => '香港岛', 'children' => [
+                    ['code' => '810001', 'name' => '中西区'],
+                    ['code' => '810002', 'name' => '湾仔区'],
+                    ['code' => '810003', 'name' => '东区'],
+                    ['code' => '810004', 'name' => '南区'],
+                ]],
+                ['code' => '8101', 'name' => '九龙', 'children' => [
+                    ['code' => '810101', 'name' => '油尖旺区'],
+                    ['code' => '810102', 'name' => '深水埗区'],
+                    ['code' => '810103', 'name' => '九龙城区'],
+                    ['code' => '810104', 'name' => '黄大仙区'],
+                    ['code' => '810105', 'name' => '观塘区'],
+                ]],
+                ['code' => '8102', 'name' => '新界', 'children' => [
+                    ['code' => '810201', 'name' => '葵青区'],
+                    ['code' => '810202', 'name' => '荃湾区'],
+                    ['code' => '810203', 'name' => '屯门区'],
+                    ['code' => '810204', 'name' => '元朗区'],
+                    ['code' => '810205', 'name' => '北区'],
+                    ['code' => '810206', 'name' => '大埔区'],
+                    ['code' => '810207', 'name' => '沙田区'],
+                    ['code' => '810208', 'name' => '西贡区'],
+                    ['code' => '810209', 'name' => '离岛区'],
+                ]],
             ],
         ];
 
-        foreach ($data as $item) {
-            DB::table('addresses')->updateOrInsert(
-                ['code' => $item['code']],
-                $item
-            );
+        $data[] = [
+            'code' => '82',
+            'name' => '澳门特别行政区',
+            'children' => [
+                ['code' => '8200', 'name' => '澳门半岛', 'children' => [
+                    ['code' => '820001', 'name' => '花地玛堂区'],
+                    ['code' => '820002', 'name' => '花王堂区'],
+                    ['code' => '820003', 'name' => '望德堂区'],
+                    ['code' => '820004', 'name' => '大堂区'],
+                    ['code' => '820005', 'name' => '风顺堂区'],
+                ]],
+                ['code' => '8201', 'name' => '氹仔', 'children' => [
+                    ['code' => '820101', 'name' => '嘉模堂区'],
+                ]],
+                ['code' => '8202', 'name' => '路环', 'children' => [
+                    ['code' => '820201', 'name' => '圣方济各堂区'],
+                ]],
+            ],
+        ];
+
+        $data[] = [
+            'code' => '71',
+            'name' => '台湾省',
+            'children' => [
+                ['code' => '7101', 'name' => '台北市', 'children' => [
+                    ['code' => '710101', 'name' => '中正区'],
+                    ['code' => '710102', 'name' => '大同区'],
+                    ['code' => '710103', 'name' => '中山区'],
+                    ['code' => '710104', 'name' => '松山区'],
+                    ['code' => '710105', 'name' => '大安区'],
+                    ['code' => '710106', 'name' => '万华区'],
+                    ['code' => '710107', 'name' => '信义区'],
+                    ['code' => '710108', 'name' => '士林区'],
+                    ['code' => '710109', 'name' => '北投区'],
+                    ['code' => '710110', 'name' => '内湖区'],
+                    ['code' => '710111', 'name' => '南港区'],
+                    ['code' => '710112', 'name' => '文山区'],
+                ]],
+                ['code' => '7102', 'name' => '新北市', 'children' => [
+                    ['code' => '710201', 'name' => '板桥区'],
+                    ['code' => '710202', 'name' => '三重区'],
+                    ['code' => '710203', 'name' => '中和区'],
+                    ['code' => '710204', 'name' => '永和区'],
+                    ['code' => '710205', 'name' => '新庄区'],
+                    ['code' => '710206', 'name' => '新店区'],
+                    ['code' => '710207', 'name' => '土城区'],
+                    ['code' => '710208', 'name' => '芦洲区'],
+                    ['code' => '710209', 'name' => '汐止区'],
+                ]],
+                ['code' => '7103', 'name' => '桃园市', 'children' => [
+                    ['code' => '710301', 'name' => '桃园区'],
+                    ['code' => '710302', 'name' => '中�的区'],
+                    ['code' => '710303', 'name' => '平镇区'],
+                    ['code' => '710304', 'name' => '八德区'],
+                    ['code' => '710305', 'name' => '杨梅区'],
+                    ['code' => '710306', 'name' => '芦竹区'],
+                ]],
+                ['code' => '7104', 'name' => '台中市', 'children' => [
+                    ['code' => '710401', 'name' => '中区'],
+                    ['code' => '710402', 'name' => '东区'],
+                    ['code' => '710403', 'name' => '南区'],
+                    ['code' => '710404', 'name' => '西区'],
+                    ['code' => '710405', 'name' => '北区'],
+                    ['code' => '710406', 'name' => '西屯区'],
+                    ['code' => '710407', 'name' => '南屯区'],
+                    ['code' => '710408', 'name' => '北屯区'],
+                ]],
+                ['code' => '7105', 'name' => '台南市', 'children' => [
+                    ['code' => '710501', 'name' => '中西区'],
+                    ['code' => '710502', 'name' => '东区'],
+                    ['code' => '710503', 'name' => '南区'],
+                    ['code' => '710504', 'name' => '北区'],
+                    ['code' => '710505', 'name' => '安平区'],
+                    ['code' => '710506', 'name' => '安南区'],
+                ]],
+                ['code' => '7106', 'name' => '高雄市', 'children' => [
+                    ['code' => '710601', 'name' => '楠梓区'],
+                    ['code' => '710602', 'name' => '左营区'],
+                    ['code' => '710603', 'name' => '鼓山区'],
+                    ['code' => '710604', 'name' => '三民区'],
+                    ['code' => '710605', 'name' => '盐埕区'],
+                    ['code' => '710606', 'name' => '前金区'],
+                    ['code' => '710607', 'name' => '新兴区'],
+                    ['code' => '710608', 'name' => '苓雅区'],
+                    ['code' => '710609', 'name' => '前镇区'],
+                    ['code' => '710610', 'name' => '小港区'],
+                ]],
+                ['code' => '7107', 'name' => '基隆市', 'children' => [
+                    ['code' => '710701', 'name' => '仁爱区'],
+                    ['code' => '710702', 'name' => '信义区'],
+                    ['code' => '710703', 'name' => '中正区'],
+                    ['code' => '710704', 'name' => '中山区'],
+                    ['code' => '710705', 'name' => '安乐区'],
+                    ['code' => '710706', 'name' => '暖暖区'],
+                    ['code' => '710707', 'name' => '七堵区'],
+                ]],
+                ['code' => '7108', 'name' => '新竹市', 'children' => [
+                    ['code' => '710801', 'name' => '东区'],
+                    ['code' => '710802', 'name' => '北区'],
+                    ['code' => '710803', 'name' => '香山区'],
+                ]],
+                ['code' => '7109', 'name' => '嘉义市', 'children' => [
+                    ['code' => '710901', 'name' => '东区'],
+                    ['code' => '710902', 'name' => '西区'],
+                ]],
+            ],
+        ];
+    }
+
+    private function flatten(array $items, ?string $parentCode = null, array $path = []): array
+    {
+        $result = [];
+
+        foreach ($items as $item) {
+            $code = $item['code'];
+            $name = $item['name'];
+            $codeLen = strlen($code);
+
+            $level = match (true) {
+                $codeLen <= 2 => 2,
+                $codeLen <= 4 => 3,
+                $codeLen <= 6 => 4,
+                default => 5,
+            };
+
+            $currentPath = array_merge($path, [$name]);
+
+            $result[] = [
+                'code' => $code,
+                'name' => $name,
+                'level' => match ($level) {
+                    2 => 'province',
+                    3 => 'city',
+                    4 => 'district',
+                    default => 'township',
+                },
+                'level_num' => $level,
+                'parent_code' => $parentCode,
+                'merge_path' => $currentPath,
+            ];
+
+            if (isset($item['children'])) {
+                $result = array_merge($result, $this->flatten($item['children'], $code, $currentPath));
+            }
         }
+
+        return $result;
+    }
+
+    private function insertLevel(array $flat, int $targetLevelNum): void
+    {
+        $items = array_filter($flat, fn ($item) => $item['level_num'] === $targetLevelNum);
+
+        $batch = [];
+
+        foreach ($items as $item) {
+            $parentId = null;
+            if ($item['parent_code'] !== null && isset($this->codeToId[$item['parent_code']])) {
+                $parentId = $this->codeToId[$item['parent_code']];
+            }
+
+            $pinyin = $targetLevelNum <= 4
+                ? $this->pinyin->permalink($item['name'], '')
+                : '';
+
+            $batch[] = [
+                'parent_id' => $parentId,
+                'name' => $item['name'],
+                'code' => $item['code'],
+                'level' => $item['level'],
+                'level_num' => $item['level_num'],
+                'pinyin' => $pinyin,
+                'merge_path' => json_encode($item['merge_path'], JSON_UNESCAPED_UNICODE),
+                'sort' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+
+            if (count($batch) >= 2000) {
+                $this->insertBatch($batch);
+            }
+        }
+
+        if ($batch !== []) {
+            $this->insertBatch($batch);
+        }
+    }
+
+    private function insertBatch(array &$batch): void
+    {
+        DB::table('addresses')->insert($batch);
+
+        $codes = array_column($batch, 'code');
+        $rows = DB::table('addresses')
+            ->whereIn('code', $codes)
+            ->pluck('id', 'code')
+            ->toArray();
+
+        foreach ($codes as $code) {
+            if (isset($rows[$code])) {
+                $this->codeToId[$code] = $rows[$code];
+            }
+        }
+
+        $batch = [];
     }
 }

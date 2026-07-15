@@ -1,0 +1,35 @@
+{
+  "$schema": "https://opencode.ai/schema.json",
+  "name": "laravel-filament",
+  "instructions": [
+    "AGENTS.md",
+    ".ai/skills/laravel-best-practices/SKILL.md",
+    ".ai/skills/laravel-architecture/SKILL.md",
+    ".ai/skills/filament-development/SKILL.md",
+    ".ai/skills/pest-testing/SKILL.blade.php",
+    ".ai/skills/pint-code-style/SKILL.md",
+    ".ai/skills/tdd-workflow/SKILL.md",
+    ".ai/skills/code-standards/SKILL.md",
+    ".ai/skills/code-review/SKILL.md",
+    ".ai/skills/database-design/SKILL.md"
+  ],
+  "skills": [
+    "tdd-workflow",
+    "code-standards",
+    "code-review",
+    "database-design",
+    "laravel-architecture",
+    "laravel-best-practices",
+    "filament-development",
+    "pest-testing",
+    "testing-best-practices",
+    "pint-code-style",
+    "restful-api-routing",
+    "queue-jobs-best-practices",
+    "redis-best-practices",
+    "mysql-best-practices"
+  ],
+  "providers": {},
+  "mcpServers": {},
+  "theme": "dark"
+}

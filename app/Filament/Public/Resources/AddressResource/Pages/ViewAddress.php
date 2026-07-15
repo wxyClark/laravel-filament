@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\AddressResource\Pages;
 
-use App\Filament\Resources\AddressResource;
 use Filament\Actions;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -28,7 +27,7 @@ class ViewAddress extends ViewRecord
                         TextEntry::make('code')->label('行政区划代码'),
                         TextEntry::make('level')->label('层级')
                             ->badge()
-                            ->formatStateUsing(fn(string $state): string => match($state) {
+                            ->formatStateUsing(fn (string $state): string => match ($state) {
                                 'province' => '省级',
                                 'city' => '地级',
                                 'district' => '县级',
