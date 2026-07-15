@@ -309,6 +309,19 @@ class Order extends Model
 php artisan make:migration alter_orders_add_column_xxx
 ```
 
+### 数据备份与恢复
+
+```bash
+# 创建快照（推荐用于大量静态数据）
+docker compose exec mysql mysqldump -u root -psecret laravel addresses > database/addresses_snapshot.sql
+
+# 从快照恢复
+php artisan app:reset --snapshot  # 秒级完成
+
+# 完整重置（含 seed，耗时 2-3 分钟）
+php artisan app:reset
+```
+
 ### 数据迁移
 
 ```php

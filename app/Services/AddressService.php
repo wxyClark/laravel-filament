@@ -27,8 +27,7 @@ class AddressService
     {
         return Cache::remember("addresses.parent.{$parentId}", $this->cacheTtl, function () use ($parentId) {
             return Address::where('parent_id', $parentId)
-                ->orderBy('sort')
-                ->orderBy('name')
+                ->orderBy('id')
                 ->get();
         });
     }

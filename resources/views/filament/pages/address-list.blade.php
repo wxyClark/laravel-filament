@@ -1,73 +1,78 @@
 <x-filament-panels::page>
     <div class="space-y-4">
         {{-- 级联筛选区 --}}
-        <div class="flex flex-wrap items-end gap-3 p-4 bg-white rounded-lg shadow dark:bg-gray-900">
-            {{-- 省份 --}}
-            <div class="flex flex-col gap-1">
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">省份</label>
-                <select
-                    wire:model.live="selectedProvinceId"
-                    class="w-80 rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                >
-                    <option value="">全部</option>
-                    @foreach($provinces as $province)
-                        <option value="{{ $province['id'] }}">{{ $province['name'] }}</option>
-                    @endforeach
-                </select>
-            </div>
+        <div class="p-4 bg-white rounded-lg shadow dark:bg-gray-900">
+            <div class="flex gap-4">
+                {{-- 省份 22.2% --}}
+                <div class="flex flex-col gap-1" style="width: 22.22%">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">省份</label>
+                    <select
+                        wire:model.live="selectedProvinceId"
+                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                    >
+                        <option value="">全部</option>
+                        @foreach($provinces as $province)
+                            <option value="{{ $province['id'] }}">{{ $province['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            {{-- 城市 --}}
-            <div class="flex flex-col gap-1">
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">城市</label>
-                <select
-                    wire:model.live="selectedCityId"
-                    @disabled($cities->isEmpty())
-                    class="w-80 rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50"
-                >
-                    <option value="">全部</option>
-                    @foreach($cities as $city)
-                        <option value="{{ $city['id'] }}">{{ $city['name'] }}</option>
-                    @endforeach
-                </select>
-            </div>
+                {{-- 城市 22.2% --}}
+                <div class="flex flex-col gap-1" style="width: 22.22%">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">城市</label>
+                    <select
+                        wire:model.live="selectedCityId"
+                        @disabled($cities->isEmpty())
+                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                    >
+                        <option value="">全部</option>
+                        @foreach($cities as $city)
+                            <option value="{{ $city['id'] }}">{{ $city['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            {{-- 区县 --}}
-            <div class="flex flex-col gap-1">
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">区县</label>
-                <select
-                    wire:model.live="selectedDistrictId"
-                    @disabled($districts->isEmpty())
-                    class="w-80 rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50"
-                >
-                    <option value="">全部</option>
-                    @foreach($districts as $district)
-                        <option value="{{ $district['id'] }}">{{ $district['name'] }}</option>
-                    @endforeach
-                </select>
-            </div>
+                {{-- 区县 22.2% --}}
+                <div class="flex flex-col gap-1" style="width: 22.22%">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">区县</label>
+                    <select
+                        wire:model.live="selectedDistrictId"
+                        @disabled($districts->isEmpty())
+                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                    >
+                        <option value="">全部</option>
+                        @foreach($districts as $district)
+                            <option value="{{ $district['id'] }}">{{ $district['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            {{-- 街道 --}}
-            <div class="flex flex-col gap-1">
-                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">街道</label>
-                <select
-                    wire:model.live="selectedTownshipId"
-                    @disabled($townships->isEmpty())
-                    class="w-80 rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50"
-                >
-                    <option value="">全部</option>
-                    @foreach($townships as $township)
-                        <option value="{{ $township['id'] }}">{{ $township['name'] }}</option>
-                    @endforeach
-                </select>
-            </div>
+                {{-- 街道 22.2% --}}
+                <div class="flex flex-col gap-1" style="width: 22.22%">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">街道</label>
+                    <select
+                        wire:model.live="selectedTownshipId"
+                        @disabled($townships->isEmpty())
+                        class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50"
+                    >
+                        <option value="">全部</option>
+                        @foreach($townships as $township)
+                            <option value="{{ $township['id'] }}">{{ $township['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
 
-            {{-- 重置按钮 --}}
-            <button
-                wire:click="resetFilters"
-                class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
-            >
-                重置
-            </button>
+                {{-- 重置按钮 11.1% --}}
+                <div class="flex flex-col gap-1" style="width: 11.12%">
+                    <label class="text-sm font-medium text-transparent">操作</label>
+                    <button
+                        wire:click="resetFilters"
+                        class="w-full px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                    >
+                        重置
+                    </button>
+                </div>
+            </div>
         </div>
 
         {{-- 结果统计 + 每页条数 --}}

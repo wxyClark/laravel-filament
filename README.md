@@ -78,6 +78,8 @@ docker compose exec app php artisan telescope:prune --hours=24
 - Docker & Docker Compose V2
 - Node.js 18+ (用于 MCP 服务)
 - Git
+- PHP 8.5+ (本地运行时需要，Docker 内已包含所有扩展)
+  - 扩展: xml, mbstring, sqlite3, curl, zip, mysql, redis
 
 ### 启动项目
 
@@ -172,13 +174,16 @@ MCP 服务配置位于项目根目录的 `.mcp.json` 文件。
 
 ## 📦 技术栈
 
-- **后端框架**: Laravel 12.x (PHP 8.2+)
+- **后端框架**: Laravel 12.x (PHP 8.5+)
 - **后台管理**: Filament 3.x (Livewire 3)
 - **数据库**: MySQL 8.4 (共享基础设施)
 - **缓存/会话**: Redis 7.0 (共享基础设施)
 - **消息队列**: RabbitMQ 3.12 (共享基础设施)
 - **Web 服务器**: Nginx Alpine
 - **容器化**: Docker & Docker Compose
+- **测试框架**: Pest PHP (SQLite :memory:)
+- **代码规范**: Laravel Pint (PSR-12)
+- **静态分析**: PHPStan Level 5 + Larastan
 
 ---
 
@@ -242,17 +247,38 @@ docker compose exec app bash            # 进入应用容器
 ```bash
 docker compose exec app php artisan migrate          # 执行迁移
 docker compose exec app php artisan db:seed          # 填充数据
+docker compose exec app php artisan app:reset        # 安全重置（migrate:fresh + seed）
+docker compose exec app php artisan app:reset --snapshot  # 从快照恢复（秒级完成）
 docker compose exec app php artisan route:list       # 查看路由
 docker compose exec app php artisan queue:work       # 启动队列 worker
 docker compose exec app php artisan make:filament-user # 创建 Filament 管理员
 ```
 
+> ⚠️ **禁止直接运行 `migrate:fresh`**：会清空所有数据。请使用 `php artisan app:reset`。
+> 使用 `--snapshot` 选项可从快照恢复地址数据（秒级完成，跳过慢速 seeder）。
+
+### 数据快照管理
+
+```bash
+# 创建/更新地址数据快照
+docker compose exec mysql mysqldump -u root -psecret laravel addresses > database/addresses_snapshot.sql
+
+# 从快照恢复（推荐）
+php artisan app:reset --snapshot
+```
+
 ### 代码质量
 ```bash
+# Docker 内运行
 docker compose exec app ./vendor/bin/pint            # 代码格式化
 docker compose exec app ./vendor/bin/phpstan analyse # 静态分析
 docker compose exec app ./vendor/bin/pest            # 运行测试
 docker compose exec app ./vendor/bin/pest --coverage # 测试覆盖率
+
+# 宿主机本地运行（需先安装 PHP 扩展）
+./vendor/bin/pint                                    # 代码格式化
+./vendor/bin/phpstan analyse                         # 静态分析
+./vendor/bin/pest --compact                          # 运行测试
 ```
 
 ### IDE Helper
@@ -261,6 +287,114 @@ docker compose exec app php artisan ide-helper:generate # 生成 Facade 提示
 docker compose exec app php artisan ide-helper:meta     # 生成 PhpStorm meta
 docker compose exec app php artisan ide-helper:models   # 生成模型属性提示
 ```
+
+---
+
+## 💻 本地开发环境
+
+项目支持两种运行方式：Docker 容器内运行（推荐）和宿主机本地运行。
+
+### 方式一：Docker 内运行（推荐）
+
+```bash
+# 所有命令加 docker compose exec app 前缀
+docker compose exec app ./vendor/bin/pest
+docker compose exec app ./vendor/bin/pint
+docker compose exec app ./vendor/bin/phpstan analyse
+```
+
+### 方式二：宿主机本地运行
+
+#### 1. 安装 PHP 扩展
+
+```bash
+sudo apt-get install -y php8.5-xml php8.5-mbstring php8.5-sqlite3 php8.5-curl php8.5-zip php8.5-mysql php8.5-redis
+```
+
+| 扩展 | 用途 |
+|------|------|
+| `php8.5-xml` | DOMDocument（Pest 依赖） |
+| `php8.5-mbstring` | 多字节字符串处理（Termwind 依赖） |
+| `php8.5-sqlite3` | 测试数据库驱动（PHPUnit 使用 SQLite :memory:） |
+| `php8.5-curl` | HTTP 请求 |
+| `php8.5-zip` | Composer 依赖管理 |
+| `php8.5-mysql` | MySQL 数据库连接 |
+| `php8.5-redis` | Redis 缓存连接 |
+
+#### 2. 修复目录权限
+
+Docker 容器以 root 创建的文件，宿主机用户需要修改所有权：
+
+```bash
+sudo chown -R $(id -u):$(id -g) storage bootstrap/cache vendor/pestphp/pest/.temp
+```
+
+#### 3. 本地运行测试
+
+```bash
+# 运行全部测试
+./vendor/bin/pest --compact
+
+# 运行指定测试文件
+./vendor/bin/pest tests/Feature/Filament/Address/AddressCascadeTest.php
+
+# 按名称筛选
+./vendor/bin/pest --filter="cascade"
+
+# 代码格式化
+./vendor/bin/pint
+
+# 静态分析
+./vendor/bin/phpstan analyse
+```
+
+---
+
+## 🧪 测试
+
+### 测试结构
+
+```
+tests/
+├── Pest.php                          # 全局配置（RefreshDatabase）
+├── Feature/
+│   ├── Api/Auth/                     # JWT 认证测试
+│   ├── Auth/                         # Session 认证 + 模型测试
+│   ├── Filament/
+│   │   ├── Address/                  # 地址列表页 + 级联筛选测试
+│   │   └── Auth/                     # Filament 面板认证测试
+│   └── AddressApiTest.php            # 地址 API 测试
+└── Unit/
+    ├── Models/AddressTest.php        # 地址模型行为测试
+    └── Services/AddressServiceTest.php # 地址服务逻辑测试
+```
+
+### 运行测试
+
+```bash
+# Docker 内运行
+docker compose exec app ./vendor/bin/pest --compact
+
+# 宿主机本地运行
+./vendor/bin/pest --compact
+
+# 运行指定目录
+./vendor/bin/pest tests/Feature/Filament/Address/
+
+# 按名称筛选
+./vendor/bin/pest --filter="cascade"
+
+# 查看详细输出
+./vendor/bin/pest --compact=false
+```
+
+### 测试约定
+
+- 使用 `test()` 函数（非 `it()`）
+- 每个 Service 方法至少 1 个单元测试
+- 每个 API 端点至少 1 个集成测试
+- 使用工厂创建测试数据：`Admin::factory()->create()`
+- 全局 RefreshDatabase 自动清理数据
 
 ---
 

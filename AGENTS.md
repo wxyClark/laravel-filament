@@ -51,6 +51,20 @@ app/
 - **DDD layer boundaries**: Domain → no framework deps; Infrastructure → implements Domain interfaces; Http → calls Service only.
 - **金额字段**: 必须使用 `decimal(10, 2)`，严禁 FLOAT/DOUBLE。
 - **软删除**: 核心业务表必须开启 SoftDeletes。
+- **Seeder 内存**: AddressSeeder 需要 512M 内存 + 禁用 Telescope (`TELESCOPE_ENABLED=false`)。
+- **本地运行测试**: 需安装 `php8.5-xml php8.5-mbstring php8.5-sqlite3`。
+- **目录权限**: Docker 创建的文件需要 `sudo chown -R $(id -u):$(id -g) storage bootstrap/cache vendor/pestphp/pest/.temp`。
+- **禁止直接运行 `migrate:fresh`**：会清空所有数据。必须使用 `php artisan app:reset`（自动 seed）。
+  - `--snapshot` 选项：从快照恢复地址数据（秒级完成，跳过慢速 seeder）
+
+## 铁律（不可违反）
+
+### 数据安全规则
+
+1. **禁止擅自删除数据**：任何涉及删除数据库数据的操作（migrate:fresh、truncate、drop、forceDelete）必须先向用户确认
+2. **禁止擅自清空缓存/会话**：Redis 清空、Session 清除等操作必须确认
+3. **确认格式**：`即将执行 [操作]，将删除 [具体数据]，是否继续？`
+4. **例外情况**：测试环境（SQLite :memory:）的 RefreshDatabase 不需要确认
 
 ## Testing
 
@@ -108,6 +122,22 @@ docker compose exec app php artisan make:filament-user  # Create admin user afte
 App: `http://localhost:8082` | Admin: `http://localhost:8082/admin`
 
 ## Skills & Workflow
+
+### 标准工作流（强制执行）
+
+收到用户提示词后，按以下流程执行：
+
+```
+用户输入 → 理解 → 增强 → 确认 → 执行 → 验证
+```
+
+1. **理解**：解析意图，识别涉及模块
+2. **增强**：读取 PRD/rules/skills，形成结构化提示词
+3. **确认**：呈现增强后的提示词，有模糊处提出疑问
+4. **执行**：用户确认后，按约束条件编写代码
+5. **验证**：Pint + PHPStan + Pest + 文档更新
+
+详细流程见：[PROMPT_WORKFLOW.md](PROMPT_WORKFLOW.md)
 
 ### TDD Workflow (7 steps)
 

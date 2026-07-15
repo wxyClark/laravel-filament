@@ -3,6 +3,8 @@
   "name": "laravel-filament",
   "instructions": [
     "AGENTS.md",
+    "REFLECTION.md",
+    "PROMPT_WORKFLOW.md",
     ".ai/skills/laravel-best-practices/SKILL.md",
     ".ai/skills/laravel-architecture/SKILL.md",
     ".ai/skills/filament-development/SKILL.md",

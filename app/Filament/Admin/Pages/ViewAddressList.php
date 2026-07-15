@@ -98,6 +98,18 @@ class ViewAddressList extends Page
         $this->page = 1;
     }
 
+    public function nextPage(): void
+    {
+        $this->page++;
+    }
+
+    public function previousPage(): void
+    {
+        if ($this->page > 1) {
+            $this->page--;
+        }
+    }
+
     public function getFilteredAddresses(): Paginator
     {
         $query = Address::query()->with('parent');
@@ -114,9 +126,7 @@ class ViewAddressList extends Page
 
         $this->totalResults = (clone $query)->count();
 
-        return $query->orderBy('level_num')
-            ->orderBy('sort')
-            ->orderBy('name')
+        return $query->orderBy('id')
             ->simplePaginate($this->perPage, ['*'], 'page', $this->page);
     }
 }
