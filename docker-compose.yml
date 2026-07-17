@@ -1,14 +1,26 @@
+# ============================================
+# Quick Start Docker Compose
+# Usage: docker compose -f docker-compose.yml up -d
+# ============================================
+
+# 开发环境快速启动
+# docker compose -f docker-compose.yml up -d
+
+# 测试环境
+# docker compose -f docker-compose.yml -f docker-compose.test.yml up -d
+
+# 预发布环境
+# docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d
+
+# 线上环境
+# docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
 services:
-  # ============================================
-  # Laravel Application (PHP 8.5-FPM)
-  # ============================================
   app:
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
-      args:
-        UID: '${UID:-1000}'
-        GID: '${GID:-1000}'
+      target: production
     container_name: filament-app
     restart: unless-stopped
     extra_hosts:
@@ -18,10 +30,10 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 512M
     environment:
-      - PHP_FPM_USER=www-data
-      - PHP_FPM_GROUP=www-data
+      - APP_ENV=local
+      - APP_DEBUG=true
       - DB_CONNECTION=mysql
       - DB_HOST=mysql
       - DB_PORT=3306
@@ -34,9 +46,6 @@ services:
       - CACHE_DRIVER=redis
       - QUEUE_CONNECTION=redis
       - SESSION_DRIVER=redis
-      - MAIL_MAILER=smtp
-      - MAIL_HOST=mailpit
-      - MAIL_PORT=1025
     networks:
       - laravel-net
     depends_on:
@@ -45,17 +54,14 @@ services:
       redis:
         condition: service_started
     healthcheck:
-      test: ["CMD-SHELL", "php -r 'try { fsockopen(\"127.0.0.1\", 9000); exit(0); } catch (Exception $e) { exit(1); }'"]
+      test: ["CMD", "pgrep", "php-fpm"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
 
-  # ============================================
-  # Nginx Web Server
-  # ============================================
   nginx:
-    image: nginx:alpine
+    image: nginx:1.25-alpine
     container_name: filament-nginx
     restart: unless-stopped
     ports:
@@ -74,11 +80,8 @@ services:
       timeout: 10s
       retries: 3
 
-  # ============================================
-  # MySQL 8.0 Database
-  # ============================================
   mysql:
-    image: mysql:8.4
+    image: mysql:8.0
     container_name: filament-mysql
     restart: unless-stopped
     ports:
@@ -100,11 +103,8 @@ services:
       retries: 5
       start_period: 60s
 
-  # ============================================
-  # Redis Cache
-  # ============================================
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     container_name: filament-redis
     restart: unless-stopped
     ports:
@@ -121,11 +121,8 @@ services:
       timeout: 10s
       retries: 3
 
-  # ============================================
-  # Composer (for running composer commands)
-  # ============================================
   composer:
-    image: composer:latest
+    image: composer:2
     container_name: filament-composer
     volumes:
       - .:/app
@@ -137,16 +134,11 @@ services:
     profiles:
       - tools
 
-  # ============================================
-  # Artisan CLI
-  # ============================================
   artisan:
     build:
       context: .
       dockerfile: ./docker/php/Dockerfile
-      args:
-        UID: '${UID:-1000}'
-        GID: '${GID:-1000}'
+      target: production
     container_name: filament-artisan
     volumes:
       - .:/var/www/html
@@ -169,16 +161,10 @@ services:
     profiles:
       - tools
 
-# ============================================
-# Networks
-# ============================================
 networks:
   laravel-net:
     driver: bridge
 
-# ============================================
-# Volumes
-# ============================================
 volumes:
   mysql_data:
     driver: local
