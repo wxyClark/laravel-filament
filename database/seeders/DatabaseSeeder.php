@@ -28,5 +28,10 @@ class DatabaseSeeder extends Seeder
                 AddressSeeder::class,
             ]);
         }
+
+        // 接口测试数据（幂等，可重复执行）
+        $this->call([
+            ApiTestingSeeder::class,
+        ]);
     }
 }
