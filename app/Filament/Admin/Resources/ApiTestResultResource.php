@@ -74,7 +74,6 @@ class ApiTestResultResource extends Resource
                     ->label('执行时间')
                     ->dateTime('Y-m-d H:i:s')
                     ->sortable()
-                    ->defaultSort('desc'),
             ])
             ->defaultSort('executed_at', 'desc')
             ->modifyQueryUsing(function ($query) {
