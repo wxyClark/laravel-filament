@@ -128,18 +128,18 @@ App: `http://localhost:8082` | Admin: `http://localhost:8082/admin`
 收到用户提示词后，按以下流程执行：
 
 ```
-用户输入 → 理解 → 增强 → 确认 → 执行 → 验证
+用户输入 → 理解(多轮对话) → 增强 → 确认 → 执行 → 验证
 ```
 
-1. **理解**：解析意图，识别涉及模块
+1. **理解（多轮对话挖掘）**：通过追问深度挖掘需求，确保逻辑闭环、全局一致
 2. **增强**：读取 PRD/rules/skills，形成结构化提示词
 3. **确认**：呈现增强后的提示词，有模糊处提出疑问
 4. **执行**：用户确认后，按约束条件编写代码
-5. **验证**：Pint + PHPStan + Pest + 文档更新
+5. **验证**：Pint + PHPStan + Pest + 架构测试 + 文档更新
 
 详细流程见：[PROMPT_WORKFLOW.md](PROMPT_WORKFLOW.md)
 
-### TDD Workflow (7 steps)
+### TDD Workflow (8 steps)
 
 1. **需求分析** → Read PRD docs in `doc/PRD/{module}/`
 2. **架构设计** → Plan files per DDD layer
@@ -147,13 +147,19 @@ App: `http://localhost:8082` | Admin: `http://localhost:8082/admin`
 4. **先写测试** → Red phase (Pest tests)
 5. **实现代码** → Green phase (minimal code to pass)
 6. **重构优化** → Refactor phase (Pint + PHPStan)
-7. **联调验证** → End-to-end verification
+7. **架构测试** → Architecture phase (DDD boundaries + naming)
+8. **联调验证** → End-to-end verification
 
 ### Skills Directory
 
 | Skill | Purpose |
 |-------|---------|
-| `tdd-workflow` | Complete AI-assisted TDD flow |
+| `requirement-analysis` | Multi-turn dialogue for requirement discovery + logic validation |
+| `tdd-workflow` | Complete AI-assisted TDD flow (8 steps) |
+| `architecture-testing` | DDD layer boundaries + naming conventions |
+| `techstack-installer` | Intelligent tech stack installation |
+| `reflection-improvement` | AI agent self-reflection and improvement |
+| `git-workflow` | Git workflow and commit conventions |
 | `code-standards` | Pint + PHPStan checking |
 | `code-review` | Code review with static analysis |
 | `database-design` | Migration & schema conventions |
@@ -167,6 +173,27 @@ App: `http://localhost:8082` | Admin: `http://localhost:8082/admin`
 | `queue-jobs-best-practices` | Job/queue patterns |
 | `redis-best-practices` | Caching strategies |
 
+### Document Structure
+
+```
+doc/
+├── requirements/          # 需求分析文档 (REQ-{模块}-{序号})
+├── design/               # 设计文档 (DES-{模块}-{序号})
+├── development/          # 开发文档 (DEV-{模块}-{序号})
+├── testing/              # 测试文档 (TES-{模块}-{序号})
+├── deployment/           # 部署文档 (DEP-{模块}-{序号})
+├── retrospective/        # 回顾文档 (RET-{模块}-{序号})
+├── PRD/                  # 产品需求文档
+├── BestPractice/         # 最佳实践
+└── Core/                 # 核心文档
+```
+
+### Document Lifecycle
+
+```
+草稿 → 评审中 → 已确认 → 已废弃
+```
+
 ## References
 
 - CI pipeline: `.github/workflows/ci.yml`
@@ -177,3 +204,45 @@ App: `http://localhost:8082` | Admin: `http://localhost:8082/admin`
 - Testing strategy: `doc/design/02-testing-strategy.md`
 - Skills directory: `.ai/skills/`
 - OpenCode config: `opencode.json`
+
+## 铁律（不可违反）
+
+### 编码质量规则
+
+1. **代码变更后必须验证**：每次修改代码后，立即执行：
+   - 语法检查: `docker compose exec app php -l {file}`
+   - 代码风格: `docker compose exec app ./vendor/bin/pint`
+   - 静态分析: `docker compose exec app ./vendor/bin/phpstan analyse`
+   - 测试运行: `docker compose exec app ./vendor/bin/pest --compact`
+
+2. **报错处理流程**：如果检查/测试失败：
+   - 先向用户说明**失败原因**
+   - 提供**改进方案**
+   - 等待用户确认后再修复
+   - 修复后重新执行检查直至通过
+
+3. **禁止未经检查提交**：任何代码变更在未经以下检查前不得提交：
+   - `./vendor/bin/pint --test` 通过
+   - `./vendor/bin/phpstan analyse` 通过
+   - `./vendor/bin/pest --compact` 通过
+
+4. **格式规范强制**：
+   - 所有 PHP 文件必须包含 `declare(strict_types=1);`
+   - 使用 4 空格缩进
+   - 使用短数组语法 `[]`
+   - import 语句按字母排序
+   - 类成员顺序: trait → constant → property → constructor → method
+
+### 自我进化规则
+
+1. **Bug 反思**：每次修复 Bug 后，分析根因并写入检查清单
+2. **模式识别**：识别重复出现的错误模式，建立预防机制
+3. **规则沉淀**：将修复经验转化为可执行的检查项
+
+### 已知陷阱检查清单
+
+- [ ] Filament 方法调用位置：defaultSort/Table, badge/Column
+- [ ] 枚举 pluck：用静态数组，不用动态 pluck
+- [ ] 列表页 action：不要加 header DeleteAction
+- [ ] 复制文件：必须更新 namespace 和 use 语句
+- [ ] 文件语法：修改后立即执行 `php -l` 检查

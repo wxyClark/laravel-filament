@@ -1,7 +1,7 @@
 {
     "name": "wxyclark/laravel-filament",
     "type": "project",
-    "description": "laravel \u524d\u540e\u7aef\u4e0d\u5206\u79bbAI\u5f00\u53d1",
+    "description": "laravel 前后端不分离AI开发",
     "keywords": [
         "framework",
         "laravel",
@@ -32,6 +32,9 @@
         "phpstan/phpstan": "^2.1"
     },
     "autoload": {
+        "files": [
+            "app/helpers.php"
+        ],
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",

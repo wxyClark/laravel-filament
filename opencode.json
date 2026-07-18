@@ -1,37 +1,75 @@
 {
-  "$schema": "https://opencode.ai/schema.json",
-  "name": "laravel-filament",
+  "$schema": "https://opencode.ai/config.json",
   "instructions": [
     "AGENTS.md",
     "REFLECTION.md",
     "PROMPT_WORKFLOW.md",
+    ".ai/skills/requirement-analysis/SKILL.md",
     ".ai/skills/laravel-best-practices/SKILL.md",
     ".ai/skills/laravel-architecture/SKILL.md",
     ".ai/skills/filament-development/SKILL.md",
-    ".ai/skills/pest-testing/SKILL.blade.php",
+    ".ai/skills/pest-testing/SKILL.md",
     ".ai/skills/pint-code-style/SKILL.md",
     ".ai/skills/tdd-workflow/SKILL.md",
     ".ai/skills/code-standards/SKILL.md",
     ".ai/skills/code-review/SKILL.md",
-    ".ai/skills/database-design/SKILL.md"
+    ".ai/skills/database-design/SKILL.md",
+    ".ai/skills/architecture-testing/SKILL.md",
+    ".ai/skills/techstack-installer/SKILL.md",
+    ".ai/skills/reflection-improvement/SKILL.md",
+    ".ai/skills/git-workflow/SKILL.md"
   ],
-  "skills": [
-    "tdd-workflow",
-    "code-standards",
-    "code-review",
-    "database-design",
-    "laravel-architecture",
-    "laravel-best-practices",
-    "filament-development",
-    "pest-testing",
-    "testing-best-practices",
-    "pint-code-style",
-    "restful-api-routing",
-    "queue-jobs-best-practices",
-    "redis-best-practices",
-    "mysql-best-practices"
-  ],
-  "providers": {},
-  "mcpServers": {},
-  "theme": "dark"
+  "skills": {
+    "paths": [
+      ".ai/skills"
+    ]
+  },
+  "agent": {
+    "name": "laravel-filament-agent",
+    "description": "AI agent for Laravel 12 + Filament 3.x development with DDD architecture, TDD workflow, architecture testing, and continuous improvement",
+    "version": "4.0.0",
+    "capabilities": [
+      "requirement-analysis",
+      "tdd-workflow",
+      "architecture-testing",
+      "code-review",
+      "filament-development",
+      "pest-testing",
+      "techstack-installer",
+      "reflection-improvement",
+      "git-workflow"
+    ],
+    "rules": [
+      "DDD layer boundaries must be enforced",
+      "Architecture tests must pass before commit",
+      "Pint + PHPStan + Pest must all pass",
+      "Services must be final",
+      "DTOs must be readonly",
+      "Domain layer cannot depend on Infrastructure or Http",
+      "Documentation must be created for each development phase",
+      "Reflection and improvement must be documented",
+      "Requirement analysis must go through multi-turn dialogue",
+      "Each business flow must have logical closure",
+      "Global consistency must be verified across modules",
+      "Style uniformity must be maintained"
+    ],
+    "requirement_analysis_flow": {
+      "phases": [
+        "Phase 1: Initial Understanding (1-2 rounds)",
+        "Phase 2: Deep Discovery (3-5 rounds)",
+        "Phase 3: Logic Verification (2-3 rounds)",
+        "Phase 4: Global Consistency (1-2 rounds)",
+        "Phase 5: Documentation (1 round)"
+      ],
+      "output": "doc/requirements/REQ-{module}-{seq}.md"
+    },
+    "document_structure": {
+      "requirements": "doc/requirements/",
+      "design": "doc/design/",
+      "development": "doc/development/",
+      "testing": "doc/testing/",
+      "deployment": "doc/deployment/",
+      "retrospective": "doc/retrospective/"
+    }
+  }
 }

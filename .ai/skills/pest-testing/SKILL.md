@@ -146,6 +146,61 @@ arch('controllers')
     ->toHaveSuffix('Controller');
 @endboostsnippet
 
+## Architecture Testing
+
+Pest 4 includes powerful architecture testing capabilities. Use `arch()` to enforce code conventions:
+
+### Basic Syntax
+
+```php
+arch('controllers')
+    ->expect('App\Http\Controllers')
+    ->toExtendNothing()
+    ->toHaveSuffix('Controller');
+
+arch('services are final')
+    ->expect('App\Domains\*\Services')
+    ->toBeFinal();
+
+arch('DTOs are readonly')
+    ->expect('App\Domains\*\Data')
+    ->toBeReadOnly();
+```
+
+### DDD Layer Testing
+
+```php
+arch('Domain has no framework dependencies')
+    ->expect('App\Domains')
+    ->not->toDependOn([
+        'Filament',
+        'App\Http',
+        'App\Infrastructure',
+    ]);
+
+arch('Infrastructure depends on Domain')
+    ->expect('App\Infrastructure')
+    ->toDependOn('App\Domains')
+    ->not->toDependOn('App\Http');
+```
+
+### Available Expectations
+
+| Expectation | Purpose |
+|-------------|---------|
+| `toHaveSuffix('Controller')` | Class name ends with suffix |
+| `toExtendNothing()` | Class doesn't extend anything |
+| `toExtend(BaseClass::class)` | Class extends specific base |
+| `toBeFinal()` | Class is declared final |
+| `toBeReadOnly()` | Class is declared readonly |
+| `toImplement(Interface::class)` | Class implements interface |
+| `toHaveMethod('methodName')` | Class has specific method |
+| `toDependOn('Package')` | Class depends on package |
+| `not->toDependOn('Package')` | Class must not depend on package |
+| `toOnlyDependOn([...])` | Class only depends on listed packages |
+
+For detailed architecture testing patterns, see `architecture-testing` skill.
+
 ## Common Pitfalls
 
 - Not importing `use function Pest\Laravel\mock;` before using mock

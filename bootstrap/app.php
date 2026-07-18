@@ -26,6 +26,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'admin/api/*',
         ]);
+
+        // API 请求日志中间件
+        $middleware->alias([
+            'request.log' => \App\Infrastructure\Http\Middleware\RequestLogging::class,
+        ]);
+
+        $middleware->group('api', [
+            \App\Infrastructure\Http\Middleware\RequestLogging::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

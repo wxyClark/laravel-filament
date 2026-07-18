@@ -246,7 +246,36 @@ docker compose exec app ./vendor/bin/pest --compact
 - [ ] 类不超过 200 行
 - [ ] 有意义的变量/方法命名
 
-### Step 7: 联调验证
+### Step 7: 架构测试 → Architecture Phase
+
+**目标**: 确保代码符合 DDD 分层规则和命名约定
+
+```php
+// tests/Unit/Architecture/{Domain}LayerTest.php
+
+arch('{Domain} layer has no framework dependencies')
+    ->expect('App\Domains\{Domain}')
+    ->not->toDependOn([
+        'Filament',
+        'App\Http',
+        'App\Infrastructure',
+    ]);
+
+arch('{Domain} services are final')
+    ->expect('App\Domains\{Domain}\Services')
+    ->toBeFinal();
+
+arch('{Domain} DTOs are readonly')
+    ->expect('App\Domains\{Domain}\Data')
+    ->toBeReadOnly();
+```
+
+**运行架构测试**:
+```bash
+docker compose exec app ./vendor/bin/pest tests/Unit/Architecture/ --compact
+```
+
+### Step 8: 联调验证
 
 **目标**: 端到端验证功能
 
