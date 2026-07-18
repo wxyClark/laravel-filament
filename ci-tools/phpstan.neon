@@ -1,0 +1,13 @@
+parameters:
+    level: 5
+    paths:
+        - ../app
+        - ../database
+    tmpDir: .phpstan-cache
+    scanDirectories:
+        - ../vendor/laravel/framework/src/Illuminate/Support
+    ignoreErrors:
+        # Laravel 框架相关误报
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::[a-zA-Z]+#'
+        - '#Call to an undefined method Illuminate\\Database\\Query\\Builder::[a-zA-Z]+#'
+        - '#Access to an undefined property [a-zA-Z\\]+::\$[a-zA-Z]+#'
