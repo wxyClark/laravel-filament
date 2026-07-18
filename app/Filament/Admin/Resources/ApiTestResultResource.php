@@ -73,7 +73,7 @@ class ApiTestResultResource extends Resource
                 Tables\Columns\TextColumn::make('executed_at')
                     ->label('执行时间')
                     ->dateTime('Y-m-d H:i:s')
-                    ->sortable()
+                    ->sortable(),
             ])
             ->defaultSort('executed_at', 'desc')
             ->modifyQueryUsing(function ($query) {
@@ -172,11 +172,6 @@ class ApiTestResultResource extends Resource
                             ->label('响应时间')
                             ->suffix(' ms'),
 
-                        Infolists\Components\TextEntry::make('response_body')
-                            ->label('响应 Body')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
-                            ->fontFamily('mono')
-                            ->columnSpanFull(),
                     ]),
 
                 Infolists\Components\Section::make('断言结果')
