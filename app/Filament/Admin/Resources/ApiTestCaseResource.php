@@ -7,12 +7,15 @@ namespace App\Filament\Admin\Resources;
 use App\Domains\ApiTesting\Models\ApiEnvironment;
 use App\Domains\ApiTesting\Models\ApiInterface;
 use App\Domains\ApiTesting\Models\ApiTestCase;
+use App\Domains\ApiTesting\Services\TestExecutorService;
 use App\Filament\Admin\Resources\ApiTestCaseResource\Pages;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\DB;
 
 class ApiTestCaseResource extends Resource
 {
@@ -127,6 +130,9 @@ class ApiTestCaseResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\CheckboxColumn::make('id')
+                    ->label(''),
+
                 Tables\Columns\TextColumn::make('interface.function.module.name')
                     ->label('模块')
                     ->sortable(),
@@ -156,11 +162,82 @@ class ApiTestCaseResource extends Resource
             ])
             ->defaultSort('sort_order')
             ->actions([
+                Tables\Actions\Action::make('test')
+                    ->label('测试')
+                    ->icon('heroicon-o-play')
+                    ->color('success')
+                    ->requiresConfirmation()
+                    ->modalHeading('执行测试')
+                    ->modalDescription('确定要执行这个测试用例吗？')
+                    ->action(function (ApiTestCase $record) {
+                        $executor = app(TestExecutorService::class);
+                        $result = $executor->execute($record);
+
+                        Notification::make()
+                            ->title('测试完成')
+                            ->body($result->status->label().' - '.$result->response_time.'ms')
+                            ->color($result->status->color())
+                            ->send();
+                    }),
+
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+
+                    Tables\Actions\BulkAction::make('testSelected')
+                        ->label('批量测试')
+                        ->icon('heroicon-o-play')
+                        ->color('success')
+                        ->requiresConfirmation()
+                        ->modalHeading('批量执行测试')
+                        ->modalDescription('确定要执行选中的测试用例吗？')
+                        ->action(function ($records) {
+                            $executor = app(TestExecutorService::class);
+                            $results = [];
+
+                            foreach ($records as $record) {
+                                $results[] = $executor->execute($record);
+                            }
+
+                            $passed = collect($results)->filter(fn ($r) => $r->status->value === 'pass')->count();
+                            $failed = collect($results)->filter(fn ($r) => $r->status->value === 'fail')->count();
+                            $error = collect($results)->filter(fn ($r) => $r->status->value === 'error')->count();
+
+                            Notification::make()
+                                ->title('批量测试完成')
+                                ->body("通过: {$passed} | 失败: {$failed} | 错误: {$error}")
+                                ->color($failed > 0 || $error > 0 ? 'danger' : 'success')
+                                ->send();
+                        }),
+
+                    Tables\Actions\BulkAction::make('testAndRedirect')
+                        ->label('测试并查看结果')
+                        ->icon('heroicon-o-arrow-right')
+                        ->color('primary')
+                        ->requiresConfirmation()
+                        ->modalHeading('执行测试并跳转')
+                        ->modalDescription('确定要执行测试并跳转到结果页面吗？')
+                        ->action(function ($records) {
+                            $executor = app(TestExecutorService::class);
+                            $batchId = DB::table('api_test_batches')->insertGetId([
+                                'name' => '批量测试 '.now()->format('Y-m-d H:i:s'),
+                                'test_case_ids' => $records->pluck('id')->toArray(),
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ]);
+
+                            foreach ($records as $record) {
+                                $executor->execute($record);
+                            }
+
+                            return redirect()->route('filament.admin.resources.api-test-results.index', [
+                                'batch_id' => $batchId,
+                            ]);
+                        }),
+                ]),
             ]);
     }
 

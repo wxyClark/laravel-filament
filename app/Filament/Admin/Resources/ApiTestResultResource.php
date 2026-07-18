@@ -73,13 +73,28 @@ class ApiTestResultResource extends Resource
                 Tables\Columns\TextColumn::make('executed_at')
                     ->label('执行时间')
                     ->dateTime('Y-m-d H:i:s')
-                    ->sortable(),
+                    ->sortable()
+                    ->defaultSort('desc'),
             ])
             ->defaultSort('executed_at', 'desc')
+            ->modifyQueryUsing(function ($query) {
+                if (request()->has('batch_id')) {
+                    $batch = DB::table('api_test_batches')->find(request('batch_id'));
+                    if ($batch) {
+                        $testCaseIds = json_decode($batch->test_case_ids, true) ?? [];
+                        $query->whereIn('test_case_id', $testCaseIds);
+                    }
+                }
+            })
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->label('状态')
-                    ->options(['pass' => '通过', 'fail' => '失败', 'error' => '错误', 'skip' => '跳过']),
+                    ->options([
+                        'pass' => '通过',
+                        'fail' => '失败',
+                        'error' => '错误',
+                        'skip' => '跳过',
+                    ]),
 
                 Tables\Filters\Filter::make('created_at')
                     ->label('时间范围')
