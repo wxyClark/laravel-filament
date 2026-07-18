@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domains\ApiTesting\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class ApiModule extends Model
+{
+    protected $table = 'api_modules';
+
+    protected $fillable = [
+        'name',
+        'description',
+        'icon',
+        'sort_order',
+    ];
+
+    public function functions(): HasMany
+    {
+        return $this->hasMany(ApiFunction::class, 'module_id');
+    }
+
+    public function interfaces(): HasMany
+    {
+        return $this->hasManyThrough(ApiInterface::class, ApiFunction::class);
+    }
+}
