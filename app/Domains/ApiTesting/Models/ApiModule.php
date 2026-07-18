@@ -23,7 +23,7 @@ class ApiModule extends Model
         return $this->hasMany(ApiFunction::class, 'module_id');
     }
 
-    public function interfaces(): HasMany
+    public function interfaces(): IlluminateDatabaseloquentRelationsHasManyThrough
     {
         return $this->hasManyThrough(ApiInterface::class, ApiFunction::class);
     }

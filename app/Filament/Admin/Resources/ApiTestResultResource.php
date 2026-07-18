@@ -73,8 +73,7 @@ class ApiTestResultResource extends Resource
                 Tables\Columns\TextColumn::make('executed_at')
                     ->label('执行时间')
                     ->dateTime('Y-m-d H:i:s')
-                    ->sortable()
-                    ->defaultSort('desc'),
+                    ->sortable(),
             ])
             ->defaultSort('executed_at', 'desc')
             ->filters([
