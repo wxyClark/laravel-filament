@@ -26,7 +26,7 @@ class ApiTestingSeeder extends Seeder
         ApiEnvironment::updateOrCreate(
             ['name' => '开发环境'],
             [
-                'base_url' => 'http://localhost:8080',
+                'base_url' => 'http://nginx:80',
                 'auth_type' => AuthType::JWT,
                 'auth_config' => [
                     'token_url' => 'admin/api/login',
