@@ -6,6 +6,7 @@ namespace App\Domains\ApiTesting\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ApiModule extends Model
 {
@@ -23,7 +24,7 @@ class ApiModule extends Model
         return $this->hasMany(ApiFunction::class, 'module_id');
     }
 
-    public function interfaces(): IlluminateDatabaseloquentRelationsHasManyThrough
+    public function interfaces(): HasManyThrough
     {
         return $this->hasManyThrough(ApiInterface::class, ApiFunction::class);
     }
