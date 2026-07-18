@@ -233,19 +233,19 @@ class LoggingResource extends Resource
                     ->schema([
                         Infolists\Components\TextEntry::make('request_headers')
                             ->label('Headers')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
+                            ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : (($state ?? '-') === '' ? '-' : ($state ?? '-')))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
 
                         Infolists\Components\TextEntry::make('request_body')
                             ->label('Body')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
+                            ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : (($state ?? '-') === '' ? '-' : ($state ?? '-')))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
 
                         Infolists\Components\TextEntry::make('query_params')
                             ->label('Query Params')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
+                            ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : (($state ?? '-') === '' ? '-' : ($state ?? '-')))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
                     ]),
