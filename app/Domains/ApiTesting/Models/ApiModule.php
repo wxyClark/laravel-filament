@@ -26,6 +26,6 @@ class ApiModule extends Model
 
     public function interfaces(): HasManyThrough
     {
-        return $this->hasManyThrough(ApiInterface::class, ApiFunction::class);
+        return $this->hasManyThrough(ApiInterface::class, ApiFunction::class, 'function_id', 'module_id');
     }
 }

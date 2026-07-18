@@ -31,7 +31,7 @@ class ApiEnvironment extends Model
 
     public function testCases(): HasMany
     {
-        return $this->hasMany(ApiTestCase::class);
+        return $this->hasMany(ApiTestCase::class, 'environment_id');
     }
 
     public function testResults(): HasMany
