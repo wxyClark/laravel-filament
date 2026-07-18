@@ -40,11 +40,15 @@ class LoggingResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('request_id')
                     ->label('请求 ID')
-                    ->limit(8)
+                    ->limit(12)
                     ->copyable()
-                    ->copyMessage('已复制'),
+                    ->tooltip(fn (RequestLog $record): string => $record->request_id),
 
                 Tables\Columns\TextColumn::make('method')
                     ->label('方法')
@@ -120,6 +124,22 @@ class LoggingResource extends Resource
                         'ios' => 'iOS',
                     ]),
 
+                Tables\Filters\SelectFilter::make('response_status')
+                    ->label('状态码')
+                    ->options([
+                        '2xx' => '2xx 成功',
+                        '3xx' => '3xx 重定向',
+                        '4xx' => '4xx 客户端错误',
+                        '5xx' => '5xx 服务器错误',
+                    ])
+                    ->query(fn ($query, array $data) => $data['value'] ?? null
+                        ? $query->whereBetween('response_status', [
+                            (int) substr($data['value'], 0, 1) * 100,
+                            (int) substr($data['value'], 0, 1) * 100 + 99,
+                        ])
+                        : $query
+                    ),
+
                 Tables\Filters\Filter::make('is_error')
                     ->label('仅异常')
                     ->query(fn ($query) => $query->where('response_status', '>=', 400)
@@ -129,11 +149,9 @@ class LoggingResource extends Resource
                     ->label('时间范围')
                     ->form([
                         Forms\Components\DatePicker::make('created_from')
-                            ->label('开始时间')
-                            ->placeholder('开始时间'),
+                            ->label('开始时间'),
                         Forms\Components\DatePicker::make('created_until')
-                            ->label('结束时间')
-                            ->placeholder('结束时间'),
+                            ->label('结束时间'),
                     ])
                     ->query(function ($query, array $data): void {
                         $query
@@ -158,16 +176,23 @@ class LoggingResource extends Resource
             ->schema([
                 Infolists\Components\Section::make('请求信息')
                     ->schema([
+                        Infolists\Components\TextEntry::make('id')
+                            ->label('日志 ID'),
+
                         Infolists\Components\TextEntry::make('request_id')
                             ->label('请求 ID')
-                            ->copyable(),
+                            ->copyable()
+                            ->tooltip(fn (RequestLog $record): string => $record->request_id)
+                            ->fontFamily('mono'),
 
                         Infolists\Components\TextEntry::make('method')
                             ->label('请求方法')
                             ->badge(),
 
                         Infolists\Components\TextEntry::make('path')
-                            ->label('请求路径'),
+                            ->label('请求路径')
+                            ->fontFamily('mono')
+                            ->columnSpanFull(),
 
                         Infolists\Components\TextEntry::make('controller')
                             ->label('控制器')
@@ -199,7 +224,8 @@ class LoggingResource extends Resource
                         Infolists\Components\TextEntry::make('user_agent')
                             ->label('User Agent')
                             ->limit(50)
-                            ->tooltip(fn (RequestLog $record): string => $record->user_agent ?? ''),
+                            ->tooltip(fn (RequestLog $record): string => $record->user_agent ?? '')
+                            ->columnSpanFull(),
                     ])
                     ->columns(2),
 
@@ -208,17 +234,20 @@ class LoggingResource extends Resource
                         Infolists\Components\TextEntry::make('request_headers')
                             ->label('Headers')
                             ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
-                            ->fontFamily('mono'),
+                            ->fontFamily('mono')
+                            ->columnSpanFull(),
 
                         Infolists\Components\TextEntry::make('request_body')
                             ->label('Body')
                             ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
-                            ->fontFamily('mono'),
+                            ->fontFamily('mono')
+                            ->columnSpanFull(),
 
                         Infolists\Components\TextEntry::make('query_params')
                             ->label('Query Params')
                             ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
-                            ->fontFamily('mono'),
+                            ->fontFamily('mono')
+                            ->columnSpanFull(),
                     ]),
 
                 Infolists\Components\Section::make('响应信息')
@@ -237,8 +266,9 @@ class LoggingResource extends Resource
 
                         Infolists\Components\TextEntry::make('response_body')
                             ->label('响应 Body')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
-                            ->fontFamily('mono'),
+                            ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : ($state ?? '-'))
+                            ->fontFamily('mono')
+                            ->columnSpanFull(),
                     ]),
 
                 Infolists\Components\Section::make('异常信息')
@@ -250,12 +280,14 @@ class LoggingResource extends Resource
 
                         Infolists\Components\TextEntry::make('exception_message')
                             ->label('异常消息')
-                            ->placeholder('无异常'),
+                            ->placeholder('无异常')
+                            ->columnSpanFull(),
 
                         Infolists\Components\TextEntry::make('exception_trace')
                             ->label('异常堆栈')
                             ->formatStateUsing(fn ($state) => $state ? Str::limit($state, 500) : '-')
-                            ->fontFamily('mono'),
+                            ->fontFamily('mono')
+                            ->columnSpanFull(),
                     ])
                     ->collapsible(),
 
@@ -274,7 +306,8 @@ class LoggingResource extends Resource
                                 Infolists\Components\TextEntry::make('created_at')
                                     ->label('时间')
                                     ->dateTime('Y-m-d H:i:s'),
-                            ]),
+                            ])
+                            ->columns(3),
                     ])
                     ->collapsible(),
             ]);
