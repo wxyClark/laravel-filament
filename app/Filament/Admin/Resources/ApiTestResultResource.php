@@ -76,15 +76,6 @@ class ApiTestResultResource extends Resource
                     ->sortable(),
             ])
             ->defaultSort('executed_at', 'desc')
-            ->modifyQueryUsing(function ($query) {
-                if (request()->has('batch_id')) {
-                    $batch = DB::table('api_test_batches')->find(request('batch_id'));
-                    if ($batch) {
-                        $testCaseIds = json_decode($batch->test_case_ids, true) ?? [];
-                        $query->whereIn('test_case_id', $testCaseIds);
-                    }
-                }
-            })
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->label('状态')
@@ -120,6 +111,13 @@ class ApiTestResultResource extends Resource
             ->schema([
                 Infolists\Components\Section::make('基本信息')
                     ->schema([
+                        Infolists\Components\TextEntry::make('id')
+                            ->label('结果 ID'),
+
+                        Infolists\Components\TextEntry::make('status')
+                            ->label('状态')
+                            ->badge(),
+
                         Infolists\Components\TextEntry::make('testCase.name')
                             ->label('用例名称'),
 
@@ -128,10 +126,6 @@ class ApiTestResultResource extends Resource
 
                         Infolists\Components\TextEntry::make('environment.name')
                             ->label('环境'),
-
-                        Infolists\Components\TextEntry::make('status')
-                            ->label('状态')
-                            ->badge(),
 
                         Infolists\Components\TextEntry::make('executed_at')
                             ->label('执行时间')
@@ -142,36 +136,45 @@ class ApiTestResultResource extends Resource
                 Infolists\Components\Section::make('请求信息')
                     ->schema([
                         Infolists\Components\TextEntry::make('request_method')
-                            ->label('方法')
+                            ->label('请求方法')
                             ->badge(),
 
-                        Infolists\Components\TextEntry::make('request_url')
-                            ->label('URL')
-                            ->fontFamily('mono'),
-
-                        Infolists\Components\TextEntry::make('request_headers')
-                            ->label('Headers')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
-                            ->fontFamily('mono')
-                            ->columnSpanFull(),
-
-                        Infolists\Components\TextEntry::make('request_body')
-                            ->label('Body')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
-                            ->fontFamily('mono')
-                            ->columnSpanFull(),
-                    ]),
-
-                Infolists\Components\Section::make('响应信息')
-                    ->schema([
                         Infolists\Components\TextEntry::make('response_status')
-                            ->label('状态码')
+                            ->label('响应状态码')
                             ->badge(),
 
                         Infolists\Components\TextEntry::make('response_time')
                             ->label('响应时间')
                             ->suffix(' ms'),
 
+                        Infolists\Components\TextEntry::make('request_url')
+                            ->label('请求 URL')
+                            ->fontFamily('mono')
+                            ->columnSpanFull(),
+
+                        Infolists\Components\TextEntry::make('request_headers')
+                            ->label('请求 Headers')
+                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
+                            ->fontFamily('mono')
+                            ->columnSpanFull(),
+
+                        Infolists\Components\TextEntry::make('request_body')
+                            ->label('请求 Body')
+                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
+                            ->fontFamily('mono')
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+
+                Infolists\Components\Section::make('响应信息')
+                    ->schema([
+                        Infolists\Components\TextEntry::make('response_body')
+                            ->label('响应 Body')
+                            ->formatStateUsing(fn ($state) => is_array($state)
+                                ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
+                                : ($state ?? '-'))
+                            ->fontFamily('mono')
+                            ->columnSpanFull(),
                     ]),
 
                 Infolists\Components\Section::make('断言结果')
@@ -183,27 +186,31 @@ class ApiTestResultResource extends Resource
                                     ->label('类型')
                                     ->badge(),
 
-                                Infolists\Components\TextEntry::make('path')
-                                    ->label('路径')
-                                    ->placeholder('-'),
-
-                                Infolists\Components\TextEntry::make('expected')
-                                    ->label('期望值'),
-
-                                Infolists\Components\TextEntry::make('actual')
-                                    ->label('实际值'),
-
-                                Infolists\Components\IconEntry::make('passed')
+                                Infolists\Components\TextEntry::make('passed')
                                     ->label('结果')
                                     ->boolean(),
-                            ]),
+
+                                Infolists\Components\TextEntry::make('path')
+                                    ->label('路径')
+                                    ->placeholder('-')
+                                    ->columnSpan(2),
+
+                                Infolists\Components\TextEntry::make('expected')
+                                    ->label('期望值')
+                                    ->fontFamily('mono'),
+
+                                Infolists\Components\TextEntry::make('actual')
+                                    ->label('实际值')
+                                    ->fontFamily('mono'),
+                            ])
+                            ->columns(4),
                     ])
                     ->collapsible(),
 
                 Infolists\Components\Section::make('错误信息')
                     ->schema([
                         Infolists\Components\TextEntry::make('error_message')
-                            ->label('错误')
+                            ->label('错误信息')
                             ->placeholder('无错误')
                             ->color('danger')
                             ->columnSpanFull(),
