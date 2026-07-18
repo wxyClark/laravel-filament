@@ -18,7 +18,7 @@ class ApiInterfaceResource extends Resource
 {
     protected static ?string $model = ApiInterface::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cable';
+    protected static ?string $navigationIcon = 'heroicon-o-link';
 
     protected static ?string $navigationGroup = '接口测试';
 
