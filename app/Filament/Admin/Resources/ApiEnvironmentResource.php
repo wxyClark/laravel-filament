@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Domains\ApiTesting\Enums\AuthType;
 use App\Domains\ApiTesting\Models\ApiEnvironment;
 use App\Filament\Admin\Resources\ApiEnvironmentResource\Pages;
 use Filament\Forms;
@@ -48,7 +47,7 @@ class ApiEnvironmentResource extends Resource
 
                         Forms\Components\Select::make('auth_type')
                             ->label('认证方式')
-                            ->options(collect(AuthType::cases())->pluck('label', 'value')->toArray())
+                            ->options(['none' => '无认证', 'jwt' => 'JWT Token', 'session' => 'Session', 'apikey' => 'API Key'])
                             ->default('none')
                             ->required(),
 
