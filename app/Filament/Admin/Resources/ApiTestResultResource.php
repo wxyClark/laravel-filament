@@ -79,7 +79,7 @@ class ApiTestResultResource extends Resource
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->label('状态')
-                    ->options(collect(TestStatus::cases())->pluck('label', 'value')->toArray()),
+                    ->options(['pass' => '通过', 'fail' => '失败', 'error' => '错误', 'skip' => '跳过']),
 
                 Tables\Filters\Filter::make('created_at')
                     ->label('时间范围')
