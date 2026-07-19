@@ -62,13 +62,11 @@ gunzip -c "${BACKUP_FILE}" | docker exec -i "${DB_CONTAINER}" \
     mysql -u root -p"${DB_ROOT_PASSWORD}" "${DB_NAME}"
 
 echo "[2/3] 正在清除缓存..."
-docker exec "filament-app" php artisan config:clear 2>/dev/null || true
 docker exec "filament-app" php artisan cache:clear 2>/dev/null || true
 docker exec "filament-app" php artisan route:clear 2>/dev/null || true
 docker exec "filament-app" php artisan view:clear 2>/dev/null || true
 
 echo "[3/3] 正在重建缓存..."
-docker exec "filament-app" php artisan config:cache 2>/dev/null || true
 docker exec "filament-app" php artisan route:cache 2>/dev/null || true
 
 echo ""
