@@ -41,15 +41,6 @@ class ViewAddressList extends Page
 
     public string $exportMessage = '';
 
-    // 导出筛选弹窗
-    public bool $showExportModal = false;
-
-    public ?string $exportLevel = null;
-
-    public ?string $exportKeyword = null;
-
-    public int $exportTotalCount = 0;
-
     protected function getViewData(): array
     {
         $service = app(AddressService::class);
@@ -126,9 +117,9 @@ class ViewAddressList extends Page
     }
 
     /**
-     * 获取页面显示的筛选条件
+     * 获取筛选条件（页面显示和导出共用）
      */
-    public function getPageFilters(): array
+    public function getFilters(): array
     {
         $filters = [];
 
@@ -151,7 +142,7 @@ class ViewAddressList extends Page
     public function getFilteredAddresses(): Paginator
     {
         $service = app(AddressService::class);
-        $filters = $this->getPageFilters();
+        $filters = $this->getFilters();
 
         $query = $service->buildQuery($filters);
         $this->totalResults = (clone $query)->count();
@@ -161,65 +152,7 @@ class ViewAddressList extends Page
     }
 
     /**
-     * 打开导出筛选弹窗
-     */
-    public function openExportModal(): void
-    {
-        $this->showExportModal = true;
-        $this->exportLevel = null;
-        $this->exportKeyword = null;
-        $this->updateExportCount();
-    }
-
-    /**
-     * 关闭导出筛选弹窗
-     */
-    public function closeExportModal(): void
-    {
-        $this->showExportModal = false;
-    }
-
-    /**
-     * 导出筛选条件变化时更新计数
-     */
-    public function updatedExportLevel(): void
-    {
-        $this->updateExportCount();
-    }
-
-    public function updatedExportKeyword(): void
-    {
-        $this->updateExportCount();
-    }
-
-    protected function updateExportCount(): void
-    {
-        $filters = $this->getExportFilters();
-        $service = app(AddressService::class);
-        $this->exportTotalCount = $service->buildQuery($filters)->count();
-    }
-
-    /**
-     * 获取导出筛选条件（页面筛选 + 导出弹窗筛选）
-     */
-    public function getExportFilters(): array
-    {
-        $filters = $this->getPageFilters();
-
-        // 叠加导出弹窗的额外筛选
-        if ($this->exportLevel) {
-            $filters['level'] = $this->exportLevel;
-        }
-
-        if ($this->exportKeyword) {
-            $filters['keyword'] = $this->exportKeyword;
-        }
-
-        return $filters;
-    }
-
-    /**
-     * 导出 CSV
+     * 导出 CSV（按页面筛选条件）
      */
     public function exportCsv(): void
     {
@@ -227,7 +160,7 @@ class ViewAddressList extends Page
     }
 
     /**
-     * 导出 Excel
+     * 导出 Excel（按页面筛选条件）
      */
     public function exportExcel(): void
     {
@@ -236,7 +169,7 @@ class ViewAddressList extends Page
 
     protected function doExport(string $format): void
     {
-        $filters = $this->getExportFilters();
+        $filters = $this->getFilters();
 
         /** @var Admin $user */
         $user = Auth::guard('admin')->user();
@@ -247,7 +180,6 @@ class ViewAddressList extends Page
             $user->id
         );
 
-        $this->showExportModal = false;
         $this->exporting = true;
         $this->exportMessage = '导出任务已提交，正在处理中...';
     }

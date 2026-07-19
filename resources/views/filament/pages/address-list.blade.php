@@ -56,9 +56,13 @@
             <div class="flex items-center gap-3">
                 {{-- 导出按钮 --}}
                 <div class="flex items-center gap-2">
-                    <button wire:click="openExportModal" @disabled($exporting) class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
+                    <button wire:click="exportCsv" @disabled($exporting || $totalResults === 0) class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
                         <x-heroicon-o-document-arrow-down class="h-4 w-4" />
-                        导出数据
+                        导出 CSV
+                    </button>
+                    <button wire:click="exportExcel" @disabled($exporting || $totalResults === 0) class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        <x-heroicon-o-table-cells class="h-4 w-4" />
+                        导出 Excel
                     </button>
                 </div>
                 @if($exporting)
@@ -159,77 +163,4 @@
             </div>
         @endif
     </div>
-
-    {{-- 导出筛选弹窗 --}}
-    @if($showExportModal)
-        <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" wire:click="closeExportModal"></div>
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full dark:bg-gray-800">
-                    <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-title">
-                                    导出数据配置
-                                </h3>
-                                <div class="mt-4 space-y-4">
-                                    {{-- 当前筛选条件 --}}
-                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">当前页面筛选条件</p>
-                                        <p class="text-sm text-gray-700 dark:text-gray-300">
-                                            @if($totalResults > 0)
-                                                匹配 <span class="font-semibold text-primary-600 dark:text-primary-400">{{ number_format($totalResults) }}</span> 条数据
-                                            @else
-                                                <span class="text-gray-500">无匹配数据</span>
-                                            @endif
-                                        </p>
-                                    </div>
-
-                                    {{-- 层级筛选 --}}
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">层级筛选</label>
-                                        <select wire:model.live="exportLevel" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm">
-                                            <option value="">全部层级</option>
-                                            <option value="province">省级</option>
-                                            <option value="city">地级</option>
-                                            <option value="district">县级</option>
-                                            <option value="township">街道</option>
-                                        </select>
-                                    </div>
-
-                                    {{-- 关键词搜索 --}}
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">关键词搜索</label>
-                                        <input type="text" wire:model.live="exportKeyword" placeholder="名称、编码、拼音" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm">
-                                    </div>
-
-                                    {{-- 导出预览 --}}
-                                    <div class="bg-blue-50 dark:bg-blue-900/30 rounded-lg p-3">
-                                        <div class="flex items-center justify-between">
-                                            <span class="text-sm text-blue-700 dark:text-blue-300">导出数据量</span>
-                                            <span class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ number_format($exportTotalCount) }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse gap-3">
-                        <button wire:click="exportCsv" @disabled($exporting || $exportTotalCount === 0) class="w-full inline-flex justify-center items-center gap-2 rounded-md border border-transparent shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-600 dark:text-white dark:hover:bg-gray-500 transition-colors">
-                            <x-heroicon-o-document-arrow-down class="h-4 w-4" />
-                            导出 CSV
-                        </button>
-                        <button wire:click="exportExcel" @disabled($exporting || $exportTotalCount === 0) class="w-full inline-flex justify-center items-center gap-2 rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:w-auto sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                            <x-heroicon-o-table-cells class="h-4 w-4" />
-                            导出 Excel
-                        </button>
-                        <button type="button" wire:click="closeExportModal" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:bg-gray-600 dark:text-white dark:border-gray-500 dark:hover:bg-gray-500 transition-colors">
-                            取消
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
 </x-filament-panels::page>
