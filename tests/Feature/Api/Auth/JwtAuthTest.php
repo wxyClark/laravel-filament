@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Admin;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,7 +160,7 @@ describe('Admin JWT Auth API', function () {
     describe('GET /admin/api/me', function () {
 
         test('authenticated admin can get profile', function () {
-            $token = auth('admin-api')->login($this->admin);
+            $token = JWTAuth::fromUser($this->admin);
 
             $response = $this->withHeader('Authorization', 'Bearer '.$token)
                 ->getJson('/admin/api/me');
@@ -186,7 +187,7 @@ describe('Admin JWT Auth API', function () {
     describe('POST /admin/api/refresh', function () {
 
         test('authenticated admin can refresh token', function () {
-            $token = auth('admin-api')->login($this->admin);
+            $token = JWTAuth::fromUser($this->admin);
 
             $response = $this->withHeader('Authorization', 'Bearer '.$token)
                 ->postJson('/admin/api/refresh');
@@ -210,7 +211,7 @@ describe('Admin JWT Auth API', function () {
     describe('POST /admin/api/logout', function () {
 
         test('authenticated admin can logout', function () {
-            $token = auth('admin-api')->login($this->admin);
+            $token = JWTAuth::fromUser($this->admin);
 
             $response = $this->withHeader('Authorization', 'Bearer '.$token)
                 ->postJson('/admin/api/logout');

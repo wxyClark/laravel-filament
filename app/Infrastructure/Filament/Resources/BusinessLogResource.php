@@ -13,6 +13,7 @@ use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class BusinessLogResource extends Resource
 {
@@ -70,7 +71,7 @@ class BusinessLogResource extends Resource
                     ->label('文件')
                     ->limit(30)
                     ->placeholder('-')
-                    ->tooltip(fn (BusinessLog $record): string => $record->file ? $record->file . ':' . $record->line : ''),
+                    ->tooltip(fn (BusinessLog $record): string => $record->file ? $record->file.':'.$record->line : ''),
 
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('时间')

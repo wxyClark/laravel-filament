@@ -90,7 +90,7 @@ class AddressService
 
         foreach ($sorted as $item) {
             $parentId = null;
-            if (isset($item['parent_code']) && $item['parent_code'] !== null && $item['parent_code'] !== '') {
+            if (! empty($item['parent_code'])) {
                 $parent = Address::where('code', $item['parent_code'])->first();
                 if ($parent) {
                     $parentId = $parent->id;

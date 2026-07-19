@@ -92,7 +92,7 @@ class RequestLogging
 
         if ($user) {
             $userType = get_class($user);
-            $userId = $user->id;
+            $userId = $user->id ?? null;
             $userName = $user->name ?? $user->email ?? null;
         }
 

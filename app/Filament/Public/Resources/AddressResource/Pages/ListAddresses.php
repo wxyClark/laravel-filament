@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\AddressResource\Pages;
+namespace App\Filament\Public\Resources\AddressResource\Pages;
 
-use App\Filament\Resources\AddressResource;
+use App\Filament\Public\Resources\AddressResource;
 use Filament\Actions\CreateAction;
-use Filament\Pages\ListRecords;
+use Filament\Resources\Pages\ListRecords;
 
 class ListAddresses extends ListRecords
 {

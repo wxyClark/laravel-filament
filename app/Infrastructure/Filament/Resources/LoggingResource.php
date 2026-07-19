@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Filament\Resources;
 
-use App\Domains\Logging\Models\BusinessLog;
 use App\Domains\Logging\Models\RequestLog;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Info;
 use Filament\Infolists;
 use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class LoggingResource extends Resource
 {
@@ -236,7 +235,7 @@ class LoggingResource extends Resource
 
                         Infolists\Components\TextEntry::make('memory_usage')
                             ->label('内存使用')
-                            ->formatStateUsing(fn ($state) => $state ? number_format($state / 1024 / 1024, 2) . ' MB' : '-'),
+                            ->formatStateUsing(fn ($state) => $state ? number_format($state / 1024 / 1024, 2).' MB' : '-'),
 
                         Infolists\Components\TextEntry::make('response_body')
                             ->label('响应 Body')

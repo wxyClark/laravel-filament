@@ -21,5 +21,6 @@ uses(
 */
 
 expect()->extend('toBeOne', function () {
+    /** @var mixed $this */
     return $this->toBe(1);
 });

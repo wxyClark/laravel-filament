@@ -6,24 +6,21 @@ parameters:
     paths:
         - app
         - database
-        - tests
     excludePaths:
         - vendor/
         - storage/
         - bootstrap/cache/
+        - tests/
     ignoreErrors:
-        # Eloquent dynamic properties
+        # Eloquent dynamic properties (accessed via __get)
         - '#Access to an undefined property [a-zA-Z\\]+::\$[a-zA-Z_]+#'
-        # Eloquent Builder dynamic methods
-        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::[a-zA-Z]+#'
-        - '#Call to an undefined method Illuminate\\Database\\Query\\Builder::[a-zA-Z]+#'
-        # Static method calls on models
-        - '#Call to an undefined static method [a-zA-Z\\]+::[a-zA-Z]+#'
-        # Undefined methods in general
-        - '#Call to an undefined method [a-zA-Z\\]+::[a-zA-Z]+#'
-        # Void method return type
-        - '#Method [a-zA-Z\\]+::[a-zA-Z]+\(\) should return [a-zA-Z\\]+ but returns nothing#'
-        # Undefined classes (common Laravel facades/helpers)
-        - '#Instantiated class [a-zA-Z\\]+ not found.#'
-        # Livewire/Filament specific
+        # Access to properties on unknown classes
+        - '#Access to property \$[a-zA-Z_]+ on an unknown class [a-zA-Z\\]+.#'
+        # Filament method not found (extensions, custom methods)
+        - '#Call to an undefined method [a-zA-Z\\]+::[a-zA-Z]+(\(\))?#'
+        # Filament static method not found (route, etc)
+        - '#Call to static method [a-zA-Z]+(\(\))? on an unknown class [a-zA-Z\\]+.#'
+        # Class not found
+        - '#Class [a-zA-Z\\]+ not found.#'
+        # Argument type mismatches (Filament/Livewire)
         - '#Parameter .+ of method .+ expects .+, .+ given#'

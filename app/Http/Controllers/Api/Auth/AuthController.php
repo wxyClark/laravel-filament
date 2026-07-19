@@ -8,9 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -28,7 +28,7 @@ class AuthController extends Controller
             'password' => $validated['password'],
         ]);
 
-        $token = Auth::guard('admin-api')->login($admin);
+        $token = JWTAuth::fromUser($admin);
 
         return response()->json([
             'message' => '注册成功',
@@ -58,7 +58,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $token = Auth::guard('admin-api')->login($admin);
+        $token = JWTAuth::fromUser($admin);
 
         return response()->json([
             'message' => '登录成功',
@@ -75,7 +75,7 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        Auth::guard('admin-api')->logout();
+        JWTAuth::parseToken()->invalidate();
 
         return response()->json([
             'message' => '退出成功',
@@ -84,7 +84,7 @@ class AuthController extends Controller
 
     public function refresh(Request $request): JsonResponse
     {
-        $token = Auth::guard('admin-api')->refresh();
+        $token = JWTAuth::parseToken()->refresh();
 
         return response()->json([
             'message' => 'Token 已刷新',
@@ -96,7 +96,8 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse
     {
-        $admin = Auth::guard('admin-api')->user();
+        /** @var Admin $admin */
+        $admin = JWTAuth::parseToken()->toUser();
 
         return response()->json([
             'data' => [

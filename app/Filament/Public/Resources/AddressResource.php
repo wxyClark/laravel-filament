@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Public\Resources;
 
-use App\Filament\Resources\AddressResource\Pages;
+use App\Filament\Public\Resources\AddressResource\Pages;
 use App\Models\Address;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;

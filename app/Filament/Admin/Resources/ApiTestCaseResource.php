@@ -72,9 +72,8 @@ class ApiTestCaseResource extends Resource
                         Forms\Components\KeyValue::make('query_params')
                             ->label('Query 参数'),
 
-                        Forms\Components\CodeEditor::make('body')
+                        Forms\Components\Textarea::make('body')
                             ->label('请求 Body')
-                            ->language('json')
                             ->rows(8)
                             ->placeholder('{\n    "key": "value"\n}'),
                     ])

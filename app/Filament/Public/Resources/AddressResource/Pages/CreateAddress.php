@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\AddressResource\Pages;
+namespace App\Filament\Public\Resources\AddressResource\Pages;
 
 use App\Models\Address;
 use Filament\Forms\Components\Select;
