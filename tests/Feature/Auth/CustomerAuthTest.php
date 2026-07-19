@@ -27,7 +27,7 @@ test('email must be unique during registration', function () {
     Customer::create([
         'name' => 'Existing Customer',
         'email' => 'existing@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     $response = $this->post('/register', [
@@ -50,7 +50,7 @@ test('customers can authenticate using login screen', function () {
     $customer = Customer::create([
         'name' => 'Test Customer',
         'email' => 'customer@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     $response = $this->post('/login', [
@@ -66,7 +66,7 @@ test('customers cannot authenticate with invalid password', function () {
     $customer = Customer::create([
         'name' => 'Test Customer',
         'email' => 'customer@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     $response = $this->post('/login', [
@@ -82,7 +82,7 @@ test('customers can logout', function () {
     $customer = Customer::create([
         'name' => 'Test Customer',
         'email' => 'customer@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     $response = $this->actingAs($customer, 'customer')->post('/logout');

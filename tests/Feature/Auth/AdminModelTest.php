@@ -19,7 +19,7 @@ test('admin table has required columns', function () {
     $admin = Admin::create([
         'name' => 'Test Admin',
         'email' => 'admin@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     expect($admin->id)->not->toBeNull();
@@ -31,14 +31,14 @@ test('admin email must be unique', function () {
     Admin::create([
         'name' => 'Admin 1',
         'email' => 'unique-admin@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     // 尝试创建相同邮箱的管理员
     Admin::create([
         'name' => 'Admin 2',
         'email' => 'unique-admin@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 })->throws(QueryException::class);
 
@@ -46,7 +46,7 @@ test('admin has remember token column', function () {
     $admin = Admin::create([
         'name' => 'Test Admin',
         'email' => 'remember-admin@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     // 验证 remember_token 字段存在
@@ -87,7 +87,7 @@ test('admin can access filament panel', function () {
     $admin = Admin::create([
         'name' => 'Panel Admin',
         'email' => 'panel@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     // 创建一个 mock panel

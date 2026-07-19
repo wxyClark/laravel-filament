@@ -18,7 +18,7 @@ test('api can get all addresses', function () {
         'level_num' => 2,
     ]);
 
-    $response = $this->getJson('/api/addresses');
+    $response = $this->getJson('/open/addresses');
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data')
@@ -58,7 +58,7 @@ test('api can get by level', function () {
         'level_num' => 2,
     ]);
 
-    $response = $this->getJson('/api/addresses/by-level/province');
+    $response = $this->getJson('/open/addresses/by-level/province');
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data');
@@ -73,7 +73,7 @@ test('api can find by code', function () {
         'level_num' => 2,
     ]);
 
-    $response = $this->getJson('/api/addresses/find/110000');
+    $response = $this->getJson('/open/addresses/find/110000');
 
     $response->assertStatus(200)
         ->assertJsonPath('data.name', '北京市')
@@ -81,7 +81,7 @@ test('api can find by code', function () {
 });
 
 test('api returns 404 for non-existent code', function () {
-    $response = $this->getJson('/api/addresses/find/999999');
+    $response = $this->getJson('/open/addresses/find/999999');
 
     $response->assertStatus(404)
         ->assertJsonPath('message', '地址不存在');
@@ -104,7 +104,7 @@ test('api can get address tree', function () {
         'level_num' => 4,
     ]);
 
-    $response = $this->getJson('/api/addresses/tree');
+    $response = $this->getJson('/open/addresses/tree');
 
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data')

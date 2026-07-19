@@ -16,16 +16,16 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 beforeEach(function () {
     $this->admin = Admin::factory()->create([
-        'password' => bcrypt('password123'),
+        'password' => 'password123',
     ]);
 });
 
 describe('Admin JWT Auth API', function () {
 
-    describe('POST /admin/api/register', function () {
+    describe('POST /api/register', function () {
 
         test('admin can register with valid data', function () {
-            $response = $this->postJson('/admin/api/register', [
+            $response = $this->postJson('/api/register', [
                 'name' => 'Test Admin',
                 'email' => 'newadmin@example.com',
                 'password' => 'password123',
@@ -49,7 +49,7 @@ describe('Admin JWT Auth API', function () {
         });
 
         test('register fails with duplicate email', function () {
-            $response = $this->postJson('/admin/api/register', [
+            $response = $this->postJson('/api/register', [
                 'name' => 'Duplicate Admin',
                 'email' => $this->admin->email,
                 'password' => 'password123',
@@ -61,7 +61,7 @@ describe('Admin JWT Auth API', function () {
         });
 
         test('register fails with invalid email', function () {
-            $response = $this->postJson('/admin/api/register', [
+            $response = $this->postJson('/api/register', [
                 'name' => 'Test',
                 'email' => 'not-an-email',
                 'password' => 'password123',
@@ -73,7 +73,7 @@ describe('Admin JWT Auth API', function () {
         });
 
         test('register fails with short password', function () {
-            $response = $this->postJson('/admin/api/register', [
+            $response = $this->postJson('/api/register', [
                 'name' => 'Test',
                 'email' => 'test@example.com',
                 'password' => '123',
@@ -85,7 +85,7 @@ describe('Admin JWT Auth API', function () {
         });
 
         test('register fails without password confirmation', function () {
-            $response = $this->postJson('/admin/api/register', [
+            $response = $this->postJson('/api/register', [
                 'name' => 'Test',
                 'email' => 'test@example.com',
                 'password' => 'password123',
@@ -96,10 +96,10 @@ describe('Admin JWT Auth API', function () {
         });
     });
 
-    describe('POST /admin/api/login', function () {
+    describe('POST /api/login', function () {
 
         test('admin can login with valid credentials', function () {
-            $response = $this->postJson('/admin/api/login', [
+            $response = $this->postJson('/api/login', [
                 'email' => $this->admin->email,
                 'password' => 'password123',
             ]);
@@ -119,7 +119,7 @@ describe('Admin JWT Auth API', function () {
         });
 
         test('login fails with wrong password', function () {
-            $response = $this->postJson('/admin/api/login', [
+            $response = $this->postJson('/api/login', [
                 'email' => $this->admin->email,
                 'password' => 'wrong-password',
             ]);
@@ -129,7 +129,7 @@ describe('Admin JWT Auth API', function () {
         });
 
         test('login fails with non-existent email', function () {
-            $response = $this->postJson('/admin/api/login', [
+            $response = $this->postJson('/api/login', [
                 'email' => 'nonexistent@example.com',
                 'password' => 'password123',
             ]);
@@ -139,7 +139,7 @@ describe('Admin JWT Auth API', function () {
         });
 
         test('login fails without email', function () {
-            $response = $this->postJson('/admin/api/login', [
+            $response = $this->postJson('/api/login', [
                 'password' => 'password123',
             ]);
 
@@ -148,7 +148,7 @@ describe('Admin JWT Auth API', function () {
         });
 
         test('login fails without password', function () {
-            $response = $this->postJson('/admin/api/login', [
+            $response = $this->postJson('/api/login', [
                 'email' => $this->admin->email,
             ]);
 
@@ -157,13 +157,13 @@ describe('Admin JWT Auth API', function () {
         });
     });
 
-    describe('GET /admin/api/me', function () {
+    describe('GET /api/me', function () {
 
         test('authenticated admin can get profile', function () {
             $token = JWTAuth::fromUser($this->admin);
 
             $response = $this->withHeader('Authorization', 'Bearer '.$token)
-                ->getJson('/admin/api/me');
+                ->getJson('/api/me');
 
             $response->assertOk()
                 ->assertJsonPath('data.email', $this->admin->email)
@@ -171,26 +171,26 @@ describe('Admin JWT Auth API', function () {
         });
 
         test('unauthenticated request is rejected', function () {
-            $response = $this->getJson('/admin/api/me');
+            $response = $this->getJson('/api/me');
 
             $response->assertUnauthorized();
         });
 
         test('invalid token is rejected', function () {
             $response = $this->withHeader('Authorization', 'Bearer invalid-token-123')
-                ->getJson('/admin/api/me');
+                ->getJson('/api/me');
 
             $response->assertUnauthorized();
         });
     });
 
-    describe('POST /admin/api/refresh', function () {
+    describe('POST /api/refresh', function () {
 
         test('authenticated admin can refresh token', function () {
             $token = JWTAuth::fromUser($this->admin);
 
             $response = $this->withHeader('Authorization', 'Bearer '.$token)
-                ->postJson('/admin/api/refresh');
+                ->postJson('/api/refresh');
 
             $response->assertOk()
                 ->assertJsonStructure([
@@ -202,26 +202,26 @@ describe('Admin JWT Auth API', function () {
         });
 
         test('refresh fails without token', function () {
-            $response = $this->postJson('/admin/api/refresh');
+            $response = $this->postJson('/api/refresh');
 
             $response->assertUnauthorized();
         });
     });
 
-    describe('POST /admin/api/logout', function () {
+    describe('POST /api/logout', function () {
 
         test('authenticated admin can logout', function () {
             $token = JWTAuth::fromUser($this->admin);
 
             $response = $this->withHeader('Authorization', 'Bearer '.$token)
-                ->postJson('/admin/api/logout');
+                ->postJson('/api/logout');
 
             $response->assertOk()
                 ->assertJsonPath('message', '退出成功');
         });
 
         test('logout fails without token', function () {
-            $response = $this->postJson('/admin/api/logout');
+            $response = $this->postJson('/api/logout');
 
             $response->assertUnauthorized();
         });

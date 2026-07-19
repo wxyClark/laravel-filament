@@ -45,7 +45,7 @@ describe('Filament Session Auth', function () {
 
         test('admin session is invalidated after logout', function () {
             $admin = Admin::factory()->create([
-                'password' => bcrypt('password123'),
+                'password' => 'password123',
             ]);
 
             $this->actingAs($admin, 'admin');
@@ -57,7 +57,7 @@ describe('Filament Session Auth', function () {
 
         test('admin cannot access dashboard after logout', function () {
             $admin = Admin::factory()->create([
-                'password' => bcrypt('password123'),
+                'password' => 'password123',
             ]);
 
             $this->actingAs($admin, 'admin');

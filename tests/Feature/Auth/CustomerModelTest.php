@@ -18,7 +18,7 @@ test('customer table has required columns', function () {
         'name' => 'Test Customer',
         'email' => 'customer@example.com',
         'phone' => '1234567890',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     expect($customer->id)->not->toBeNull();
@@ -31,14 +31,14 @@ test('customer email must be unique', function () {
     Customer::create([
         'name' => 'Customer 1',
         'email' => 'unique@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     // 尝试创建相同邮箱的客户
     Customer::create([
         'name' => 'Customer 2',
         'email' => 'unique@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 })->throws(QueryException::class);
 
@@ -47,7 +47,7 @@ test('customer phone must be unique', function () {
         'name' => 'Customer 1',
         'email' => 'customer1@example.com',
         'phone' => '1234567890',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     // 尝试创建相同手机号的客户
@@ -55,7 +55,7 @@ test('customer phone must be unique', function () {
         'name' => 'Customer 2',
         'email' => 'customer2@example.com',
         'phone' => '1234567890',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 })->throws(QueryException::class);
 
@@ -63,7 +63,7 @@ test('customer has remember token column', function () {
     $customer = Customer::create([
         'name' => 'Test Customer',
         'email' => 'remember@example.com',
-        'password' => bcrypt('password'),
+        'password' => 'password',
     ]);
 
     // 验证 remember_token 字段存在
