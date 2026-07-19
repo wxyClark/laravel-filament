@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Pages;
 
-use App\Jobs\ExportAddressJob;
-use App\Models\Admin;
+use App\Filament\Admin\Concerns\HasExportAction;
 use App\Services\AddressService;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Builder;
 
 class ViewAddressList extends Page
 {
+    use HasExportAction;
+
     protected static ?string $navigationIcon = 'heroicon-o-map';
 
     protected static string $view = 'filament.pages.address-list';
@@ -23,6 +23,8 @@ class ViewAddressList extends Page
     protected static ?string $navigationGroup = '地址管理';
 
     protected static ?int $navigationSort = 0;
+
+    public ?int $selectedCountryId = null;
 
     public ?int $selectedProvinceId = null;
 
@@ -38,33 +40,64 @@ class ViewAddressList extends Page
 
     public int $totalResults = 0;
 
-    public bool $exporting = false;
+    public array $countries = [];
 
-    public string $exportMessage = '';
+    public array $provinces = [];
 
-    public ?string $downloadUrl = null;
+    public array $cities = [];
 
-    protected function getViewData(): array
+    public array $districts = [];
+
+    public array $townships = [];
+
+    public function mount(): void
+    {
+        $this->loadFilterOptions();
+        $this->updateTotalResults();
+    }
+
+    protected function loadFilterOptions(): void
     {
         $service = app(AddressService::class);
 
-        $provinces = $service->getChildrenByParentId(null);
-        $cities = $this->selectedProvinceId
-            ? $service->getChildrenByParentId($this->selectedProvinceId)
-            : collect();
-        $districts = $this->selectedCityId
-            ? $service->getChildrenByParentId($this->selectedCityId)
-            : collect();
-        $townships = $this->selectedDistrictId
-            ? $service->getChildrenByParentId($this->selectedDistrictId)
-            : collect();
+        $this->countries = $service->getChildrenByParentId(null)
+            ->map(fn ($a) => ['id' => $a->id, 'name' => $a->name])
+            ->toArray();
 
-        return [
-            'provinces' => $provinces,
-            'cities' => $cities,
-            'districts' => $districts,
-            'townships' => $townships,
-        ];
+        $this->provinces = $this->selectedCountryId
+            ? $service->getChildrenByParentId($this->selectedCountryId)
+                ->map(fn ($a) => ['id' => $a->id, 'name' => $a->name])
+                ->toArray()
+            : [];
+
+        $this->cities = $this->selectedProvinceId
+            ? $service->getChildrenByParentId($this->selectedProvinceId)
+                ->map(fn ($a) => ['id' => $a->id, 'name' => $a->name])
+                ->toArray()
+            : [];
+
+        $this->districts = $this->selectedCityId
+            ? $service->getChildrenByParentId($this->selectedCityId)
+                ->map(fn ($a) => ['id' => $a->id, 'name' => $a->name])
+                ->toArray()
+            : [];
+
+        $this->townships = $this->selectedDistrictId
+            ? $service->getChildrenByParentId($this->selectedDistrictId)
+                ->map(fn ($a) => ['id' => $a->id, 'name' => $a->name])
+                ->toArray()
+            : [];
+    }
+
+    public function updatedSelectedCountryId(): void
+    {
+        $this->selectedProvinceId = null;
+        $this->selectedCityId = null;
+        $this->selectedDistrictId = null;
+        $this->selectedTownshipId = null;
+        $this->page = 1;
+        $this->loadFilterOptions();
+        $this->updateTotalResults();
     }
 
     public function updatedSelectedProvinceId(): void
@@ -73,6 +106,8 @@ class ViewAddressList extends Page
         $this->selectedDistrictId = null;
         $this->selectedTownshipId = null;
         $this->page = 1;
+        $this->loadFilterOptions();
+        $this->updateTotalResults();
     }
 
     public function updatedSelectedCityId(): void
@@ -80,17 +115,22 @@ class ViewAddressList extends Page
         $this->selectedDistrictId = null;
         $this->selectedTownshipId = null;
         $this->page = 1;
+        $this->loadFilterOptions();
+        $this->updateTotalResults();
     }
 
     public function updatedSelectedDistrictId(): void
     {
         $this->selectedTownshipId = null;
         $this->page = 1;
+        $this->loadFilterOptions();
+        $this->updateTotalResults();
     }
 
     public function updatedSelectedTownshipId(): void
     {
         $this->page = 1;
+        $this->updateTotalResults();
     }
 
     public function updatedPerPage(): void
@@ -100,11 +140,21 @@ class ViewAddressList extends Page
 
     public function resetFilters(): void
     {
+        $this->selectedCountryId = null;
         $this->selectedProvinceId = null;
         $this->selectedCityId = null;
         $this->selectedDistrictId = null;
         $this->selectedTownshipId = null;
         $this->page = 1;
+        $this->loadFilterOptions();
+        $this->updateTotalResults();
+    }
+
+    protected function updateTotalResults(): void
+    {
+        $service = app(AddressService::class);
+        $filters = $this->getFilters();
+        $this->totalResults = $service->buildQuery($filters)->count();
     }
 
     public function nextPage(): void
@@ -119,9 +169,6 @@ class ViewAddressList extends Page
         }
     }
 
-    /**
-     * 获取筛选条件（页面显示和导出共用）
-     */
     public function getFilters(): array
     {
         $filters = [];
@@ -134,99 +181,51 @@ class ViewAddressList extends Page
             $filters['parent_id'] = $this->selectedCityId;
         } elseif ($this->selectedProvinceId) {
             $filters['parent_id'] = $this->selectedProvinceId;
+        } elseif ($this->selectedCountryId) {
+            $filters['parent_id'] = $this->selectedCountryId;
         }
 
         return $filters;
     }
 
-    /**
-     * 页面显示查询（使用共享查询逻辑）
-     */
     public function getFilteredAddresses(): Paginator
     {
         $service = app(AddressService::class);
         $filters = $this->getFilters();
 
-        $query = $service->buildQuery($filters);
-        $this->totalResults = (clone $query)->count();
-
-        return $query->orderBy('id')
+        return $service->buildQuery($filters)
+            ->orderBy('id')
             ->simplePaginate($this->perPage, ['*'], 'page', $this->page);
     }
 
-    /**
-     * 导出 CSV（按页面筛选条件）
-     */
-    public function exportCsv(): void
+    // ── HasExportAction 实现 ──────────────────────────────
+
+    public function getExportQuery(): Builder
     {
-        $this->doExport('csv');
+        $service = app(AddressService::class);
+
+        return $service->buildQuery($this->getFilters());
     }
 
-    /**
-     * 导出 Excel（按页面筛选条件）
-     */
-    public function exportExcel(): void
+    public function getExportColumns(): array
     {
-        $this->doExport('xlsx');
+        return [
+            'id' => 'ID',
+            'name' => '名称',
+            'code' => '行政区划代码',
+            'level' => '层级',
+            'parent_name' => '上级地址',
+            'pinyin' => '拼音',
+        ];
     }
 
-    protected function doExport(string $format): void
+    public function getExportLabel(): string
     {
-        $filters = $this->getFilters();
-
-        /** @var Admin $user */
-        $user = Auth::guard('admin')->user();
-
-        ExportAddressJob::dispatch(
-            $filters,
-            $format,
-            $user->id
-        );
-
-        $this->exporting = true;
-        $this->exportMessage = '导出任务已提交，正在处理中...';
-        $this->downloadUrl = null;
-
-        // Dispatch browser event to poll for completion
-        $this->dispatch('pollExportStatus');
+        return '地址数据';
     }
 
-    /**
-     * 检查导出状态（由前端轮询调用）
-     */
-    public function checkExportStatus(): void
+    protected function getExportDirectory(): string
     {
-        /** @var Admin $user */
-        $user = Auth::guard('admin')->user();
-        $notification = Cache::get("export_notification_{$user->id}");
-
-        if (! $notification) {
-            return;
-        }
-
-        if ($notification['type'] === 'export') {
-            $this->exportMessage = $notification['message'];
-
-            if ($notification['success']) {
-                $this->exporting = false;
-                $this->downloadUrl = $notification['file_path'] ?? null;
-                Cache::forget("export_notification_{$user->id}");
-            } elseif (! $notification['success']) {
-                $this->exporting = false;
-                Cache::forget("export_notification_{$user->id}");
-            }
-        }
-    }
-
-    /**
-     * 下载导出文件
-     */
-    public function getDownloadUrl(): ?string
-    {
-        if (! $this->downloadUrl) {
-            return null;
-        }
-
-        return route('admin.api.export.download', ['filePath' => $this->downloadUrl]);
+        return 'exports/addresses';
     }
 }

@@ -69,6 +69,11 @@ class Address extends Model
         return $this->name;
     }
 
+    public function getParentNameAttribute(): ?string
+    {
+        return $this->parent?->name;
+    }
+
     public function scopeByLevel($query, string $level)
     {
         return $query->where('level', $level);

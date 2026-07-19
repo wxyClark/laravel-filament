@@ -38,8 +38,17 @@
         <div class="p-4 bg-white rounded-lg shadow dark:bg-gray-900">
             <div class="flex gap-4">
                 <div class="flex flex-col gap-1 flex-1">
+                    <label class="text-sm font-medium text-gray-700 dark:text-gray-300">国家</label>
+                    <select wire:model.live="selectedCountryId" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                        <option value="">全部</option>
+                        @foreach($countries as $country)
+                            <option value="{{ $country['id'] }}">{{ $country['name'] }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="flex flex-col gap-1 flex-1">
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300">省份</label>
-                    <select wire:model.live="selectedProvinceId" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                    <select wire:model.live="selectedProvinceId" @disabled(empty($provinces)) class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50">
                         <option value="">全部</option>
                         @foreach($provinces as $province)
                             <option value="{{ $province['id'] }}">{{ $province['name'] }}</option>
@@ -48,7 +57,7 @@
                 </div>
                 <div class="flex flex-col gap-1 flex-1">
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300">城市</label>
-                    <select wire:model.live="selectedCityId" @disabled($cities->isEmpty()) class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50">
+                    <select wire:model.live="selectedCityId" @disabled(empty($cities)) class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50">
                         <option value="">全部</option>
                         @foreach($cities as $city)
                             <option value="{{ $city['id'] }}">{{ $city['name'] }}</option>
@@ -57,7 +66,7 @@
                 </div>
                 <div class="flex flex-col gap-1 flex-1">
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300">区县</label>
-                    <select wire:model.live="selectedDistrictId" @disabled($districts->isEmpty()) class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50">
+                    <select wire:model.live="selectedDistrictId" @disabled(empty($districts)) class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50">
                         <option value="">全部</option>
                         @foreach($districts as $district)
                             <option value="{{ $district['id'] }}">{{ $district['name'] }}</option>
@@ -66,7 +75,7 @@
                 </div>
                 <div class="flex flex-col gap-1 flex-1">
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300">街道</label>
-                    <select wire:model.live="selectedTownshipId" @disabled($townships->isEmpty()) class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50">
+                    <select wire:model.live="selectedTownshipId" @disabled(empty($townships)) class="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white disabled:opacity-50">
                         <option value="">全部</option>
                         @foreach($townships as $township)
                             <option value="{{ $township['id'] }}">{{ $township['name'] }}</option>
@@ -121,6 +130,9 @@
         </div>
 
         {{-- 数据表格 --}}
+        @php
+            $paginator = $this->getFilteredAddresses();
+        @endphp
         <div class="w-full overflow-x-auto bg-white rounded-lg shadow dark:bg-gray-900">
             <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
                 <thead class="bg-gray-50 dark:bg-gray-800">
@@ -135,7 +147,7 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
-                    @forelse($this->getFilteredAddresses() as $addr)
+                    @forelse($paginator as $addr)
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800">
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $addr->id }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{{ $addr->name }}</td>
@@ -173,9 +185,6 @@
         </div>
 
         {{-- 底部分页导航 --}}
-        @php
-            $paginator = $this->getFilteredAddresses();
-        @endphp
         <div class="flex items-center justify-between">
             <div class="text-sm text-gray-500">
                 共 {{ number_format($totalResults) }} 条
@@ -199,7 +208,7 @@
         </div>
     </div>
 
-    {{-- 导出状态轮询 --}}
+    {{-- 导出状态轮询 + 同步下载 --}}
     <script>
         document.addEventListener('livewire:init', () => {
             let pollInterval = null;
@@ -218,6 +227,31 @@
                         pollInterval = null;
                     }
                 }, 60000);
+            });
+
+            Livewire.on('startSyncDownload', (detail) => {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = detail.url;
+
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = 'token';
+                tokenInput.value = detail.token;
+                form.appendChild(tokenInput);
+
+                const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+                if (csrfMeta) {
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = '_token';
+                    csrfInput.value = csrfMeta.content;
+                    form.appendChild(csrfInput);
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
             });
         });
     </script>

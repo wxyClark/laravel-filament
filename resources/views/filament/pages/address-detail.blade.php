@@ -32,7 +32,7 @@
                     @if(!empty($parentChain))
                         <div class="flex items-center flex-wrap gap-1.5">
                             <a href="{{ route('filament.admin.pages.view-address-list') }}" class="text-sm text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 transition-colors">
-                                中国
+                                地址管理
                             </a>
                             @foreach($parentChain as $index => $parent)
                                 <x-heroicon-m-chevron-right class="h-3.5 w-3.5 text-gray-400" />

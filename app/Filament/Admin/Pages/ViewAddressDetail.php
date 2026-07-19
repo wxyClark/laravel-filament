@@ -6,6 +6,7 @@ namespace App\Filament\Admin\Pages;
 
 use App\Models\Address;
 use Filament\Pages\Page;
+use Illuminate\Database\Eloquent\Collection;
 
 class ViewAddressDetail extends Page
 {
@@ -36,10 +37,10 @@ class ViewAddressDetail extends Page
 
     public int $totalChildCount = 0;
 
-    /** @var \Illuminate\Database\Eloquent\Collection */
+    /** @var Collection */
     public $children;
 
-    /** @var \Illuminate\Database\Eloquent\Collection */
+    /** @var Collection */
     public $siblings;
 
     public int $siblingCount = 0;
