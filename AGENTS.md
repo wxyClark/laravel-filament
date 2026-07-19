@@ -154,6 +154,7 @@ App: `http://localhost:8082` | Admin: `http://localhost:8082/admin`
 
 | Skill | Purpose |
 |-------|---------|
+| `prompt-engineer` | 优化提示词，生成结构化高质量需求 |
 | `requirement-analysis` | Multi-turn dialogue for requirement discovery + logic validation |
 | `tdd-workflow` | Complete AI-assisted TDD flow (8 steps) |
 | `architecture-testing` | DDD layer boundaries + naming conventions |
