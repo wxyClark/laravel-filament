@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Filament\Admin\Pages;
 
 use App\Jobs\ExportAddressJob;
-use App\Models\Address;
 use App\Models\Admin;
 use App\Services\AddressService;
 use Filament\Pages\Page;
@@ -41,6 +40,15 @@ class ViewAddressList extends Page
     public bool $exporting = false;
 
     public string $exportMessage = '';
+
+    // 导出筛选弹窗
+    public bool $showExportModal = false;
+
+    public ?string $exportLevel = null;
+
+    public ?string $exportKeyword = null;
+
+    public int $exportTotalCount = 0;
 
     protected function getViewData(): array
     {
@@ -117,31 +125,110 @@ class ViewAddressList extends Page
         }
     }
 
-    public function getFilteredAddresses(): Paginator
+    /**
+     * 获取页面显示的筛选条件
+     */
+    public function getPageFilters(): array
     {
-        $query = Address::query()->with('parent');
+        $filters = [];
 
         if ($this->selectedTownshipId) {
-            $query->where('id', $this->selectedTownshipId);
+            $filters['parent_id'] = $this->selectedTownshipId;
         } elseif ($this->selectedDistrictId) {
-            $query->where('parent_id', $this->selectedDistrictId);
+            $filters['parent_id'] = $this->selectedDistrictId;
         } elseif ($this->selectedCityId) {
-            $query->where('parent_id', $this->selectedCityId);
+            $filters['parent_id'] = $this->selectedCityId;
         } elseif ($this->selectedProvinceId) {
-            $query->where('parent_id', $this->selectedProvinceId);
+            $filters['parent_id'] = $this->selectedProvinceId;
         }
 
+        return $filters;
+    }
+
+    /**
+     * 页面显示查询（使用共享查询逻辑）
+     */
+    public function getFilteredAddresses(): Paginator
+    {
+        $service = app(AddressService::class);
+        $filters = $this->getPageFilters();
+
+        $query = $service->buildQuery($filters);
         $this->totalResults = (clone $query)->count();
 
         return $query->orderBy('id')
             ->simplePaginate($this->perPage, ['*'], 'page', $this->page);
     }
 
+    /**
+     * 打开导出筛选弹窗
+     */
+    public function openExportModal(): void
+    {
+        $this->showExportModal = true;
+        $this->exportLevel = null;
+        $this->exportKeyword = null;
+        $this->updateExportCount();
+    }
+
+    /**
+     * 关闭导出筛选弹窗
+     */
+    public function closeExportModal(): void
+    {
+        $this->showExportModal = false;
+    }
+
+    /**
+     * 导出筛选条件变化时更新计数
+     */
+    public function updatedExportLevel(): void
+    {
+        $this->updateExportCount();
+    }
+
+    public function updatedExportKeyword(): void
+    {
+        $this->updateExportCount();
+    }
+
+    protected function updateExportCount(): void
+    {
+        $filters = $this->getExportFilters();
+        $service = app(AddressService::class);
+        $this->exportTotalCount = $service->buildQuery($filters)->count();
+    }
+
+    /**
+     * 获取导出筛选条件（页面筛选 + 导出弹窗筛选）
+     */
+    public function getExportFilters(): array
+    {
+        $filters = $this->getPageFilters();
+
+        // 叠加导出弹窗的额外筛选
+        if ($this->exportLevel) {
+            $filters['level'] = $this->exportLevel;
+        }
+
+        if ($this->exportKeyword) {
+            $filters['keyword'] = $this->exportKeyword;
+        }
+
+        return $filters;
+    }
+
+    /**
+     * 导出 CSV
+     */
     public function exportCsv(): void
     {
         $this->doExport('csv');
     }
 
+    /**
+     * 导出 Excel
+     */
     public function exportExcel(): void
     {
         $this->doExport('xlsx');
@@ -160,24 +247,8 @@ class ViewAddressList extends Page
             $user->id
         );
 
+        $this->showExportModal = false;
         $this->exporting = true;
         $this->exportMessage = '导出任务已提交，正在处理中...';
-    }
-
-    protected function getExportFilters(): array
-    {
-        $filters = [];
-
-        if ($this->selectedTownshipId) {
-            $filters['parent_id'] = $this->selectedTownshipId;
-        } elseif ($this->selectedDistrictId) {
-            $filters['parent_id'] = $this->selectedDistrictId;
-        } elseif ($this->selectedCityId) {
-            $filters['parent_id'] = $this->selectedCityId;
-        } elseif ($this->selectedProvinceId) {
-            $filters['parent_id'] = $this->selectedProvinceId;
-        }
-
-        return $filters;
     }
 }

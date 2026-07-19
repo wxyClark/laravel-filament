@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Address;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -14,6 +15,35 @@ class AddressService
     public function __construct()
     {
         $this->cacheTtl = config('app.address_cache_ttl', 3600);
+    }
+
+    /**
+     * 构建地址查询（页面显示和导出共用）
+     *
+     * @param  array{parent_id?: int, level?: string, keyword?: string}  $filters
+     */
+    public function buildQuery(array $filters = []): Builder
+    {
+        $query = Address::query()->with('parent');
+
+        if (! empty($filters['parent_id'])) {
+            $query->where('parent_id', $filters['parent_id']);
+        }
+
+        if (! empty($filters['level'])) {
+            $query->where('level', $filters['level']);
+        }
+
+        if (! empty($filters['keyword'])) {
+            $keyword = $filters['keyword'];
+            $query->where(function (Builder $q) use ($keyword) {
+                $q->where('name', 'like', "%{$keyword}%")
+                    ->orWhere('code', 'like', "%{$keyword}%")
+                    ->orWhere('pinyin', 'like', "%{$keyword}%");
+            });
+        }
+
+        return $query;
     }
 
     public function getAllAddresses(): Collection

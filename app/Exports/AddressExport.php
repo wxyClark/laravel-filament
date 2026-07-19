@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Exports;
 
 use App\Models\Address;
+use App\Services\AddressService;
 use Illuminate\Database\Eloquent\Builder;
 
 class AddressExport
@@ -15,8 +16,10 @@ class AddressExport
 
     public function __construct(array $filters = [])
     {
-        $this->query = Address::query()->with('parent');
-        $this->applyFilters($filters);
+        // 使用共享的查询构建器
+        $service = app(AddressService::class);
+        $this->query = $service->buildQuery($filters);
+
         $this->columns = [
             'id' => 'ID',
             'name' => '名称',
@@ -30,26 +33,6 @@ class AddressExport
             'created_at' => '创建时间',
             'updated_at' => '更新时间',
         ];
-    }
-
-    protected function applyFilters(array $filters): void
-    {
-        if (! empty($filters['parent_id'])) {
-            $this->query->where('parent_id', $filters['parent_id']);
-        }
-
-        if (! empty($filters['level'])) {
-            $this->query->where('level', $filters['level']);
-        }
-
-        if (! empty($filters['keyword'])) {
-            $keyword = $filters['keyword'];
-            $this->query->where(function (Builder $q) use ($keyword) {
-                $q->where('name', 'like', "%{$keyword}%")
-                    ->orWhere('code', 'like', "%{$keyword}%")
-                    ->orWhere('pinyin', 'like', "%{$keyword}%");
-            });
-        }
     }
 
     public function getTotalRows(): int
