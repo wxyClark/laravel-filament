@@ -144,9 +144,9 @@
         @endphp
         <div class="flex items-center justify-between">
             <div class="text-sm text-gray-500">
-                共 {{ number_format($totalResults) }} 条，当前第 {{ $paginator->currentPage() }} 页
+                共 {{ number_format($totalResults) }} 条
                 @if($totalResults > 0)
-                    ，显示 {{ $paginator->firstItem() }} - {{ $paginator->lastItem() }} 条
+                    ，当前第 {{ $paginator->currentPage() }} 页，显示 {{ $paginator->firstItem() }} - {{ $paginator->lastItem() }} 条
                 @endif
             </div>
             <div class="flex items-center gap-2">
@@ -155,7 +155,7 @@
                 @else
                     <button wire:click="previousPage" class="px-3 py-2 text-sm text-gray-700 bg-white border rounded-lg hover:bg-gray-50">← 上一页</button>
                 @endif
-                <span class="px-3 py-2 text-sm text-gray-500">第 {{ $paginator->currentPage() }} / {{ $paginator->lastPage() }} 页</span>
+                <span class="px-3 py-2 text-sm text-gray-500">第 {{ $paginator->currentPage() }} 页</span>
                 @if($paginator->hasMorePages())
                     <button wire:click="nextPage" class="px-3 py-2 text-sm text-gray-700 bg-white border rounded-lg hover:bg-gray-50">下一页 →</button>
                 @else
