@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Pages;
 
+use App\Jobs\ExportAddressJob;
 use App\Models\Address;
+use App\Models\Admin;
 use App\Services\AddressService;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
 
 class ViewAddressList extends Page
 {
@@ -34,6 +37,10 @@ class ViewAddressList extends Page
     public int $perPage = 25;
 
     public int $totalResults = 0;
+
+    public bool $exporting = false;
+
+    public string $exportMessage = '';
 
     protected function getViewData(): array
     {
@@ -128,5 +135,49 @@ class ViewAddressList extends Page
 
         return $query->orderBy('id')
             ->simplePaginate($this->perPage, ['*'], 'page', $this->page);
+    }
+
+    public function exportCsv(): void
+    {
+        $this->doExport('csv');
+    }
+
+    public function exportExcel(): void
+    {
+        $this->doExport('xlsx');
+    }
+
+    protected function doExport(string $format): void
+    {
+        $filters = $this->getExportFilters();
+
+        /** @var Admin $user */
+        $user = Auth::guard('admin')->user();
+
+        ExportAddressJob::dispatch(
+            $filters,
+            $format,
+            $user->id
+        );
+
+        $this->exporting = true;
+        $this->exportMessage = '导出任务已提交，正在处理中...';
+    }
+
+    protected function getExportFilters(): array
+    {
+        $filters = [];
+
+        if ($this->selectedTownshipId) {
+            $filters['parent_id'] = $this->selectedTownshipId;
+        } elseif ($this->selectedDistrictId) {
+            $filters['parent_id'] = $this->selectedDistrictId;
+        } elseif ($this->selectedCityId) {
+            $filters['parent_id'] = $this->selectedCityId;
+        } elseif ($this->selectedProvinceId) {
+            $filters['parent_id'] = $this->selectedProvinceId;
+        }
+
+        return $filters;
     }
 }

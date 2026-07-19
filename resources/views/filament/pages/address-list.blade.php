@@ -53,14 +53,36 @@
             <span class="text-sm text-gray-600 dark:text-gray-400">
                 共 <span class="font-semibold">{{ $totalResults }}</span> 条结果
             </span>
-            <div class="flex items-center gap-2">
-                <label class="text-sm text-gray-600 dark:text-gray-400">每页</label>
-                <select wire:model.live="perPage" class="rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm">
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-                <label class="text-sm text-gray-600 dark:text-gray-400">条</label>
+            <div class="flex items-center gap-3">
+                {{-- 导出按钮 --}}
+                <div class="flex items-center gap-2">
+                    <button wire:click="exportCsv" @disabled($exporting) class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 transition-colors">
+                        <x-heroicon-o-document-arrow-down class="h-4 w-4" />
+                        导出 CSV
+                    </button>
+                    <button wire:click="exportExcel" @disabled($exporting) class="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-white bg-primary-600 border border-transparent rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                        <x-heroicon-o-table-cells class="h-4 w-4" />
+                        导出 Excel
+                    </button>
+                </div>
+                @if($exporting)
+                    <div class="flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400">
+                        <svg class="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        {{ $exportMessage }}
+                    </div>
+                @endif
+                <div class="flex items-center gap-2">
+                    <label class="text-sm text-gray-600 dark:text-gray-400">每页</label>
+                    <select wire:model.live="perPage" class="rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm">
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <label class="text-sm text-gray-600 dark:text-gray-400">条</label>
+                </div>
             </div>
         </div>
 

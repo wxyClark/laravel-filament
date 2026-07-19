@@ -1,0 +1,87 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Jobs;
+
+use App\Exports\AddressExport;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Storage;
+
+class ExportAddressJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public int $tries = 3;
+
+    public int $timeout = 300;
+
+    public function __construct(
+        protected array $filters,
+        protected string $format,
+        protected int $userId,
+    ) {
+        $this->onQueue('exports');
+    }
+
+    public function handle(): void
+    {
+        $export = new AddressExport($this->filters);
+        $totalRows = $export->getTotalRows();
+
+        if ($totalRows === 0) {
+            $this->notifyUser('导出失败：没有符合条件的数据', false);
+
+            return;
+        }
+
+        $timestamp = now()->format('Ymd_His');
+        $filename = "addresses_{$timestamp}.{$this->format}";
+        $directory = 'exports/addresses';
+        $filePath = storage_path("app/{$directory}/{$filename}");
+
+        // Ensure directory exists
+        Storage::makeDirectory($directory);
+
+        try {
+            if ($this->format === 'csv') {
+                $export->exportToCsv($filePath);
+            } else {
+                $export->exportToExcel($filePath);
+            }
+
+            $fileSize = round(filesize($filePath) / 1024, 2);
+
+            $this->notifyUser(
+                "导出完成：{$totalRows} 条数据，文件大小 {$fileSize}KB",
+                true,
+                "{$directory}/{$filename}"
+            );
+        } catch (\Exception $e) {
+            $this->notifyUser("导出失败：{$e->getMessage()}", false);
+            throw $e;
+        }
+    }
+
+    protected function notifyUser(string $message, bool $success, string $filePath = ''): void
+    {
+        // Store notification in cache for the user to retrieve
+        $notification = [
+            'type' => 'export',
+            'message' => $message,
+            'success' => $success,
+            'file_path' => $filePath,
+            'created_at' => now()->toISOString(),
+        ];
+
+        cache()->put(
+            "export_notification_{$this->userId}",
+            $notification,
+            now()->addHours(24)
+        );
+    }
+}

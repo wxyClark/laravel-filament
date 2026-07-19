@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Http\Controllers\Api\AddressApiController;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\ExportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,5 +45,18 @@ Route::prefix('admin/api')->group(function () {
         Route::get('/by-level/{level}', [AddressApiController::class, 'byLevel']);
         Route::get('/find/{code}', [AddressApiController::class, 'findByCode']);
         Route::get('/tree', [AddressApiController::class, 'tree']);
+    });
+
+    // 数据导出 API（需要认证）
+    Route::middleware('auth:admin')->prefix('export')->group(function () {
+        Route::post('/address', [ExportController::class, 'exportAddress'])
+            ->name('admin.api.export.address');
+
+        Route::get('/status', [ExportController::class, 'checkExportStatus'])
+            ->name('admin.api.export.status');
+
+        Route::get('/download/{filePath}', [ExportController::class, 'downloadExport'])
+            ->where('filePath', '.*')
+            ->name('admin.api.export.download');
     });
 });
