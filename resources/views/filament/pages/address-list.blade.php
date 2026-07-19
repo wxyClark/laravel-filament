@@ -100,9 +100,9 @@
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $addr->parent?->name ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $addr->pinyin ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <button wire:click="viewDetail({{ $addr->id }})" class="text-primary-600 hover:text-primary-900 dark:text-primary-400">
+                                <a href="{{ route('filament.admin.pages.address', ['id' => $addr->id]) }}" class="text-primary-600 hover:text-primary-900 dark:text-primary-400 hover:underline">
                                     详情
-                                </button>
+                                </a>
                             </td>
                         </tr>
                     @empty
@@ -141,108 +141,4 @@
             </div>
         @endif
     </div>
-
-    {{-- 详情弹窗 --}}
-    @if($showDetailModal)
-        <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" wire:click="closeDetailModal"></div>
-                <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full dark:bg-gray-800">
-                    <div class="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <div class="sm:flex sm:items-start">
-                            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-title">
-                                    地址详情 - {{ $detailAddress?->name ?? '' }}
-                                </h3>
-                                <div class="mt-4 space-y-4">
-                                    {{-- 基本信息 --}}
-                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                        <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">基本信息</h4>
-                                        <div class="grid grid-cols-2 gap-3">
-                                            <div>
-                                                <span class="text-xs text-gray-500">ID</span>
-                                                <p class="text-sm font-medium">{{ $detailAddress?->id }}</p>
-                                            </div>
-                                            <div>
-                                                <span class="text-xs text-gray-500">名称</span>
-                                                <p class="text-sm font-medium">{{ $detailAddress?->name }}</p>
-                                            </div>
-                                            <div>
-                                                <span class="text-xs text-gray-500">编码</span>
-                                                <p class="text-sm font-mono">{{ $detailAddress?->code }}</p>
-                                            </div>
-                                            <div>
-                                                <span class="text-xs text-gray-500">层级</span>
-                                                <p class="text-sm font-medium">{{ $detailAddress?->level }}</p>
-                                            </div>
-                                            <div>
-                                                <span class="text-xs text-gray-500">拼音</span>
-                                                <p class="text-sm">{{ $detailAddress?->pinyin ?? '-' }}</p>
-                                            </div>
-                                            <div>
-                                                <span class="text-xs text-gray-500">排序</span>
-                                                <p class="text-sm">{{ $detailAddress?->sort ?? 0 }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {{-- 上级地址链 --}}
-                                    <div class="bg-blue-50 dark:bg-blue-900 rounded-lg p-4">
-                                        <h4 class="text-sm font-medium text-blue-700 dark:text-blue-300 mb-3">📍 上级地址</h4>
-                                        @if($parentChain->count() > 0)
-                                            <div class="flex items-center flex-wrap gap-1 text-sm">
-                                                <span class="text-blue-600 dark:text-blue-400">中国</span>
-                                                @foreach($parentChain as $parent)
-                                                    <span class="text-gray-400">/</span>
-                                                    <span class="text-blue-600 dark:text-blue-400">{{ $parent->name }}</span>
-                                                @endforeach
-                                                <span class="text-gray-400">/</span>
-                                                <span class="text-blue-800 dark:text-blue-200 font-semibold">{{ $detailAddress?->name }}</span>
-                                            </div>
-                                        @else
-                                            <p class="text-sm text-gray-500">顶级地址</p>
-                                        @endif
-                                    </div>
-
-                                    {{-- 下级地址统计 --}}
-                                    <div class="bg-green-50 dark:bg-green-900 rounded-lg p-4">
-                                        <h4 class="text-sm font-medium text-green-700 dark:text-green-300 mb-3">📊 下级地址统计</h4>
-                                        <div class="grid grid-cols-2 gap-3">
-                                            <div class="bg-white dark:bg-gray-600 rounded p-3 text-center">
-                                                <p class="text-2xl font-bold text-green-600">{{ $childCount }}</p>
-                                                <p class="text-xs text-gray-500">直接下级</p>
-                                            </div>
-                                            <div class="bg-white dark:bg-gray-600 rounded p-3 text-center">
-                                                <p class="text-2xl font-bold text-blue-600">{{ $totalChildCount }}</p>
-                                                <p class="text-xs text-gray-500">全部下级</p>
-                                            </div>
-                                        </div>
-                                        @if($children->count() > 0)
-                                            <div class="mt-3">
-                                                <p class="text-xs text-gray-500 mb-2">直接下级列表 (前10个)：</p>
-                                                <div class="flex flex-wrap gap-1">
-                                                    @foreach($children->take(10) as $child)
-                                                        <span class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded">{{ $child->name }}</span>
-                                                    @endforeach
-                                                    @if($children->count() > 10)
-                                                        <span class="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded">+{{ $children->count() - 10 }} 更多</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                        <button type="button" wire:click="closeDetailModal" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm">
-                            关闭
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
 </x-filament-panels::page>

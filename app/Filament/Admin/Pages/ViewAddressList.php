@@ -7,6 +7,7 @@ namespace App\Filament\Admin\Pages;
 use App\Models\Address;
 use App\Services\AddressService;
 use Filament\Pages\Page;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class ViewAddressList extends Page
 {
@@ -33,18 +34,6 @@ class ViewAddressList extends Page
     public int $perPage = 25;
 
     public int $totalResults = 0;
-
-    public bool $showDetailModal = false;
-
-    public ?Address $detailAddress = null;
-
-    public $parentChain = [];
-
-    public int $childCount = 0;
-
-    public int $totalChildCount = 0;
-
-    public $children = [];
 
     protected function getViewData(): array
     {
@@ -121,7 +110,7 @@ class ViewAddressList extends Page
         }
     }
 
-    public function getFilteredAddresses(): \Illuminate\Contracts\Pagination\Paginator
+    public function getFilteredAddresses(): Paginator
     {
         $query = Address::query()->with('parent');
 
@@ -139,66 +128,5 @@ class ViewAddressList extends Page
 
         return $query->orderBy('id')
             ->simplePaginate($this->perPage, ['*'], 'page', $this->page);
-    }
-
-    public function viewDetail(int $id): void
-    {
-        $address = Address::find($id);
-
-        if (! $address) {
-            return;
-        }
-
-        $this->detailAddress = $address;
-
-        // 获取上级地址链
-        $this->parentChain = $this->getParentChain($address);
-
-        // 获取直接下级数量
-        $this->childCount = Address::where('parent_id', $address->id)->count();
-
-        // 获取全部下级数量
-        $this->totalChildCount = $this->getTotalChildCount($address->id);
-
-        // 获取直接下级列表
-        $this->children = Address::where('parent_id', $address->id)
-            ->orderBy('sort')
-            ->orderBy('name')
-            ->limit(10)
-            ->get();
-
-        $this->showDetailModal = true;
-    }
-
-    public function closeDetailModal(): void
-    {
-        $this->showDetailModal = false;
-        $this->detailAddress = null;
-    }
-
-    protected function getParentChain(Address $address): array
-    {
-        $chain = [];
-        $current = $address->parent;
-
-        while ($current) {
-            $chain[] = $current;
-            $current = $current->parent;
-        }
-
-        return array_reverse($chain);
-    }
-
-    protected function getTotalChildCount(int $parentId): int
-    {
-        $count = 0;
-        $children = Address::where('parent_id', $parentId)->pluck('id');
-
-        foreach ($children as $childId) {
-            $count++;
-            $count += $this->getTotalChildCount($childId);
-        }
-
-        return $count;
     }
 }

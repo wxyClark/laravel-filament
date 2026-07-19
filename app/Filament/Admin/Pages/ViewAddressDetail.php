@@ -1,0 +1,96 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Filament\Admin\Pages;
+
+use App\Models\Address;
+use Filament\Pages\Page;
+
+class ViewAddressDetail extends Page
+{
+    protected static ?string $navigationIcon = 'heroicon-o-map-pin';
+
+    protected static string $view = 'filament.pages.address-detail';
+
+    protected static ?string $title = '地址详情';
+
+    protected static bool $shouldRegisterNavigation = false;
+
+    protected static ?string $navigationGroup = '地址管理';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?string $slug = 'address';
+
+    public static function getRoutePath(): string
+    {
+        return '/address/{id}';
+    }
+
+    public ?Address $address = null;
+
+    public array $parentChain = [];
+
+    public int $childCount = 0;
+
+    public int $totalChildCount = 0;
+
+    /** @var \Illuminate\Database\Eloquent\Collection */
+    public $children;
+
+    /** @var \Illuminate\Database\Eloquent\Collection */
+    public $siblings;
+
+    public int $siblingCount = 0;
+
+    public function mount(int|string $id): void
+    {
+        $address = Address::with('parent')->find($id);
+
+        if (! $address) {
+            abort(404, '地址不存在');
+        }
+
+        $this->address = $address;
+        $this->parentChain = $this->buildParentChain($address);
+        $this->childCount = $address->children()->count();
+        $this->totalChildCount = $this->countAllDescendants($address->id);
+        $this->children = $address->children()->limit(20)->get();
+        $this->siblings = Address::where('parent_id', $address->parent_id)
+            ->where('id', '!=', $address->id)
+            ->orderBy('sort')
+            ->orderBy('name')
+            ->limit(10)
+            ->get();
+        $this->siblingCount = Address::where('parent_id', $address->parent_id)
+            ->where('id', '!=', $address->id)
+            ->count();
+    }
+
+    protected function buildParentChain(Address $address): array
+    {
+        $chain = [];
+        $current = $address->parent;
+
+        while ($current) {
+            $chain[] = $current;
+            $current = $current->parent;
+        }
+
+        return array_reverse($chain);
+    }
+
+    protected function countAllDescendants(int $parentId): int
+    {
+        $count = 0;
+        $childIds = Address::where('parent_id', $parentId)->pluck('id');
+
+        foreach ($childIds as $childId) {
+            $count++;
+            $count += $this->countAllDescendants($childId);
+        }
+
+        return $count;
+    }
+}
