@@ -234,6 +234,100 @@ docker compose exec mysql mysql -u root -p -e "DROP DATABASE laravel; CREATE DAT
 3. 定期清理 Docker 资源以节省磁盘空间
 4. 生产环境请修改默认密码和密钥
 
+## 💾 数据库备份与恢复
+
+### 备份命令
+
+```bash
+# 备份当前数据库（自动命名带时间戳）
+./docker/mysql/backup.sh
+
+# 备份并指定名称
+./docker/mysql/backup.sh my_backup
+
+# 备份文件保存在: backups/mysql/my_backup.sql.gz
+```
+
+### 恢复命令
+
+```bash
+# 查看可用备份
+./docker/mysql/restore.sh
+
+# 恢复指定备份
+./docker/mysql/restore.sh my_backup
+
+# 恢复后自动清除缓存
+```
+
+### 数据快照（备份 + Seed）
+
+```bash
+# 创建包含 Seed 数据的快照
+./docker/mysql/snapshot.sh my_snapshot
+
+# 快照包含：
+# - seeded_my_snapshot.sql.gz（seed 后的完整数据）
+# - snapshot_my_snapshot.sql.gz（seed 前的备份）
+
+# 恢复快照
+./docker/mysql/restore.sh seeded_my_snapshot
+```
+
+### 重新构建并恢复数据
+
+```bash
+# 1. 停止并删除容器
+docker compose down
+
+# 2. 重新构建镜像
+docker compose build --no-cache
+
+# 3. 启动容器
+docker compose up -d
+
+# 4. 等待 MySQL 就绪（约 30 秒）
+docker compose ps  # 等待 mysql 状态变为 healthy
+
+# 5. 恢复数据库
+./docker/mysql/restore.sh my_backup
+
+# 或者从头开始（迁移 + Seed）
+docker compose exec app php artisan migrate:fresh --seed
+```
+
+### 备份文件结构
+
+```
+backups/
+├── mysql/
+│   ├── backup_20260719_120000.sql.gz    # 普通备份
+│   ├── my_backup.sql.gz                 # 命名备份
+│   └── ...
+└── snapshots/
+    ├── seeded_my_snapshot.sql.gz        # Seed 数据
+    ├── snapshot_my_snapshot.sql.gz      # Seed 前备份
+    └── my_snapshot.info                 # 快照信息
+```
+
+### CI 测试前的数据准备
+
+```bash
+# 方式 1: 使用快照恢复测试数据
+./docker/mysql/restore.sh seeded_snapshot_name
+
+# 方式 2: 从头迁移
+docker compose exec app php artisan migrate:fresh --seed
+
+# 方式 3: 只运行迁移
+docker compose exec app php artisan migrate
+
+# 然后运行 CI 测试
+docker compose exec app ./vendor/bin/pint --test
+docker compose exec app ./vendor/bin/phpstan analyse --no-progress
+docker compose exec app ./vendor/bin/pest --compact
+```
+
 ## 🎯 推荐工作流
 
 1. **开发时**: `./docker.sh start` 启动环境

@@ -75,7 +75,10 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        JWTAuth::parseToken()->invalidate();
+        $user = $request->user();
+        if ($user && method_exists($user, 'token') && $user->token()) {
+            $user->token()->revoke();
+        }
 
         return response()->json([
             'message' => '退出成功',
@@ -84,7 +87,8 @@ class AuthController extends Controller
 
     public function refresh(Request $request): JsonResponse
     {
-        $token = JWTAuth::parseToken()->refresh();
+        $user = $request->user();
+        $token = JWTAuth::fromUser($user);
 
         return response()->json([
             'message' => 'Token 已刷新',
@@ -96,8 +100,11 @@ class AuthController extends Controller
 
     public function me(Request $request): JsonResponse
     {
-        /** @var Admin $admin */
-        $admin = JWTAuth::parseToken()->toUser();
+        $admin = $request->user();
+
+        if (! $admin) {
+            return response()->json(['message' => '未认证'], 401);
+        }
 
         return response()->json([
             'data' => [

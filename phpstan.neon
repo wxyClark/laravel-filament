@@ -24,3 +24,5 @@ parameters:
         - '#Class [a-zA-Z\\]+ not found.#'
         # Argument type mismatches (Filament/Livewire)
         - '#Parameter .+ of method .+ expects .+, .+ given#'
+        # Call method on unknown class (User model in request context)
+        - '#Call to method [a-zA-Z]+\(\) on an unknown class#'

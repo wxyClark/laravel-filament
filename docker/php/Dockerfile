@@ -52,11 +52,15 @@ COPY --from=builder /usr/local/etc/php/conf.d/ /usr/local/etc/php/conf.d/
 RUN mkdir -p /var/www/html/storage /var/www/html/bootstrap/cache \
     && chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
+# 复制启动脚本
+COPY docker/php/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 # 设置工作目录
 WORKDIR /var/www/html
 
 # 暴露端口
 EXPOSE 9000
 
-# 启动命令（FPM master 以 root 运行，worker 自动降权到 www-data）
-CMD ["php-fpm"]
+# 启动命令（修复权限后启动 FPM）
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
