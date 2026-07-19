@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domains\Logging\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -111,7 +112,7 @@ class RequestLog extends Model
     /**
      * 获取指定时间范围的日志
      */
-    public static function getRecent(int $minutes = 60): \Illuminate\Database\Eloquent\Collection
+    public static function getRecent(int $minutes = 60): Collection
     {
         return static::where('created_at', '>=', now()->subMinutes($minutes))
             ->orderByDesc('created_at')

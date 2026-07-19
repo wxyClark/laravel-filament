@@ -121,6 +121,25 @@ services:
       timeout: 10s
       retries: 3
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: filament-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "${PMA_PORT:-8081}:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+      UPLOAD_LIMIT: 100M
+    networks:
+      - laravel-net
+    depends_on:
+      mysql:
+        condition: service_healthy
+    profiles:
+      - tools
+
   composer:
     image: composer:2
     container_name: filament-composer

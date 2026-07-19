@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domains\Logging\Models;
 
 use App\Domains\Logging\Enums\LogLevel;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -114,7 +115,7 @@ class BusinessLog extends Model
     /**
      * 根据 requestId 查找日志
      */
-    public static function findByRequestId(string $requestId): \Illuminate\Database\Eloquent\Collection
+    public static function findByRequestId(string $requestId): Collection
     {
         return static::where('request_id', $requestId)->orderBy('created_at')->get();
     }

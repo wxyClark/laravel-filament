@@ -44,6 +44,23 @@ services:
             retries: 3
         restart: unless-stopped
 
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: filament-phpmyadmin
+        restart: unless-stopped
+        ports:
+            - '${PMA_PORT:-8081}:80'
+        environment:
+            PMA_HOST: mysql
+            PMA_USER: root
+            PMA_PASSWORD: '${DB_ROOT_PASSWORD:-rootsecret}'
+            UPLOAD_LIMIT: 100M
+        networks:
+            - laravel-net
+        depends_on:
+            app:
+                condition: service_started
+
 
 networks:
     laravel-net:
