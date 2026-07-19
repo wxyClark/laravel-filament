@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Exports\AddressExport;
+use App\Exports\QueryExport;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,7 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
 
-class ExportAddressJob implements ShouldQueue
+class ExportDataJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -20,18 +20,24 @@ class ExportAddressJob implements ShouldQueue
 
     public int $timeout = 300;
 
+    /**
+     * @param  QueryExport  $export  导出实例
+     * @param  string  $format  csv|xlsx
+     * @param  int  $userId  触发用户 ID
+     * @param  string  $directory  存储子目录 (e.g. 'exports/addresses')
+     */
     public function __construct(
-        protected array $filters,
+        protected QueryExport $export,
         protected string $format,
         protected int $userId,
+        protected string $directory = 'exports/data',
     ) {
         $this->onQueue('exports');
     }
 
     public function handle(): void
     {
-        $export = new AddressExport($this->filters);
-        $totalRows = $export->getTotalRows();
+        $totalRows = $this->export->getTotalRows();
 
         if ($totalRows === 0) {
             $this->notifyUser('导出失败：没有符合条件的数据', false);
@@ -39,19 +45,18 @@ class ExportAddressJob implements ShouldQueue
             return;
         }
 
+        $label = $this->export->getLabel();
         $timestamp = now()->format('Ymd_His');
-        $filename = "addresses_{$timestamp}.{$this->format}";
-        $directory = 'exports/addresses';
-        $filePath = storage_path("app/{$directory}/{$filename}");
+        $filename = "{$label}_{$timestamp}.{$this->format}";
+        $filePath = storage_path("app/{$this->directory}/{$filename}");
 
-        // Ensure directory exists
-        Storage::makeDirectory($directory);
+        Storage::makeDirectory($this->directory);
 
         try {
             if ($this->format === 'csv') {
-                $export->exportToCsv($filePath);
+                $this->export->exportToCsv($filePath);
             } else {
-                $export->exportToExcel($filePath);
+                $this->export->exportToExcel($filePath);
             }
 
             $fileSize = round(filesize($filePath) / 1024, 2);
@@ -59,7 +64,7 @@ class ExportAddressJob implements ShouldQueue
             $this->notifyUser(
                 "导出完成：{$totalRows} 条数据，文件大小 {$fileSize}KB",
                 true,
-                "{$directory}/{$filename}"
+                "{$this->directory}/{$filename}"
             );
         } catch (\Exception $e) {
             $this->notifyUser("导出失败：{$e->getMessage()}", false);
@@ -69,18 +74,15 @@ class ExportAddressJob implements ShouldQueue
 
     protected function notifyUser(string $message, bool $success, string $filePath = ''): void
     {
-        // Store notification in cache for the user to retrieve
-        $notification = [
-            'type' => 'export',
-            'message' => $message,
-            'success' => $success,
-            'file_path' => $filePath,
-            'created_at' => now()->toISOString(),
-        ];
-
         cache()->put(
             "export_notification_{$this->userId}",
-            $notification,
+            [
+                'type' => 'export',
+                'message' => $message,
+                'success' => $success,
+                'file_path' => $filePath,
+                'created_at' => now()->toISOString(),
+            ],
             now()->addHours(24)
         );
     }
