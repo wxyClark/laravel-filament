@@ -234,6 +234,12 @@ doc/
    - import 语句按字母排序
    - 类成员顺序: trait → constant → property → constructor → method
 
+5. **修改范围限定**：
+   - **只改需要改的**：不要"顺手"重构不相关的代码
+   - **保持已有功能不退化**：修改某个功能前，先确认该功能当前是否正常；修改后必须验证原有功能未被破坏
+   - **数据操作前先备份**：涉及数据库结构或数据变更的操作，先备份再执行
+   - **缓存一致性**：修改数据库数据后，必须清除相关的 Redis/应用缓存
+
 ### 自我进化规则
 
 1. **Bug 反思**：每次修复 Bug 后，分析根因并写入检查清单
@@ -247,6 +253,11 @@ doc/
 - [ ] 列表页 action：不要加 header DeleteAction
 - [ ] 复制文件：必须更新 namespace 和 use 语句
 - [ ] 文件语法：修改后立即执行 `php -l` 检查
+- [ ] `'hashed'` cast：Admin/Customer 模型有此 cast，创建用户时直接赋明文密码，不要用 bcrypt/Hash::make
+- [ ] serialize() 不可用于含 PDO 连接的对象：用 toArray() + DB::select() 替代
+- [ ] 地址快照导入后：必须重新 UPDATE parent_id 建立层级关系
+- [ ] Blade 模板中 Collection 方法（->isEmpty()）在纯数组上报错：改用 empty()
+- [ ] getViewData() 返回的 Eloquent Collection 无法被 Livewire 序列化：改用 public 属性 + 纯数组
 
 ### 页面功能测试规则
 

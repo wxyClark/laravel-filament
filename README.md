@@ -227,6 +227,11 @@ app/
 ### 🐳 基础设施
 - [Docker 环境说明](docker/README.md)
 
+### 🔧 运维管理工具
+- **Portainer**: http://localhost:9000 — Docker 容器管理面板
+  - 账号: `admin`
+  - 密码: `admin@example`
+
 ---
 
 ## 🔧 常用命令

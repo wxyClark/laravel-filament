@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources\BusinessLogResource\Pages;
 
+use App\Filament\Admin\Concerns\HasExportAction;
 use App\Filament\Admin\Resources\BusinessLogResource;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
 
 class ListBusinessLogs extends ListRecords
 {
+    use HasExportAction;
+
     protected static string $resource = BusinessLogResource::class;
 
     public function getTabs(): array
@@ -25,5 +29,33 @@ class ListBusinessLogs extends ListRecords
             'critical' => Tab::make('严重')
                 ->query(fn ($query) => $query->where('level', 'critical')),
         ];
+    }
+
+    public function getExportQuery(): Builder
+    {
+        return $this->getResource()::getModel()::query();
+    }
+
+    public function getExportColumns(): array
+    {
+        return [
+            'id' => 'ID',
+            'request_id' => '请求 ID',
+            'level' => '级别',
+            'channel' => '通道',
+            'message' => '消息',
+            'file' => '文件',
+            'created_at' => '时间',
+        ];
+    }
+
+    public function getExportLabel(): string
+    {
+        return '业务日志';
+    }
+
+    protected function getExportDirectory(): string
+    {
+        return 'exports/business-logs';
     }
 }
