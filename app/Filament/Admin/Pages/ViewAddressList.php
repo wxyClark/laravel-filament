@@ -10,6 +10,7 @@ use App\Services\AddressService;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ViewAddressList extends Page
 {
@@ -40,6 +41,8 @@ class ViewAddressList extends Page
     public bool $exporting = false;
 
     public string $exportMessage = '';
+
+    public ?string $downloadUrl = null;
 
     protected function getViewData(): array
     {
@@ -182,5 +185,48 @@ class ViewAddressList extends Page
 
         $this->exporting = true;
         $this->exportMessage = '导出任务已提交，正在处理中...';
+        $this->downloadUrl = null;
+
+        // Dispatch browser event to poll for completion
+        $this->dispatch('pollExportStatus');
+    }
+
+    /**
+     * 检查导出状态（由前端轮询调用）
+     */
+    public function checkExportStatus(): void
+    {
+        /** @var Admin $user */
+        $user = Auth::guard('admin')->user();
+        $notification = Cache::get("export_notification_{$user->id}");
+
+        if (! $notification) {
+            return;
+        }
+
+        if ($notification['type'] === 'export') {
+            $this->exportMessage = $notification['message'];
+
+            if ($notification['success']) {
+                $this->exporting = false;
+                $this->downloadUrl = $notification['file_path'] ?? null;
+                Cache::forget("export_notification_{$user->id}");
+            } elseif (! $notification['success']) {
+                $this->exporting = false;
+                Cache::forget("export_notification_{$user->id}");
+            }
+        }
+    }
+
+    /**
+     * 下载导出文件
+     */
+    public function getDownloadUrl(): ?string
+    {
+        if (! $this->downloadUrl) {
+            return null;
+        }
+
+        return route('admin.api.export.download', ['filePath' => $this->downloadUrl]);
     }
 }
