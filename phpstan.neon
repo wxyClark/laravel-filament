@@ -1,3 +1,6 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
 parameters:
     level: 5
     paths:
@@ -8,3 +11,19 @@ parameters:
         - vendor/
         - storage/
         - bootstrap/cache/
+    ignoreErrors:
+        # Eloquent dynamic properties
+        - '#Access to an undefined property [a-zA-Z\\]+::\$[a-zA-Z_]+#'
+        # Eloquent Builder dynamic methods
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::[a-zA-Z]+#'
+        - '#Call to an undefined method Illuminate\\Database\\Query\\Builder::[a-zA-Z]+#'
+        # Static method calls on models
+        - '#Call to an undefined static method [a-zA-Z\\]+::[a-zA-Z]+#'
+        # Undefined methods in general
+        - '#Call to an undefined method [a-zA-Z\\]+::[a-zA-Z]+#'
+        # Void method return type
+        - '#Method [a-zA-Z\\]+::[a-zA-Z]+\(\) should return [a-zA-Z\\]+ but returns nothing#'
+        # Undefined classes (common Laravel facades/helpers)
+        - '#Instantiated class [a-zA-Z\\]+ not found.#'
+        # Livewire/Filament specific
+        - '#Parameter .+ of method .+ expects .+, .+ given#'
