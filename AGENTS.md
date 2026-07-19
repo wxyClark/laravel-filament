@@ -254,10 +254,13 @@ doc/
 - [ ] 复制文件：必须更新 namespace 和 use 语句
 - [ ] 文件语法：修改后立即执行 `php -l` 检查
 - [ ] `'hashed'` cast：Admin/Customer 模型有此 cast，创建用户时直接赋明文密码，不要用 bcrypt/Hash::make
-- [ ] serialize() 不可用于含 PDO 连接的对象：用 toArray() + DB::select() 替代
+- [ ] serialize() 不可用于含 PDO 连接的对象：用 sql+bindings+model 存储，DB::select() 执行
+- [ ] toSql() vs toRawSql()：导出存储用 toSql()（保留 ? 占位符），toRawSql() 会把值嵌入 SQL 导致 bindings 多余
 - [ ] 地址快照导入后：必须重新 UPDATE parent_id 建立层级关系
 - [ ] Blade 模板中 Collection 方法（->isEmpty()）在纯数组上报错：改用 empty()
 - [ ] getViewData() 返回的 Eloquent Collection 无法被 Livewire 序列化：改用 public 属性 + 纯数组
+- [ ] protected 方法无法被 Controller 调用：导出相关方法需改为 public
+- [ ] Array to string conversion：Eloquent cast 返回数组时，htmlspecialchars 前需 json_encode
 
 ### 页面功能测试规则
 
