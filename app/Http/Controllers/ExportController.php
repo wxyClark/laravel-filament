@@ -84,10 +84,43 @@ class ExportController extends Controller
         $filename = basename($filePath);
 
         return response()->streamDownload(function () use ($fullPath) {
-            echo file_get_contents($fullPath);
+            // Stream file to browser
+            $handle = fopen($fullPath, 'r');
+            if ($handle) {
+                while (! feof($handle)) {
+                    echo fread($handle, 8192);
+                }
+                fclose($handle);
+            }
+
+            // Delete temp file after download
+            @unlink($fullPath);
         }, $filename, [
             'Content-Type' => mime_content_type($fullPath),
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
         ]);
+    }
+
+    /**
+     * 清理过期的导出文件（超过1小时）
+     */
+    public function cleanExpiredExports(): int
+    {
+        $directory = storage_path('app/exports/addresses');
+        $count = 0;
+
+        if (is_dir($directory)) {
+            $files = glob($directory.'/*');
+            $expireTime = time() - 3600; // 1 hour
+
+            foreach ($files as $file) {
+                if (is_file($file) && filemtime($file) < $expireTime) {
+                    @unlink($file);
+                    $count++;
+                }
+            }
+        }
+
+        return $count;
     }
 }
