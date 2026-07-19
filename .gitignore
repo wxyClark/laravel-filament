@@ -33,3 +33,9 @@ Homestead.json
 .phpactor.json
 auth.json
 .mcp.json
+
+# Database backups
+/backups/mysql/*
+!/backups/mysql/.gitkeep
+/backups/snapshots/*
+!/backups/snapshots/.gitkeep
