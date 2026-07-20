@@ -272,15 +272,15 @@ class OrderService
 }
 ```
 
-### 5.2 方法不超过 20 行
+### 5.2 方法不超过 50 行
 
-超过 20 行的方法必须拆分：
+超过 50 行的方法必须拆分。业务逻辑方法应保持单一职责。
 
 ```php
-// ❌ 过长
+// ❌ 业务逻辑过长
 public function process(Order $order): void
 {
-    // 50 行代码...
+    // 80 行混合了验证、计算、保存、通知...
 }
 
 // ✅ 拆分为私有方法
@@ -288,25 +288,21 @@ public function process(Order $order): void
 {
     $this->validateOrder($order);
     $this->calculateTotal($order);
-    $this->applyDiscounts($order);
     $this->saveOrder($order);
     $this->notifyCustomer($order);
 }
-
-private function validateOrder(Order $order): void {}
-private function calculateTotal(Order $order): void {}
-private function applyDiscounts(Order $order): void {}
-private function saveOrder(Order $order): void {}
-private function notifyCustomer(Order $order): void {}
 ```
 
-### 5.3 类不超过 200 行
+### 5.3 类不超过 1000 行
 
-超过 200 行的类必须拆分：
+超过 1000 行的类需要审视是否职责过多。Filament Resource 类（form + table + infolist + pages）天然较长，属正常；超过 1000 行应考虑拆分。
 
 ```php
-// ❌ 上帝类
-class EverythingService { /* 500 行 */ }
+// ✅ Filament Resource 600 行，form/table/infolist 都在这里，职责内聚
+class OrderResource extends Resource { /* 600 行 */ }
+
+// ❌ 上帝类 2000 行，混合了多种职责
+class EverythingService { /* 2000 行 */ }
 
 // ✅ 拆分为专用服务
 class OrderValidationService {}
@@ -314,10 +310,14 @@ class OrderCalculationService {}
 class OrderNotificationService {}
 ```
 
-### 5.4 构造函数注入（禁止 app()）
+### 5.4 构造函数注入 + 基类复用
+
+**构造函数注入**：Controller、Service 等可注入的类必须使用构造函数注入，禁止在方法内 `new` 或 `app()`。
+
+**通用方法用基类**：多个类共享的通用方法（如导出、分页、格式化）应提取到基类或 Trait，而非复制粘贴。
 
 ```php
-// ✅ 依赖注入
+// ✅ Controller 用构造函数注入
 class OrderController extends Controller
 {
     public function __construct(
@@ -325,12 +325,30 @@ class OrderController extends Controller
     ) {}
 }
 
-// ❌ 使用 app() 辅助函数
+// ✅ 通用方法提取到基类
+abstract class ExportableController extends Controller
+{
+    protected function streamCsv(Builder $query, array $columns): StreamedResponse
+    {
+        // 通用 CSV 流式导出逻辑
+    }
+}
+
+class OrderController extends ExportableController
+{
+    public function export(Request $request): StreamedResponse
+    {
+        return $this->streamCsv($query, $columns);  // 复用基类方法
+    }
+}
+
+// ❌ Controller 中直接 app() 或 new
 class OrderController extends Controller
 {
     public function store(Request $request)
     {
-        $service = app(OrderService::class);  // 禁止
+        $service = app(OrderService::class);  // 应注入
+        $dto = new OrderCreateData($request->all());  // 应注入或工厂方法
     }
 }
 ```
@@ -627,7 +645,7 @@ class OrderController extends Controller
 - 使用 FormRequest 做验证
 - 使用 API Resource 做格式化
 - 返回类型声明
-- 方法不超过 10 行
+- 方法不超过 50 行
 - 不包含业务逻辑
 
 ---
@@ -858,7 +876,378 @@ class OrderResource extends JsonResource
 
 ---
 
-## 十四、检查清单
+## 十四、性能铁律
+
+### 14.1 禁止 N+1 递归查询
+
+树形数据必须用批量加载 + 内存构建，禁止 `while ($node->parent)` 循环查询或无深度限制的递归 DB 调用。
+
+```php
+// ❌ 递归查询（每次循环一次 DB）
+$current = $node;
+while ($current->parent) {
+    $current = $current->parent;  // N+1!
+}
+
+// ✅ 批量加载 + 内存构建
+$chain = [];
+$current = $node;
+while ($current) {
+    $chain[] = $current;
+    $current = $current->parent_id ? $parents[$current->parent_id] : null;
+}
+```
+
+### 14.2 禁止逐行 INSERT
+
+大批量数据导入必须使用 `chunk()` + `DB::table()->insert()` 或 `Model::insert()` 批量插入。
+
+```php
+// ❌ 循环 create（8万条 = 8万次查询）
+foreach ($records as $record) {
+    Address::create($record);  // 每次一个 INSERT
+}
+
+// ✅ 批量 insert（8万条 = 80次查询）
+collect($records)->chunk(1000)->each(function ($chunk) {
+    DB::table('addresses')->insert($chunk->toArray());
+});
+```
+
+### 14.3 Filament Form/Table 禁止裸查询
+
+下拉框选项、筛选器选项必须使用 `Cache::remember()` 缓存或静态数组。
+
+```php
+// ❌ 每次渲染都执行 DB 查询
+Select::make('parent_id')
+    ->options(Address::whereNull('parent_id')->pluck('name', 'id'))
+
+// ✅ 缓存选项
+Select::make('parent_id')
+    ->options(fn () => Cache::remember('address:root_options', 3600, fn () =>
+        Address::whereNull('parent_id')->orderBy('sort')->pluck('name', 'id')
+    ))
+```
+
+### 14.4 公共 API 必须缓存
+
+面向前端/公开的查询必须有缓存层，禁止每次请求直接打 DB。
+
+```php
+// ❌ 每次请求打 DB
+public function index()
+{
+    return Address::count();
+}
+
+// ✅ 缓存统计
+public function index()
+{
+    return Cache::remember('address:stats', 3600, fn () => [
+        'total' => Address::count(),
+        'provinces' => Address::where('level', 'province')->count(),
+    ]);
+}
+```
+
+---
+
+## 十五、安全铁律
+
+### 15.1 文件下载必须 realpath 验证
+
+任何涉及文件路径拼接的下载功能，必须用 `realpath()` 验证解析后的路径在允许目录内。
+
+```php
+// ❌ 路径穿越风险
+$filePath = storage_path("app/exports/{$request->segment}");
+return response()->download($filePath);
+
+// ✅ realpath 验证
+$filePath = storage_path("app/exports/{$request->segment}");
+$realPath = realpath($filePath);
+$allowedDir = realpath(storage_path('app/exports'));
+
+if (! $realPath || ! str_starts_with($realPath, $allowedDir)) {
+    abort(404);
+}
+return response()->download($realPath);
+```
+
+### 15.2 公开路由必须限流
+
+所有 `open/*` 和无认证的公开路由必须添加 `throttle` 中间件。
+
+```php
+// ❌ 无限制
+Route::get('/open/addresses', [AddressController::class, 'index']);
+
+// ✅ 限流
+Route::get('/open/addresses', [AddressController::class, 'index'])
+    ->middleware('throttle:60,1');
+```
+
+### 15.3 密码哈希一致性
+
+如果 Model 有 `'password' => 'hashed'` cast，所有创建用户的地方必须直接赋明文字符串。
+
+```php
+// ❌ 双重哈希（hashed cast + Hash::make = 无法登录）
+Admin::create(['password' => Hash::make('password')]);
+$admin->password = bcrypt('password');
+
+// ✅ 直接赋明文（cast 自动哈希）
+Admin::create(['password' => 'password']);
+```
+
+### 15.4 导出 Token 必须绑定用户
+
+同步导出的 cache token 必须以当前用户 ID 为 key 前缀。
+
+```php
+// ❌ 全局 token，可被猜解
+$token = Str::random(32);
+Cache::set("export:{$token}", $data);
+
+// ✅ 绑定用户
+$token = Str::random(32);
+Cache::set("export:{$userId}:{$token}", $data);
+```
+
+---
+
+## 十六、代码质量铁律
+
+### 16.1 禁止代码重复
+
+超过 10 行的相同逻辑必须提取为基类、Trait 或 Utility 类。优先用基类继承，其次用 Trait 组合。
+
+```php
+// ❌ Excel XML 生成在两个文件中重复 130 行
+// QueryExport.php 和 ExportController.php 各有一份
+
+// ✅ 提取为共享基类
+abstract class BaseExcelExport
+{
+    protected function getColumnLetter(int $column): string { /* ... */ }
+    protected function getContentTypesXml(): string { /* ... */ }
+    // ...
+}
+
+// 或提取为 Trait（无法多继承时用 Trait）
+trait ExcelXmlHelpers {
+    protected function getColumnLetter(int $column): string { /* ... */ }
+    protected function getContentTypesXml(): string { /* ... */ }
+    // ...
+}
+```
+
+### 16.2 禁止空 stub 方法
+
+方法如果只返回空数组/空值且无 TODO 注释，必须删除或实现。
+
+```php
+// ❌ 永远不会执行的死代码
+public function parseHtmlData(string $html): array
+{
+    return [];  // fetchFromNationalBureau 永远抛异常
+}
+
+// ✅ 删除或实现
+// 直接删除 parseHtmlData 方法
+```
+
+### 16.3 DDD 目录不允许空壳
+
+新创建的 `app/Domains/{Domain}/` 目录必须有实际代码。已存在的空目录在 30 天内清理或实现。
+
+```bash
+# ❌ 新建空壳目录
+mkdir -p app/Domains/NewDomain/Models/  # 然后什么都不做
+
+# ✅ 新建目录时必须有实际代码
+# 先写 Model，再创建目录
+
+# 已存在的空目录：限期清理
+app/Domains/Base/Models/      # 空 → 30 天内删除或实现
+app/Domains/ApiTesting/Data/  # 空 → 30 天内删除或实现
+```
+
+### 16.4 Filament Resource 禁止重复定义
+
+同一个 Model 只能有一个 Filament Resource 定义。
+
+```php
+// ❌ 两个位置定义同一个 Model 的 Resource
+// app/Infrastructure/Filament/Resources/BusinessLogResource.php
+// app/Filament/Admin/Resources/BusinessLogResource.php
+
+// ✅ 只在 Panel 目录定义
+// app/Filament/Admin/Resources/BusinessLogResource.php
+```
+
+### 16.5 Migration 文件名必须正确
+
+禁止双后缀（如 `.php.php`），创建 migration 后必须检查文件名。
+
+```bash
+# 创建后检查
+ls database/migrations/ | grep "\.php\.php"
+# 应该返回空
+```
+
+---
+
+## 十七、Laravel 最佳实践
+
+### 17.1 Controller 必须用 FormRequest
+
+验证逻辑禁止内联 `$request->validate([...])`，必须创建 FormRequest 类。
+
+```php
+// ❌ 内联验证
+public function store(Request $request): JsonResponse
+{
+    $validated = $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+    ]);
+}
+
+// ✅ FormRequest
+class StoreUserRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return ['name' => ['required', 'string', 'max:255']];
+    }
+}
+
+public function store(StoreUserRequest $request): JsonResponse
+{
+    $validated = $request->validated();
+}
+```
+
+### 17.2 API 响应用 API Resource
+
+返回 Model 数据时必须使用 JsonResource 包装。
+
+```php
+// ❌ 返回原始数组
+return response()->json([
+    'data' => [
+        'id' => $admin->id,
+        'name' => $admin->name,
+    ],
+]);
+
+// ✅ API Resource
+class AdminResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+        ];
+    }
+}
+
+return response()->json([
+    'data' => new AdminResource($admin),
+]);
+```
+
+### 17.3 业务逻辑在 Service 层
+
+Controller 禁止直接操作 Eloquent，必须调用 Service。
+
+```php
+// ❌ Controller 直接操作 Model
+public function register(Request $request): JsonResponse
+{
+    $admin = Admin::create($request->all());
+    $token = JWTAuth::fromUser($admin);
+}
+
+// ✅ Controller 调用 Service
+public function register(RegisterRequest $request): JsonResponse
+{
+    $result = $this->authService->register($request->validated());
+    return response()->json(['token' => $result['token']]);
+}
+```
+
+### 17.4 通用方法提取到基类/Trait
+
+多个 Controller 共享的逻辑必须提取。
+
+```php
+// ❌ 重复的流式下载逻辑
+class ExportController {
+    public function download() {
+        $handle = fopen($path, 'r');
+        while (!feof($handle)) { echo fread($handle, 8192); }
+    }
+}
+
+// ✅ 提取为 Trait
+trait StreamDownload {
+    protected function streamFile(string $path, string $name, array $headers = []): StreamedResponse
+    {
+        return response()->streamDownload(function () use ($path) {
+            // ...
+        }, $name, $headers);
+    }
+}
+```
+
+### 17.5 每个 Model 必须有 Factory
+
+```php
+// ❌ 手动创建测试数据
+$customer = Customer::create([
+    'name' => 'Test',
+    'email' => 'test@example.com',
+]);
+
+// ✅ 使用 Factory
+$customer = Customer::factory()->create();
+$customer = Customer::factory()->verified()->create();
+```
+
+### 17.6 禁止魔法字符串
+
+```php
+// ❌ 魔法字符串
+->whereIn('level', ['province', 'city', 'district'])
+
+// ✅ 使用 Enum
+->whereIn('level', [
+    AddressLevel::PROVINCE->value,
+    AddressLevel::CITY->value,
+    AddressLevel::DISTRICT->value,
+])
+```
+
+### 17.7 数据库表名只在 Model 中定义
+
+FormRequest 验证规则、Service 查询等禁止硬编码表名字符串，必须通过 `(new Model)->getTable()` 引用。
+
+```php
+// ❌ 硬编码表名
+'email' => ['unique:customers,email']
+DB::table('addresses')->insert($rows);
+
+// ✅ 通过 Model 引用
+'email' => ['unique:' . (new Customer)->getTable() . ',email']
+DB::table((new Address)->getTable())->insert($rows);
+```
+
+---
+
+## 十八、检查清单
 
 开发新功能时，逐项检查：
 
@@ -871,15 +1260,42 @@ class OrderResource extends JsonResource
 
 ### 类层面
 - [ ] 类成员顺序正确（trait → constant → property → constructor → method）
-- [ ] 类不超过 200 行
+- [ ] 类不超过 1000 行
 - [ ] 每个方法只做一件事
 - [ ] 构造函数注入依赖
 
 ### 方法层面
-- [ ] 方法不超过 20 行
+- [ ] 方法不超过 50 行
 - [ ] 有返回类型声明
 - [ ] 参数有类型声明
-- [ ] 不使用 `app()` 辅助函数
+- [ ] 通用方法提取到基类或 Trait，禁止复制粘贴
+
+### Laravel 最佳实践
+- [ ] Controller 使用 FormRequest 验证
+- [ ] API 响应用 JsonResource 包装
+- [ ] 业务逻辑在 Service 层
+- [ ] 每个 Model 有 Factory
+- [ ] 禁止魔法字符串，使用 Enum
+- [ ] 数据库表名只在 Model 中定义，禁止硬编码
+
+### 性能层面
+- [ ] 无 N+1 递归查询（树形数据用批量加载）
+- [ ] 大批量导入用 chunk + insert
+- [ ] Filament Form/Table 选项已缓存
+- [ ] 公共 API 有缓存层
+
+### 安全层面
+- [ ] 文件下载有 realpath 验证
+- [ ] 公开路由有 throttle 中间件
+- [ ] 密码赋值与 hashed cast 一致
+- [ ] 导出 token 绑定用户
+
+### 代码质量
+- [ ] 无超过 10 行的重复代码
+- [ ] 无空 stub 方法
+- [ ] DDD 目录有实际内容
+- [ ] 同一 Model 只有一个 Filament Resource
+- [ ] Migration 文件名正确
 
 ### 测试层面
 - [ ] Service 方法有单元测试

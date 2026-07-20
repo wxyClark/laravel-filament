@@ -82,6 +82,44 @@ protected function casts(): array
 }
 ```
 
+## The `'hashed'` Cast Trap
+
+When a model uses `'password' => 'hashed'` cast, the cast auto-hashes on write. Using `Hash::make()`, `bcrypt()`, or `password_hash()` alongside it causes **double-hashing** — the password will never match during authentication.
+
+Affected models in this project: `Admin`, `Customer`.
+
+Incorrect:
+```php
+// Seeder — double-hashed, login will fail
+Admin::create(['password' => Hash::make('password')]);
+
+// Factory — double-hashed
+public function definition(): array
+{
+    return ['password' => bcrypt('password')];
+}
+
+// Controller — double-hashed
+$user->password = Hash::make($request->password);
+$user->save();
+```
+
+Correct:
+```php
+// Seeder — plain text, cast handles hashing
+Admin::create(['password' => 'password']);
+
+// Factory — plain text
+public function definition(): array
+{
+    return ['password' => 'password'];
+}
+
+// Controller — plain text
+$user->password = $request->password;
+$user->save();
+```
+
 ## Cast Date Columns Properly
 
 Always cast date columns. Use Carbon instances in templates instead of formatting strings manually.

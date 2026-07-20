@@ -190,3 +190,92 @@ return view('users.index', compact('users'));
     {{ $user->profile->name }}
 @endforeach
 ```
+
+## No Recursive DB Queries for Tree Structures (Project-Specific)
+
+Tree data (categories, addresses, org charts) MUST use batch loading + in-memory construction. Never use `while ($node->parent)` loops or unbounded recursive DB calls.
+
+Incorrect (N+1 recursive — fires one query per node):
+```php
+$current = $node;
+while ($current->parent) {       // Each iteration = 1 SELECT
+    $current = $current->parent;  // For 1000 nodes = 1000 queries
+}
+```
+
+Correct (batch load + memory):
+```php
+// Load all parents in one query
+$parentIds = collect(explode(',', $node->merge_path))->filter()->values();
+$parents = Address::whereIn('id', $parentIds)->keyBy('id');
+
+// Build chain from memory
+$chain = [];
+$current = $node;
+while ($current) {
+    $chain[] = $current;
+    $current = $current->parent_id ? $parents[$current->parent_id] ?? null : null;
+}
+```
+
+For counting descendants, use a recursive CTE instead of recursive PHP:
+
+```php
+// ✅ Single query with CTE
+$descendantCount = DB::select("
+    WITH RECURSIVE descendants AS (
+        SELECT id FROM addresses WHERE parent_id = ?
+        UNION ALL
+        SELECT a.id FROM addresses a
+        INNER JOIN descendants d ON a.parent_id = d.id
+    )
+    SELECT COUNT(*) as count FROM descendants
+", [$node->id])[0]->count;
+```
+
+## Batch Inserts for Large Imports (Project-Specific)
+
+NEVER call `Model::create()` in a loop for bulk data. Use `chunk()` + `DB::table()->insert()` or `Model::insert()`.
+
+Incorrect (80,000 records = 80,000 queries):
+```php
+foreach ($records as $record) {
+    Address::create($record);  // One INSERT per iteration
+}
+```
+
+Correct (80,000 records = 80 queries):
+```php
+collect($records)->chunk(1000)->each(function ($chunk) {
+    DB::table('addresses')->insert($chunk->toArray());
+});
+```
+
+Also avoid loading all records into memory for deletion:
+```php
+// ❌ Loads everything into memory
+Address::query()->withTrashed()->get()->each->forceDelete();
+
+// ✅ Use chunked deletion
+Address::query()->withTrashed()->chunkById(1000, function ($addresses) {
+    $addresses->each->forceDelete();
+});
+```
+
+## Cache Filament Form/Table Options (Project-Specific)
+
+Every Filament page render triggers form/table option queries. These MUST be cached.
+
+Incorrect:
+```php
+Select::make('parent_id')
+    ->options(Address::whereNull('parent_id')->pluck('name', 'id'))  // DB hit per render
+```
+
+Correct:
+```php
+Select::make('parent_id')
+    ->options(fn () => Cache::remember('address:root_options', 3600, fn () =>
+        Address::whereNull('parent_id')->orderBy('sort')->pluck('name', 'id')
+    ))
+```

@@ -41,3 +41,39 @@ Ticket::factory()
     ->recycle(Airline::factory()->create())
     ->create();
 ```
+
+## Factory Requirements (Project-Specific)
+
+Every domain model MUST have a Factory. Tests must use factories for test data — never manually create records with hardcoded values.
+
+Required factories:
+- `AdminFactory` (exists)
+- `CustomerFactory` (missing — create in `database/factories/CustomerFactory.php`)
+- `AddressFactory` (missing — create in `database/factories/AddressFactory.php`)
+
+Incorrect:
+```php
+// Manual creation — brittle, duplicates field definitions
+$customer = Customer::create([
+    'name' => 'Test User',
+    'email' => 'test@example.com',
+    'password' => 'password',
+]);
+```
+
+Correct:
+```php
+// Factory — flexible, centralized, reusable
+$customer = Customer::factory()->create();
+$customer = Customer::factory()->verified()->create(['name' => 'Custom Name']);
+```
+
+## Minimum Test Coverage (Project-Specific)
+
+Every new feature must meet these minimums:
+- Each Service method: minimum 1 unit test
+- Each API endpoint: minimum 1 integration test
+- Each Filament resource: list + create + edit + delete tests
+- Export functionality: sync CSV/Excel + async job tests
+
+Never mark a feature as complete without tests for the export path, error handling, and authorization.

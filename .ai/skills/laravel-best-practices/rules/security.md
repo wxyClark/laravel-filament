@@ -196,3 +196,93 @@ class Integration extends Model
     }
 }
 ```
+
+## Path Traversal Prevention (Project-Specific)
+
+Any file download endpoint MUST validate the resolved path stays within the allowed directory. Never trust user-supplied path segments.
+
+Incorrect:
+```php
+public function download(string $filename)
+{
+    $path = storage_path("app/exports/{$filename}");
+    return response()->download($path);  // Vulnerable to ../../etc/passwd
+}
+```
+
+Correct:
+```php
+public function download(string $filename)
+{
+    $path = storage_path("app/exports/{$filename}");
+    $realPath = realpath($path);
+    $allowedDir = realpath(storage_path('app/exports'));
+
+    if (! $realPath || ! str_starts_with($realPath, $allowedDir)) {
+        abort(404);
+    }
+
+    return response()->download($realPath);
+}
+```
+
+## Rate Limiting on Public Routes (Project-Specific)
+
+ALL routes under `open/*` and any unauthenticated public routes MUST have `throttle` middleware to prevent DoS.
+
+Incorrect:
+```php
+// routes/open.php
+Route::get('/open/addresses', [AddressController::class, 'index']);  // No rate limit
+```
+
+Correct:
+```php
+// routes/open.php
+Route::get('/open/addresses', [AddressController::class, 'index'])
+    ->middleware('throttle:60,1');
+```
+
+## Password Hash Consistency (Project-Specific)
+
+When a Model has `'password' => 'hashed'` cast, NEVER use `Hash::make()`, `bcrypt()`, or `password_hash()` in seeders, factories, tests, or controllers. The cast auto-hashes on write — using both causes double-hashing and login failure.
+
+Incorrect:
+```php
+// Seeder
+Admin::create(['password' => Hash::make('password')]);  // Double-hashed!
+
+// Factory
+public function definition(): array
+{
+    return ['password' => bcrypt('password')];  // Double-hashed!
+}
+```
+
+Correct:
+```php
+// Seeder
+Admin::create(['password' => 'password']);  // Cast auto-hashes
+
+// Factory
+public function definition(): array
+{
+    return ['password' => 'password'];  // Cast auto-hashes
+}
+```
+
+## Export Token Binding (Project-Specific)
+
+Synchronous export cache tokens MUST be prefixed with the current user's ID to prevent token guessing between users.
+
+Incorrect:
+```php
+$token = Str::random(32);
+Cache::set("export:{$token}", $data);  // Any user could guess this token
+```
+
+Correct:
+```php
+$token = Str::random(32);
+Cache::set("export:{$authId}:{$token}", $data);  // Bound to authenticated user
+```

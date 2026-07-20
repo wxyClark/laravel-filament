@@ -231,6 +231,55 @@ arch('Value objects are immutable')
     ->toBeReadOnly();
 ```
 
+### Enforce No Duplicate Filament Resources
+
+```php
+// tests/Unit/Architecture/FilamentResourceTest.php
+
+arch('Each model has only one Filament Resource definition')
+    ->expect([
+        'App\Filament\Admin\Resources\BusinessLogResource',
+        'App\Filament\Admin\Resources\LoggingResource',
+    ])
+    ->not->toDependOn([
+        'App\Infrastructure\Filament\Resources\BusinessLogResource',
+        'App\Infrastructure\Filament\Resources\LoggingResource',
+    ]);
+```
+
+### Enforce No Empty DDD Directories
+
+```php
+// tests/Unit/Architecture/DddStructureTest.php
+
+arch('Domain directories have actual code')
+    ->expect('App\Domains')
+    ->toHaveMethods();  // Every domain must have at least one method
+```
+
+### Enforce Password Hash Consistency
+
+```php
+// tests/Unit/Architecture/PasswordHashTest.php
+
+arch('Seeders and factories do not use Hash::make or bcrypt')
+    ->expect([
+        'Database\Seeders',
+        'database\Factories',
+    ])
+    ->not->toUse('Hash::make')
+    ->not->toUse('bcrypt')
+    ->not->toUse('password_hash');
+```
+
+### Enforce Declare Strict Types
+
+```php
+arch('All PHP files declare strict types')
+    ->expect('app')
+    ->toHaveKeyword('declare_strict_types');
+```
+
 ---
 
 ## Integration with CI

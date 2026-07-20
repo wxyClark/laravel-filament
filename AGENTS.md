@@ -66,6 +66,39 @@ app/
 3. **确认格式**：`即将执行 [操作]，将删除 [具体数据]，是否继续？`
 4. **例外情况**：测试环境（SQLite :memory:）的 RefreshDatabase 不需要确认
 
+### 性能铁律
+
+1. **禁止 N+1 递归查询**：树形数据必须用批量加载 + 内存构建，禁止 `while ($node->parent)` 循环查询或无深度限制的递归 DB 调用
+2. **禁止逐行 INSERT**：大批量数据导入必须使用 `chunk()` + `DB::table()->insert()` 或 `Model::insert()` 批量插入，禁止在循环中调用 `Model::create()`
+3. **Filament Form/Table 禁止裸查询**：下拉框选项、筛选器选项必须使用 `Cache::remember()` 缓存或静态数组，禁止每次渲染都执行 DB 查询
+4. **公共 API 必须缓存**：面向前端/公开的查询（如地址列表、统计数据）必须有缓存层，禁止每次请求直接打 DB
+
+### 安全铁律
+
+1. **文件下载必须 realpath 验证**：任何涉及文件路径拼接的下载功能，必须用 `realpath()` 验证解析后的路径在允许目录内，防止路径穿越
+2. **公开路由必须限流**：所有 `open/*` 和无认证的公开路由必须添加 `throttle` 中间件
+3. **密码哈希一致性**：如果 Model 有 `'password' => 'hashed'` cast，seeder/factory/test/controller 中禁止使用 `Hash::make()`、`bcrypt()`、`password_hash()`，必须直接赋明文字符串
+4. **导出 Token 必须绑定用户**：同步导出的 cache token 必须以当前用户 ID 为 key 前缀，防止用户间 token 猜解
+
+### 代码质量铁律
+
+1. **禁止代码重复**：超过 10 行的相同逻辑必须提取为 Trait、Utility 类或共享方法。特别注意：Excel XML 生成、导出流式处理等复杂逻辑必须复用
+2. **禁止空 stub 方法**：方法如果只返回空数组/空值且无 TODO 注释，必须删除或实现，禁止留下永远不执行的死代码
+3. **DDD 目录不允许空壳**：新创建的 `app/Domains/{Domain}/` 目录必须有实际代码。已存在的空目录在 30 天内清理或实现
+4. ** Filament Resource 禁止重复定义**：同一个 Model 只能有一个 Filament Resource 定义。如果 Infrastructure 和 Panel 都需要，只在 Panel 目录定义，Infrastructure 只做 CI 检查
+5. **Migration 文件名必须正确**：禁止双后缀（如 `.php.php`），创建 migration 后必须检查文件名
+
+### Laravel 最佳实践（必须遵循）
+
+1. **Controller 必须用 FormRequest**：验证逻辑禁止内联 `$request->validate([...])`，必须创建 `app/Http/Requests/` 下的 FormRequest 类
+2. **API 响必须用 API Resource**：返回 Model 数据时必须使用 `app/Http/Resources/` 下的 JsonResource 包装，禁止返回原始数组
+3. **业务逻辑在 Service 层**：Controller 禁止直接操作 Eloquent（`Model::create()`、`Model::where()`），必须调用 Service 方法
+4. **通用方法提取到基类/Trait**：多个 Controller 共享的逻辑（如流式下载、分页）必须提取到 `app/Infrastructure/Support/Traits/` 或基类
+5. **每个 Model 必须有 Factory**：测试数据通过 Factory 生成，禁止手动创建硬编码数据
+6. **所有方法必须有返回类型**：包括 Controller、Service、Model 的所有 public/protected 方法
+7. **禁止魔法字符串**：状态值、层级等必须使用 BackedEnum，禁止在代码中直接写 `'province'`、`'active'` 等字符串
+8. **数据库表名只在 Model 中定义**：FormRequest 验证规则、Service 查询等禁止硬编码表名字符串（如 `'unique:customers,email'`），必须通过 `(new Model)->getTable()` 或 Model 关联引用
+
 ## Testing
 
 ```bash
@@ -261,6 +294,7 @@ doc/
 - [ ] getViewData() 返回的 Eloquent Collection 无法被 Livewire 序列化：改用 public 属性 + 纯数组
 - [ ] protected 方法无法被 Controller 调用：导出相关方法需改为 public
 - [ ] Array to string conversion：Eloquent cast 返回数组时，htmlspecialchars 前需 json_encode
+- [ ] 数据库表名只在 Model 中定义，禁止硬编码（如 `'unique:customers,email'`），必须用 `(new Model)->getTable()`
 
 ### 页面功能测试规则
 
