@@ -7,8 +7,10 @@ namespace App\Domains\ApiTesting\Services;
 use App\Domains\ApiTesting\Enums\TestStatus;
 use App\Domains\ApiTesting\Models\ApiEnvironment;
 use App\Domains\ApiTesting\Models\ApiInterface;
+use App\Domains\ApiTesting\Models\ApiTestBatch;
 use App\Domains\ApiTesting\Models\ApiTestCase;
 use App\Domains\ApiTesting\Models\ApiTestResult;
+use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Support\Facades\Http;
 
 class TestExecutorService
@@ -31,8 +33,8 @@ class TestExecutorService
             $testCase->headers ?? []
         );
 
-        // 添加认证信息
-        $headers = $this->addAuthHeaders($headers, $environment);
+        // 解析前置认证（JWT / Session / API Key），必要时先登录获取凭证
+        [$headers, $cookies] = $this->resolveAuth($headers, $environment);
 
         // 合并 Query 参数
         $queryParams = $testCase->query_params ?? [];
@@ -46,6 +48,10 @@ class TestExecutorService
             $request = Http::withHeaders($headers)
                 ->timeout(30)
                 ->withoutVerifying();
+
+            if (! empty($cookies)) {
+                $request = $request->withCookies($cookies, $this->cookieDomain($environment->base_url));
+            }
 
             // 添加 Query 参数
             if (! empty($queryParams)) {
@@ -119,8 +125,10 @@ class TestExecutorService
 
     /**
      * 批量执行测试用例
+     *
+     * @param  iterable<ApiTestCase>  $testCases
      */
-    public function executeBatch(array $testCases, ?ApiEnvironment $environment = null): array
+    public function executeBatch(iterable $testCases, ?ApiEnvironment $environment = null): array
     {
         $results = [];
         foreach ($testCases as $testCase) {
@@ -128,6 +136,23 @@ class TestExecutorService
         }
 
         return $results;
+    }
+
+    /**
+     * 创建批量测试记录并执行全部用例
+     *
+     * @param  iterable<ApiTestCase>  $testCases
+     */
+    public function executeBatchAndRecord(iterable $testCases, ?ApiEnvironment $environment = null): ApiTestBatch
+    {
+        $batch = ApiTestBatch::create([
+            'name' => '批量测试 '.now()->format('Y-m-d H:i:s'),
+            'test_case_ids' => collect($testCases)->map(fn (ApiTestCase $tc) => $tc->id)->toArray(),
+        ]);
+
+        $this->executeBatch($testCases, $environment);
+
+        return $batch;
     }
 
     /**
@@ -141,27 +166,35 @@ class TestExecutorService
     }
 
     /**
-     * 添加认证 Headers
+     * 解析前置认证
+     *
+     * 根据环境 auth_type 区分认证方式：
+     * - none:   无认证
+     * - jwt:    先登录获取 token，注入 Authorization Header
+     * - session:先登录获取 Session Cookie，后续请求携带该 Cookie
+     * - apikey: 直接注入 API Key Header
+     *
+     * @return array{0: array, 1: array<string, string>} [headers, cookies]
      */
-    protected function addAuthHeaders(array $headers, ApiEnvironment $environment): array
+    protected function resolveAuth(array $headers, ApiEnvironment $environment): array
     {
         if ($environment->auth_type->value === 'none') {
-            return $headers;
+            return [$headers, []];
         }
 
         $authConfig = $environment->auth_config ?? [];
 
         return match ($environment->auth_type->value) {
-            'jwt' => $this->addJwtAuth($headers, $authConfig),
-            'apikey' => $this->addApiKeyAuth($headers, $authConfig),
-            default => $headers,
+            'jwt' => [$this->resolveJwtAuth($headers, $authConfig, $environment), []],
+            'session' => [[], $this->resolveSessionAuth($authConfig, $environment)],
+            'apikey' => [$this->resolveApiKeyAuth($headers, $authConfig), []],
         };
     }
 
     /**
-     * 添加 JWT 认证
+     * 前置登录获取 JWT，并注入 Authorization Header
      */
-    protected function addJwtAuth(array $headers, array $config): array
+    protected function resolveJwtAuth(array $headers, array $config, ApiEnvironment $environment): array
     {
         $tokenUrl = $config['token_url'] ?? null;
         $username = $config['username'] ?? null;
@@ -175,9 +208,8 @@ class TestExecutorService
         }
 
         try {
-            $baseUrl = $headers['base_url'] ?? '';
             $response = Http::withHeaders(['Accept' => 'application/json'])
-                ->post($baseUrl.$tokenUrl, [
+                ->post($this->baseUrl($environment).$tokenUrl, [
                     $config['username_field'] ?? 'email' => $username,
                     $config['password_field'] ?? 'password' => $password,
                 ]);
@@ -196,9 +228,64 @@ class TestExecutorService
     }
 
     /**
-     * 添加 API Key 认证
+     * 前置登录获取 Session Cookie
+     *
+     * @return array<string, string>
      */
-    protected function addApiKeyAuth(array $headers, array $config): array
+    protected function resolveSessionAuth(array $config, ApiEnvironment $environment): array
+    {
+        $loginUrl = $config['login_url'] ?? null;
+        $username = $config['username'] ?? null;
+        $password = $config['password'] ?? null;
+
+        if (! $loginUrl || ! $username || ! $password) {
+            return [];
+        }
+
+        try {
+            $jar = new CookieJar;
+
+            $response = Http::withHeaders(['Accept' => 'application/json'])
+                ->withOptions(['cookies' => $jar])
+                ->post($this->baseUrl($environment).$loginUrl, [
+                    $config['username_field'] ?? 'email' => $username,
+                    $config['password_field'] ?? 'password' => $password,
+                ]);
+
+            if (! $response->successful()) {
+                return [];
+            }
+
+            $cookies = [];
+            foreach ($jar->toArray() as $cookie) {
+                $cookies[$cookie['Name']] = $cookie['Value'];
+            }
+
+            // 兜底：从 Set-Cookie 响应头解析（兼容未启用 CookieJar 的场景）
+            if ($cookies === []) {
+                $setCookies = (array) $response->header('Set-Cookie');
+                foreach ($setCookies as $setCookie) {
+                    $parts = explode(';', (string) $setCookie);
+                    $first = $parts[0];
+                    $pair = explode('=', $first, 2);
+                    $name = trim($pair[0]);
+                    $value = trim($pair[1] ?? '');
+                    if ($name !== '') {
+                        $cookies[$name] = $value;
+                    }
+                }
+            }
+
+            return $cookies;
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
+
+    /**
+     * 注入 API Key
+     */
+    protected function resolveApiKeyAuth(array $headers, array $config): array
     {
         $keyName = $config['key_name'] ?? 'X-API-Key';
         $keyValue = $config['key_value'] ?? null;
@@ -209,6 +296,18 @@ class TestExecutorService
         }
 
         return $headers;
+    }
+
+    protected function baseUrl(ApiEnvironment $environment): string
+    {
+        return rtrim($environment->base_url, '/').'/';
+    }
+
+    protected function cookieDomain(string $baseUrl): string
+    {
+        $host = (string) parse_url($baseUrl, PHP_URL_HOST);
+
+        return $host !== '' ? $host : 'localhost';
     }
 
     /**

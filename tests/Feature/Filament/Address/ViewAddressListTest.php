@@ -46,7 +46,7 @@ describe('ViewAddressList Page Access', function () {
 
 describe('ViewAddressList Province Loading', function () {
 
-    test('provinces are loaded on mount', function () {
+    test('top-level addresses are loaded on mount', function () {
         $province = Address::create([
             'parent_id' => null,
             'name' => '测试省',
@@ -56,12 +56,12 @@ describe('ViewAddressList Province Loading', function () {
         ]);
 
         Livewire::test(ViewAddressList::class)
-            ->assertViewHas('provinces', function ($provinces) use ($province) {
-                return $provinces->contains('id', $province->id);
+            ->assertViewHas('countries', function ($countries) use ($province) {
+                return collect($countries)->contains('id', $province->id);
             });
     });
 
-    test('provinces exclude non-province addresses', function () {
+    test('provinces dropdown excludes non-top-level addresses', function () {
         $province = Address::create([
             'parent_id' => null,
             'name' => '测试省',
@@ -79,22 +79,22 @@ describe('ViewAddressList Province Loading', function () {
         ]);
 
         Livewire::test(ViewAddressList::class)
-            ->assertViewHas('provinces', function ($provinces) use ($province, $city) {
-                return $provinces->contains('id', $province->id)
-                    && ! $provinces->contains('id', $city->id);
+            ->assertViewHas('countries', function ($countries) use ($province, $city) {
+                return collect($countries)->contains('id', $province->id)
+                    && ! collect($countries)->contains('id', $city->id);
             });
     });
 
     test('cities and districts are empty on initial load', function () {
         Livewire::test(ViewAddressList::class)
             ->assertViewHas('cities', function ($cities) {
-                return $cities->isEmpty();
+                return empty($cities);
             })
             ->assertViewHas('districts', function ($districts) {
-                return $districts->isEmpty();
+                return empty($districts);
             })
             ->assertViewHas('townships', function ($townships) {
-                return $townships->isEmpty();
+                return empty($townships);
             });
     });
 });

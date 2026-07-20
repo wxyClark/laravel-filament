@@ -65,3 +65,21 @@ if (! function_exists('get_request_id')) {
             ?? request()->header('X-Request-ID');
     }
 }
+
+if (! function_exists('format_json')) {
+    /**
+     * 将值格式化为可读的 JSON 字符串（中文不转义）
+     */
+    function format_json(mixed $value): string
+    {
+        if ($value === null) {
+            return '-';
+        }
+
+        if (is_array($value)) {
+            return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        }
+
+        return (string) $value;
+    }
+}

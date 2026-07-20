@@ -64,9 +64,7 @@ class ViewAddressDetail extends Page
             ->orderBy('name')
             ->limit(10)
             ->get();
-        $this->siblingCount = Address::where('parent_id', $address->parent_id)
-            ->where('id', '!=', $address->id)
-            ->count();
+        $this->siblingCount = $this->siblings->count();
     }
 
     protected function buildParentChain(Address $address): array

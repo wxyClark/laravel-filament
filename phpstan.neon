@@ -6,6 +6,7 @@ parameters:
     paths:
         - app
         - database
+    reportUnmatchedIgnoredErrors: false
     excludePaths:
         - vendor/
         - storage/
@@ -26,3 +27,5 @@ parameters:
         - '#Parameter .+ of method .+ expects .+, .+ given#'
         # Call method on unknown class (User model in request context)
         - '#Call to method [a-zA-Z]+\(\) on an unknown class#'
+        # tymon/jwt-auth Facade: fromUser() is defined on Tymon\JWTAuth\JWT (resolved via Facade accessor)
+        - '#Call to an undefined static method Tymon\\JWTAuth\\Facades\\JWTAuth::fromUser\(\)\.#'

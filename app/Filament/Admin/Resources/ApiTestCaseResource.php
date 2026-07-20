@@ -15,7 +15,6 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\DB;
 
 class ApiTestCaseResource extends Resource
 {
@@ -128,6 +127,7 @@ class ApiTestCaseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['interface.function.module', 'environment', 'latestResult']))
             ->columns([
                 Tables\Columns\CheckboxColumn::make('id')
                     ->label(''),
@@ -149,7 +149,7 @@ class ApiTestCaseResource extends Resource
                 Tables\Columns\TextColumn::make('expected_status')
                     ->label('预期状态码'),
 
-                Tables\Columns\TextColumn::make('latest_result.status')
+                Tables\Columns\TextColumn::make('latestResult.status')
                     ->label('最近结果')
                     ->badge()
                     ->formatStateUsing(fn ($state) => $state?->label() ?? '未测试')
@@ -221,19 +221,10 @@ class ApiTestCaseResource extends Resource
                         ->modalDescription('确定要执行测试并跳转到结果页面吗？')
                         ->action(function ($records) {
                             $executor = app(TestExecutorService::class);
-                            $batchId = DB::table('api_test_batches')->insertGetId([
-                                'name' => '批量测试 '.now()->format('Y-m-d H:i:s'),
-                                'test_case_ids' => $records->pluck('id')->toArray(),
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                            ]);
-
-                            foreach ($records as $record) {
-                                $executor->execute($record);
-                            }
+                            $batch = $executor->executeBatchAndRecord($records);
 
                             return redirect()->route('filament.admin.resources.api-test-results.index', [
-                                'batch_id' => $batchId,
+                                'batch_id' => $batch->id,
                             ]);
                         }),
                 ]),

@@ -163,13 +163,13 @@ class BusinessLogResource extends Resource
 
                         Infolists\Components\TextEntry::make('context')
                             ->label('上下文')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
+                            ->formatStateUsing(fn ($state) => format_json($state))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
 
                         Infolists\Components\TextEntry::make('extra')
                             ->label('额外数据')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
+                            ->formatStateUsing(fn ($state) => format_json($state))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
                     ]),

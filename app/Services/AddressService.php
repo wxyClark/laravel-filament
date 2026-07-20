@@ -6,7 +6,6 @@ use App\Models\Address;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 
 class AddressService
 {
@@ -74,45 +73,42 @@ class AddressService
 
     public function findByCode(string $code): ?Address
     {
-        return Address::where('code', $code)->first();
+        return Cache::remember("addresses.code.{$code}", $this->cacheTtl, function () use ($code) {
+            return Address::where('code', $code)->first();
+        });
     }
 
     public function getAddressTree(?int $parentId = null): Collection
     {
-        $children = $this->getChildrenByParentId($parentId);
+        $all = Address::query()
+            ->orderBy('level_num')
+            ->orderBy('sort')
+            ->orderBy('name')
+            ->get(['id', 'parent_id', 'name', 'code', 'level', 'level_num']);
 
-        return $children->map(function (Address $address) {
+        $childrenMap = $all->groupBy('parent_id');
+
+        return $this->buildTree($childrenMap, $parentId);
+    }
+
+    protected function buildTree(Collection $childrenMap, ?int $parentId): Collection
+    {
+        return $childrenMap->get($parentId, collect())->map(function (Address $address) use ($childrenMap) {
             return [
                 'id' => $address->id,
                 'name' => $address->name,
                 'code' => $address->code,
                 'level' => $address->level,
                 'level_num' => $address->level_num,
-                'children' => $this->getAddressTree($address->id),
+                'children' => $this->buildTree($childrenMap, $address->id),
             ];
         });
     }
 
-    public function fetchFromNationalBureau(): array
-    {
-        $response = Http::timeout(30)->get('https://www.stats.gov.cn/sj/tjbz/tjyqhdmhcxhfdm/2023/index.html');
-
-        if ($response->successful()) {
-            return $this->parseHtmlData($response->body());
-        }
-
-        throw new \RuntimeException('无法从国家统计局获取数据');
-    }
-
-    protected function parseHtmlData(string $html): array
-    {
-        return [];
-    }
-
     public function importAddresses(array $data): int
     {
-        Address::query()->withTrashed()->get()->each->forceDelete();
-        Cache::forget('addresses.all');
+        Address::query()->withTrashed()->forceDelete();
+        $this->clearCache();
 
         // 按 level_num 排序导入
         $sorted = collect($data)->sortBy('level_num')->values()->toArray();

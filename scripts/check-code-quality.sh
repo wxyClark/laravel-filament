@@ -34,7 +34,7 @@ main() {
     echo ""
 
     # 检查 1: PHP 语法
-    info "📝 [1/5] 检查 PHP 语法..."
+    info "📝 [1/6] 检查 PHP 语法..."
     STAGED_FILES=$(get_staged_files)
     if [ -z "$STAGED_FILES" ]; then
         info "  没有 PHP 文件被修改，跳过语法检查"
@@ -59,7 +59,7 @@ main() {
     echo ""
 
     # 检查 2: Pint 代码格式化
-    info "🎨 [2/5] 运行 Pint 代码格式化检查..."
+    info "🎨 [2/6] 运行 Pint 代码格式化检查..."
     if [ -z "$STAGED_FILES" ]; then
         # 没有暂存文件时检查所有 PHP 文件
         if command -v ./vendor/bin/pint &> /dev/null; then
@@ -83,7 +83,7 @@ main() {
     echo ""
 
     # 检查 3: Filament 资源规范检查（自定义）
-    info "📦 [3/5] 检查 Filament 资源规范..."
+    info "📦 [3/6] 检查 Filament 资源规范..."
     RESOURCE_ERRORS=0
     for file in $STAGED_FILES; do
         if [[ "$file" == *"Resource.php" ]] && [[ "$file" == *"Filament"* ]]; then
@@ -115,7 +115,7 @@ main() {
     echo ""
 
     # 检查 4: PHPStan 静态分析（仅检查暂存文件）
-    info "🔬 [4/5] 运行 PHPStan 静态分析..."
+    info "🔬 [4/6] 运行 PHPStan 静态分析..."
     if [ -n "$STAGED_FILES" ] && command -v ./vendor/bin/phpstan &> /dev/null; then
         # 构建文件列表参数
         FILE_ARGS=""
@@ -136,7 +136,7 @@ main() {
     echo ""
 
     # 检查 5: 文件命名规范检查
-    info "📋 [5/5] 检查文件命名规范..."
+    info "📋 [5/6] 检查文件命名规范..."
     NAMING_ERRORS=0
 
     # 检查 Resource 文件命名
@@ -170,6 +170,19 @@ main() {
         exit 1
     fi
     success "  文件命名规范检查通过"
+    echo ""
+
+    # 检查 6: 运行测试（阻断性）
+    info "🧪 [6/6] 运行 Pest 测试..."
+    if command -v ./vendor/bin/pest &> /dev/null; then
+        if ! ./vendor/bin/pest --compact 2>/dev/null; then
+            error "  Pest 测试失败，请修复后再提交"
+            exit 1
+        fi
+        success "  Pest 测试通过"
+    else
+        warning "  未安装 Pest，跳过测试检查"
+    fi
     echo ""
 
     success "🎉 所有检查通过！可以提交代码"

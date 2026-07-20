@@ -135,3 +135,92 @@ test('address service cache works', function () {
     // 第二次应该从缓存获取
     expect(Cache::has('addresses.all'))->toBeTrue();
 });
+
+test('address service find by code is cached', function () {
+    Cache::flush();
+
+    Address::create([
+        'parent_id' => null,
+        'name' => '北京市',
+        'code' => '110000',
+        'level' => 'province',
+        'level_num' => 2,
+    ]);
+
+    $service = app(AddressService::class);
+    $service->findByCode('110000');
+
+    expect(Cache::has('addresses.code.110000'))->toBeTrue();
+
+    $cached = $service->findByCode('110000');
+    expect($cached->name)->toBe('北京市');
+});
+
+test('address service build query applies filters', function () {
+    $province = Address::create([
+        'parent_id' => null,
+        'name' => '北京市',
+        'code' => '110000',
+        'level' => 'province',
+        'level_num' => 2,
+    ]);
+
+    Address::create([
+        'parent_id' => $province->id,
+        'name' => '朝阳区',
+        'code' => '110105',
+        'level' => 'district',
+        'level_num' => 4,
+    ]);
+
+    $service = app(AddressService::class);
+
+    $byParent = $service->buildQuery(['parent_id' => $province->id])->get();
+    expect($byParent)->toHaveCount(1)
+        ->and($byParent->first()->name)->toBe('朝阳区');
+
+    $byLevel = $service->buildQuery(['level' => 'province'])->get();
+    expect($byLevel)->toHaveCount(1)
+        ->and($byLevel->first()->name)->toBe('北京市');
+
+    $byKeyword = $service->buildQuery(['keyword' => '朝阳'])->get();
+    expect($byKeyword)->toHaveCount(1);
+
+    // 导出查询应预加载 parent，避免 N+1
+    $withParent = $service->buildQuery()->get();
+    expect($withParent->first()->relationLoaded('parent'))->toBeTrue();
+});
+
+test('address service tree returns nested structure', function () {
+    $province = Address::create([
+        'parent_id' => null,
+        'name' => '北京市',
+        'code' => '110000',
+        'level' => 'province',
+        'level_num' => 2,
+    ]);
+
+    $city = Address::create([
+        'parent_id' => $province->id,
+        'name' => '市辖区',
+        'code' => '110100',
+        'level' => 'city',
+        'level_num' => 3,
+    ]);
+
+    Address::create([
+        'parent_id' => $city->id,
+        'name' => '朝阳区',
+        'code' => '110105',
+        'level' => 'district',
+        'level_num' => 4,
+    ]);
+
+    $service = app(AddressService::class);
+    $tree = $service->getAddressTree();
+
+    expect($tree)->toHaveCount(1)
+        ->and($tree->first()['children'])->toHaveCount(1)
+        ->and($tree->first()['children']->first()['children'])->toHaveCount(1)
+        ->and($tree->first()['children']->first()['children']->first()['name'])->toBe('朝阳区');
+});

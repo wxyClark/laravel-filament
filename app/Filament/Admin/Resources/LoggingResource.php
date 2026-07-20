@@ -233,19 +233,19 @@ class LoggingResource extends Resource
                     ->schema([
                         Infolists\Components\TextEntry::make('request_headers')
                             ->label('Headers')
-                            ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : (($state ?? '-') === '' ? '-' : ($state ?? '-')))
+                            ->formatStateUsing(fn ($state) => format_json($state === '' ? null : $state))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
 
                         Infolists\Components\TextEntry::make('request_body')
                             ->label('Body')
-                            ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : (($state ?? '-') === '' ? '-' : ($state ?? '-')))
+                            ->formatStateUsing(fn ($state) => format_json($state === '' ? null : $state))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
 
                         Infolists\Components\TextEntry::make('query_params')
                             ->label('Query Params')
-                            ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : (($state ?? '-') === '' ? '-' : ($state ?? '-')))
+                            ->formatStateUsing(fn ($state) => format_json($state === '' ? null : $state))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
                     ]),
@@ -266,7 +266,7 @@ class LoggingResource extends Resource
 
                         Infolists\Components\TextEntry::make('response_body')
                             ->label('响应 Body')
-                            ->formatStateUsing(fn ($state) => is_array($state) ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : ($state ?? '-'))
+                            ->formatStateUsing(fn ($state) => format_json($state))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
                     ]),

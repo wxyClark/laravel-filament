@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exports;
 
+use App\Models\Enums\AddressLevel;
 use App\Services\AddressService;
 
 class AddressExport extends QueryExport
@@ -49,12 +50,6 @@ class AddressExport extends QueryExport
 
     protected function getLevelLabel(string $level): string
     {
-        return match ($level) {
-            'province' => '省级',
-            'city' => '地级',
-            'district' => '县级',
-            'township' => '街道',
-            default => $level,
-        };
+        return AddressLevel::toLabel($level);
     }
 }

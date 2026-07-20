@@ -39,6 +39,7 @@ class ApiTestResultResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['testCase', 'interface', 'environment']))
             ->columns([
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID')
@@ -154,13 +155,13 @@ class ApiTestResultResource extends Resource
 
                         Infolists\Components\TextEntry::make('request_headers')
                             ->label('请求 Headers')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
+                            ->formatStateUsing(fn ($state) => format_json($state))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
 
                         Infolists\Components\TextEntry::make('request_body')
                             ->label('请求 Body')
-                            ->formatStateUsing(fn ($state) => $state ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) : '-')
+                            ->formatStateUsing(fn ($state) => format_json($state))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
                     ])
@@ -170,9 +171,7 @@ class ApiTestResultResource extends Resource
                     ->schema([
                         Infolists\Components\TextEntry::make('response_body')
                             ->label('响应 Body')
-                            ->formatStateUsing(fn ($state) => is_array($state)
-                                ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)
-                                : ($state ?? '-'))
+                            ->formatStateUsing(fn ($state) => format_json($state))
                             ->fontFamily('mono')
                             ->columnSpanFull(),
                     ]),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Exports;
 
+use App\Models\Enums\AddressLevel;
 use Illuminate\Database\Eloquent\Builder;
 
 class QueryExport
@@ -57,7 +58,7 @@ class QueryExport
             $query->with($data['eager']);
         }
 
-        return new static($query, $data['columns'], $data['label']);
+        return new self($query, $data['columns'], $data['label']);
     }
 
     public function getTotalRows(): int
@@ -128,19 +129,11 @@ class QueryExport
 
     protected function formatRow($row): array
     {
-        $levelMap = [
-            'country' => '国家级',
-            'province' => '省级',
-            'city' => '地级',
-            'district' => '县级',
-            'township' => '街道级',
-        ];
-
         $data = [];
         foreach (array_keys($this->columns) as $column) {
             $value = $row->{$column} ?? '';
-            if ($column === 'level' && isset($levelMap[$value])) {
-                $value = $levelMap[$value];
+            if ($column === 'level' && is_string($value)) {
+                $value = AddressLevel::toLabel($value);
             } elseif (is_array($value)) {
                 $value = json_encode($value, JSON_UNESCAPED_UNICODE);
             }

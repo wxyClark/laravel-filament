@@ -38,7 +38,7 @@ describe('Cascade Filter: Province Selection', function () {
         Livewire::test(ViewAddressList::class)
             ->set('selectedProvinceId', $province->id)
             ->assertViewHas('cities', function ($cities) use ($city) {
-                return $cities->contains('id', $city->id);
+                return collect($cities)->contains('id', $city->id);
             });
     });
 
@@ -96,11 +96,11 @@ describe('Cascade Filter: Province Selection', function () {
         Livewire::test(ViewAddressList::class)
             ->set('selectedProvinceId', $province->id)
             ->assertViewHas('cities', function ($cities) {
-                return $cities->isNotEmpty();
+                return ! empty($cities);
             })
             ->set('selectedProvinceId', null)
             ->assertViewHas('cities', function ($cities) {
-                return $cities->isEmpty();
+                return empty($cities);
             });
     });
 });
@@ -136,7 +136,7 @@ describe('Cascade Filter: City Selection', function () {
             ->set('selectedProvinceId', $province->id)
             ->set('selectedCityId', $city->id)
             ->assertViewHas('districts', function ($districts) use ($district) {
-                return $districts->contains('id', $district->id);
+                return collect($districts)->contains('id', $district->id);
             });
     });
 
@@ -207,7 +207,7 @@ describe('Cascade Filter: District Selection', function () {
             ->set('selectedCityId', $city->id)
             ->set('selectedDistrictId', $district->id)
             ->assertViewHas('townships', function ($townships) use ($township) {
-                return $townships->contains('id', $township->id);
+                return collect($townships)->contains('id', $township->id);
             });
     });
 
@@ -286,17 +286,17 @@ describe('Reset Filters', function () {
         Livewire::test(ViewAddressList::class)
             ->set('selectedProvinceId', $province->id)
             ->assertViewHas('cities', function ($cities) use ($city) {
-                return $cities->contains('id', $city->id);
+                return collect($cities)->contains('id', $city->id);
             })
             ->call('resetFilters')
             ->assertViewHas('cities', function ($cities) {
-                return $cities->isEmpty();
+                return empty($cities);
             })
             ->assertViewHas('districts', function ($districts) {
-                return $districts->isEmpty();
+                return empty($districts);
             })
             ->assertViewHas('townships', function ($townships) {
-                return $townships->isEmpty();
+                return empty($townships);
             });
     });
 });

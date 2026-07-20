@@ -7,6 +7,7 @@ namespace App\Domains\ApiTesting\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ApiTestCase extends Model
 {
@@ -55,5 +56,11 @@ class ApiTestCase extends Model
         return $this->results()
             ->orderByDesc('executed_at')
             ->first();
+    }
+
+    public function latestResult(): HasOne
+    {
+        return $this->hasOne(ApiTestResult::class, 'test_case_id')
+            ->ofMany('executed_at', 'max');
     }
 }

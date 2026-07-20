@@ -94,10 +94,17 @@ class BusinessLog extends Model
             $requestId = request()->header('X-Request-ID') ?? request()->attributes->get('request_id');
         }
 
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5);
-        $caller = collect($trace)->firstWhere('function', static function ($item) {
-            return ! in_array($item['function'], ['createLog', 'info', 'warning', 'error', 'critical', 'debug']);
-        });
+        $file = $context['file'] ?? null;
+        $line = $context['line'] ?? null;
+
+        if ($file === null || $line === null) {
+            $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+            $caller = collect($trace)->firstWhere('function', static function ($item) {
+                return ! in_array($item['function'], ['createLog', 'info', 'warning', 'error', 'critical', 'debug']);
+            });
+            $file ??= $caller['file'] ?? null;
+            $line ??= $caller['line'] ?? null;
+        }
 
         return static::create([
             'request_id' => $requestId,

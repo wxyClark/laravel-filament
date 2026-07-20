@@ -104,6 +104,7 @@ class ApiInterfaceResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->with(['function.module']))
             ->columns([
                 Tables\Columns\TextColumn::make('function.module.name')
                     ->label('模块')

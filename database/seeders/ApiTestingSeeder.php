@@ -47,6 +47,27 @@ class ApiTestingSeeder extends Seeder
             ]
         );
 
+        ApiEnvironment::updateOrCreate(
+            ['name' => 'Session 环境'],
+            [
+                'base_url' => 'http://nginx:80',
+                'auth_type' => AuthType::SESSION,
+                'auth_config' => [
+                    'login_url' => 'api/login',
+                    'username_field' => 'email',
+                    'password_field' => 'password',
+                    'username' => 'admin@example.com',
+                    'password' => 'password',
+                ],
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ],
+                'is_default' => false,
+                'sort_order' => 1,
+            ]
+        );
+
         $this->command->info('✓ 环境数据已创建');
     }
 
