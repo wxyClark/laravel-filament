@@ -1,33 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Customer;
-use Illuminate\Http\Request;
+use App\Http\Requests\Auth\CustomerRegisterRequest;
+use App\Services\CustomerService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
-    public function create()
+    public function __construct(
+        private readonly CustomerService $customerService
+    ) {}
+
+    public function create(): View
     {
         return view('auth.register');
     }
 
-    public function store(Request $request)
+    public function store(CustomerRegisterRequest $request): RedirectResponse
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:customers'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $customer = Customer::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $customer = $this->customerService->register($request->validated());
 
         Auth::guard('customer')->login($customer);
 

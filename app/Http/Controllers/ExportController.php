@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Exports\QueryExport;
+use App\Infrastructure\Support\Traits\StreamDownload;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ExportController extends Controller
 {
+    use StreamDownload;
+
     public function checkExportStatus(Request $request): JsonResponse
     {
         $user = Auth::guard('admin')->user();
@@ -35,43 +38,32 @@ class ExportController extends Controller
     public function downloadExport(Request $request, string $filePath): StreamedResponse
     {
         $fullPath = storage_path("app/{$filePath}");
+        $realPath = realpath($fullPath);
+        $allowedDir = realpath(storage_path('app/exports'));
 
-        if (! file_exists($fullPath)) {
+        if (! $realPath || ! $allowedDir || ! str_starts_with($realPath, $allowedDir)) {
             abort(404, '文件不存在');
         }
 
-        if (! str_starts_with($filePath, 'exports/')) {
-            abort(403, '禁止访问');
-        }
+        $filename = basename($realPath);
 
-        $filename = basename($filePath);
-
-        return response()->streamDownload(function () use ($fullPath) {
-            $handle = fopen($fullPath, 'r');
-            if ($handle) {
-                while (! feof($handle)) {
-                    echo fread($handle, 8192);
-                }
-                fclose($handle);
-            }
-
-            @unlink($fullPath);
-        }, $filename, [
-            'Content-Type' => mime_content_type($fullPath),
+        return $this->streamFile($realPath, $filename, [
+            'Content-Type' => mime_content_type($realPath),
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
         ]);
     }
 
     public function syncExport(Request $request): StreamedResponse
     {
+        $user = Auth::guard('admin')->user();
         $token = $request->input('token');
-        $data = Cache::get("sync_export_{$token}");
+        $data = Cache::get("sync_export_{$user->id}:{$token}");
 
         if (! $data) {
             abort(404, '导出任务已过期或不存在');
         }
 
-        Cache::forget("sync_export_{$token}");
+        Cache::forget("sync_export_{$user->id}:{$token}");
 
         $format = $data['format'];
 
@@ -93,16 +85,7 @@ class ExportController extends Controller
             $contentType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
         }
 
-        return response()->streamDownload(function () use ($tempFile) {
-            $handle = fopen($tempFile, 'r');
-            if ($handle) {
-                while (! feof($handle)) {
-                    echo fread($handle, 8192);
-                }
-                fclose($handle);
-            }
-            @unlink($tempFile);
-        }, $filename, [
+        return $this->streamFile($tempFile, $filename, [
             'Content-Type' => $contentType,
         ]);
     }

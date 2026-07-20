@@ -1,25 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\CustomerLoginRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
-    public function create()
+    public function create(): View
     {
         return view('auth.login');
     }
 
-    public function store(Request $request)
+    public function store(CustomerLoginRequest $request): RedirectResponse
     {
-        $request->validate([
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
-        ]);
-
         if (Auth::guard('customer')->attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
 
@@ -31,7 +31,7 @@ class AuthenticatedSessionController extends Controller
         ])->onlyInput('email');
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request): RedirectResponse
     {
         Auth::guard('customer')->logout();
         $request->session()->invalidate();

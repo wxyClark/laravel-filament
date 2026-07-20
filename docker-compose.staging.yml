@@ -1,0 +1,130 @@
+# ============================================
+# Staging Environment (Pre-production)
+# Uses: docker compose -f docker-compose.base.yml -f docker-compose.staging.yml up
+# ============================================
+
+services:
+  app:
+    environment:
+      - APP_ENV=staging
+      - APP_DEBUG=false
+      - APP_URL=${APP_URL:-https://staging.example.com}
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-laravel_staging}
+      - DB_USERNAME=${DB_USERNAME:-laravel}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - CACHE_DRIVER=redis
+      - QUEUE_CONNECTION=redis
+      - SESSION_DRIVER=redis
+      - MAIL_MAILER=smtp
+      - MAIL_HOST=${MAIL_HOST:-smtp.example.com}
+      - MAIL_PORT=${MAIL_PORT:-587}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - MAIL_ENCRYPTION=tls
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+  nginx:
+    ports:
+      - "${NGINX_PORT:-8084}:80"
+
+  mysql:
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE:-laravel_staging}
+      - MYSQL_USER=${DB_USERNAME:-laravel}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - mysql_staging_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+
+  redis:
+    volumes:
+      - redis_staging_data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+  # ============================================
+  # Queue Worker
+  # ============================================
+  queue-worker:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+      target: production
+    volumes:
+      - .:/var/www/html
+    entrypoint: ["php", "/var/www/html/artisan", "queue:work", "--sleep=3", "--tries=3", "--max-time=3600"]
+    environment:
+      - APP_ENV=staging
+      - APP_DEBUG=false
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-laravel_staging}
+      - DB_USERNAME=${DB_USERNAME:-laravel}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - QUEUE_CONNECTION=redis
+    networks:
+      - app-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # ============================================
+  # Scheduler
+  # ============================================
+  scheduler:
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+      target: production
+    volumes:
+      - .:/var/www/html
+    entrypoint: ["sh", "-c", "php /var/www/html/artisan schedule:loop --verbose --no-interaction"]
+    environment:
+      - APP_ENV=staging
+      - APP_DEBUG=false
+      - DB_CONNECTION=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${DB_DATABASE:-laravel_staging}
+      - DB_USERNAME=${DB_USERNAME:-laravel}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - QUEUE_CONNECTION=redis
+    networks:
+      - app-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+
+volumes:
+  mysql_staging_data:
+    driver: local
+  redis_staging_data:
+    driver: local

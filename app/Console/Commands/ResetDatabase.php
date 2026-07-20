@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Models\Address;
 use App\Models\Admin;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -123,7 +124,7 @@ class ResetDatabase extends Command
             $this->executeBatch($batch);
         }
 
-        $total = DB::table('addresses')->count();
+        $total = DB::table((new Address)->getTable())->count();
         $this->info("地址数据已导入: {$total} 条记录");
     }
 

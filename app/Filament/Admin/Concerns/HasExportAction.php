@@ -100,9 +100,11 @@ trait HasExportAction
                 ->info()
                 ->send();
         } else {
+            /** @var Admin $user */
+            $user = Auth::guard('admin')->user();
             $token = Str::random(32);
             $base = $query->toBase();
-            Cache::put("sync_export_{$token}", [
+            Cache::put("sync_export_{$user->id}:{$token}", [
                 'sql' => $base->toSql(),
                 'bindings' => $base->getBindings(),
                 'model' => get_class($query->getModel()),

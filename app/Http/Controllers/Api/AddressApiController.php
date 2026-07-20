@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Address\AddressChildrenRequest;
 use App\Services\AddressService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class AddressApiController extends Controller
 {
@@ -28,12 +28,9 @@ class AddressApiController extends Controller
     /**
      * 根据上级ID获取子级地址（公开接口）
      */
-    public function children(Request $request): JsonResponse
+    public function children(AddressChildrenRequest $request): JsonResponse
     {
-        $parentId = $request->input('parent_id');
-        if ($parentId !== null) {
-            $parentId = (int) $parentId;
-        }
+        $parentId = $request->validated('parent_id');
         $children = $this->addressService->getChildrenByParentId($parentId);
 
         return response()->json([

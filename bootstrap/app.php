@@ -19,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('api')
                 ->group(base_path('routes/api.php'));
 
+            // 用户管理接口
+            Route::middleware('api')
+                ->group(base_path('routes/user.php'));
+
             // 公开接口（无需认证）
             Route::middleware('api')
                 ->group(base_path('routes/open.php'));

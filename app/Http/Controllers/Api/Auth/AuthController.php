@@ -5,80 +5,48 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Admin;
+use App\Http\Requests\Api\Auth\LoginRequest;
+use App\Http\Requests\Api\Auth\RegisterRequest;
+use App\Http\Resources\AdminResource;
+use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    public function register(Request $request): JsonResponse
+    public function __construct(
+        private readonly AuthService $authService
+    ) {}
+
+    public function register(RegisterRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:admins,email'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $admin = Admin::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-        ]);
-
-        $token = JWTAuth::fromUser($admin);
+        $result = $this->authService->register($request->validated());
 
         return response()->json([
             'message' => '注册成功',
-            'user' => [
-                'id' => $admin->id,
-                'name' => $admin->name,
-                'email' => $admin->email,
-            ],
-            'token' => $token,
+            'user' => new AdminResource($result->admin),
+            'token' => $result->token,
             'token_type' => 'bearer',
-            'expires_in' => config('jwt.ttl') * 60,
+            'expires_in' => $result->expiresIn,
         ], 201);
     }
 
-    public function login(Request $request): JsonResponse
+    public function login(LoginRequest $request): JsonResponse
     {
-        $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
-        ]);
-
-        $admin = Admin::where('email', $request->email)->first();
-
-        if (! $admin || ! Hash::check($request->password, $admin->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['邮箱或密码错误'],
-            ]);
-        }
-
-        $token = JWTAuth::fromUser($admin);
+        $result = $this->authService->login($request->validated());
 
         return response()->json([
             'message' => '登录成功',
-            'user' => [
-                'id' => $admin->id,
-                'name' => $admin->name,
-                'email' => $admin->email,
-            ],
-            'token' => $token,
+            'user' => new AdminResource($result->admin),
+            'token' => $result->token,
             'token_type' => 'bearer',
-            'expires_in' => config('jwt.ttl') * 60,
+            'expires_in' => $result->expiresIn,
         ]);
     }
 
     public function logout(Request $request): JsonResponse
     {
-        $user = $request->user();
-        if ($user && method_exists($user, 'token') && $user->token()) {
-            $user->token()->revoke();
-        }
+        $this->authService->logout($request->user());
 
         return response()->json([
             'message' => '退出成功',
@@ -87,8 +55,7 @@ class AuthController extends Controller
 
     public function refresh(Request $request): JsonResponse
     {
-        $user = $request->user();
-        $token = JWTAuth::fromUser($user);
+        $token = $this->authService->refresh($request->user());
 
         return response()->json([
             'message' => 'Token 已刷新',
@@ -102,17 +69,10 @@ class AuthController extends Controller
     {
         $admin = $request->user();
 
-        if (! $admin) {
-            return response()->json(['message' => '未认证'], 401);
-        }
-
         return response()->json([
-            'data' => [
-                'id' => $admin->id,
-                'name' => $admin->name,
-                'email' => $admin->email,
+            'data' => (new AdminResource($admin))->additional([
                 'roles' => $admin->getRoleNames(),
-            ],
+            ]),
         ]);
     }
 }

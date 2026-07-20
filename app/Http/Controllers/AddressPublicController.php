@@ -1,27 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Models\Address;
+use App\Models\Enums\AddressLevel;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\View\View;
 
 class AddressPublicController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $levelCounts = Address::query()
-            ->whereIn('level', ['province', 'city', 'district'])
+        $stats = Cache::remember('address:public:stats', 3600, fn () => Address::query()
+            ->whereIn('level', [
+                AddressLevel::PROVINCE->value,
+                AddressLevel::CITY->value,
+                AddressLevel::DISTRICT->value,
+            ])
             ->groupBy('level')
             ->selectRaw('level, count(*) as total')
-            ->pluck('total', 'level');
+            ->pluck('total', 'level')
+            ->toArray());
+
+        $provinces = Cache::remember('address:public:provinces', 3600, fn () => Address::with(['children.children' => function ($q) {
+            $q->orderBy('sort');
+        }])->where('level', AddressLevel::PROVINCE->value)->orderBy('sort')->get(['id', 'name', 'code'])->toArray());
 
         return view('address.index', [
-            'total' => Address::count(),
-            'provinceCount' => $levelCounts->get('province', 0),
-            'cityCount' => $levelCounts->get('city', 0),
-            'districtCount' => $levelCounts->get('district', 0),
-            'provinces' => Address::with(['children.children' => function ($q) {
-                $q->orderBy('sort');
-            }])->where('level', 'province')->orderBy('sort')->get(['id', 'name', 'code']),
+            'total' => array_sum($stats),
+            'provinceCount' => $stats['province'] ?? 0,
+            'cityCount' => $stats['city'] ?? 0,
+            'districtCount' => $stats['district'] ?? 0,
+            'provinces' => $provinces,
         ]);
     }
 }

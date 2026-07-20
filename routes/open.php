@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('open')->group(function () {
+Route::prefix('open')->middleware('throttle:60,1')->group(function () {
 
     // 地址公开 API
     Route::prefix('addresses')->group(function () {

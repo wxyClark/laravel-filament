@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Models\Address;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class AddressService
 {
@@ -110,37 +113,63 @@ class AddressService
         Address::query()->withTrashed()->forceDelete();
         $this->clearCache();
 
-        // 按 level_num 排序导入
-        $sorted = collect($data)->sortBy('level_num')->values()->toArray();
+        // 按 level_num 排序导入，先构建 parent_code -> id 映射
+        $sorted = collect($data)->sortBy('level_num')->values();
+        $codeToId = [];
         $count = 0;
 
-        foreach ($sorted as $item) {
-            $parentId = null;
-            if (! empty($item['parent_code'])) {
-                $parent = Address::where('code', $item['parent_code'])->first();
-                if ($parent) {
-                    $parentId = $parent->id;
+        $sorted->chunk(1000)->each(function ($chunk) use (&$codeToId, &$count) {
+            $codes = $chunk->pluck('code')->toArray();
+            $rows = [];
+
+            foreach ($chunk as $item) {
+                $parentId = null;
+                if (! empty($item['parent_code']) && isset($codeToId[$item['parent_code']])) {
+                    $parentId = $codeToId[$item['parent_code']];
                 }
+
+                $rows[] = [
+                    'parent_id' => $parentId,
+                    'name' => $item['name'],
+                    'code' => $item['code'],
+                    'level' => $item['level'],
+                    'level_num' => $item['level_num'],
+                    'pinyin' => $item['pinyin'] ?? null,
+                    'merge_path' => isset($item['merge_path']) ? json_encode($item['merge_path']) : null,
+                    'sort' => $item['sort'] ?? 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
             }
 
-            Address::create([
-                'parent_id' => $parentId,
-                'name' => $item['name'],
-                'code' => $item['code'],
-                'level' => $item['level'],
-                'level_num' => $item['level_num'],
-                'pinyin' => $item['pinyin'] ?? null,
-                'merge_path' => $item['merge_path'] ?? null,
-                'sort' => $item['sort'] ?? 0,
-            ]);
-            $count++;
-        }
+            DB::table((new Address)->getTable())->insert($rows);
+
+            // 查询本批次插入的 id，回填 code -> id 映射
+            $inserted = DB::table((new Address)->getTable())
+                ->whereIn('code', $codes)
+                ->pluck('id', 'code')
+                ->toArray();
+
+            foreach ($inserted as $code => $id) {
+                $codeToId[$code] = $id;
+            }
+
+            $count += count($rows);
+        });
 
         return $count;
     }
 
     public function clearCache(): void
     {
-        Cache::forget('addresses.all');
+        $keys = [
+            'addresses.all',
+            'address:public:stats',
+            'address:public:provinces',
+        ];
+
+        foreach ($keys as $key) {
+            Cache::forget($key);
+        }
     }
 }
