@@ -60,7 +60,14 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "test": "./vendor/bin/pest",
+        "pint": "./vendor/bin/pint",
+        "pint:test": "./vendor/bin/pint --test",
+        "phpstan": "./vendor/bin/phpstan analyse --memory-limit=512M",
+        "ci": ["@pint:test", "@phpstan", "@test"],
+        "quality": "./scripts/check-code-quality.sh",
+        "check": "./scripts/check-code-quality.sh"
     },
     "config": {
         "optimize-autoloader": true,
