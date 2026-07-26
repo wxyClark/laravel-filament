@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Domains\CrossSell\Models\Inventory;
-use App\Domains\CrossSell\Models\Product;
-use App\Domains\CrossSell\Models\SKU;
-use App\Domains\CrossSell\Models\Tenant;
-use App\Domains\CrossSell\Models\Warehouse;
+use App\CrossSell\Product\Models\Product;
+use App\CrossSell\Product\Models\SKU;
+use App\CrossSell\Tenant\Models\Tenant;
+use App\CrossSell\Warehouse\Models\Inventory;
+use App\CrossSell\Warehouse\Models\Warehouse;
 use App\Domains\Notification\Events\LowStockDetected;
 use App\Domains\Notification\Models\AdminNotification;
 use App\Models\Admin;

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Domains\CrossSell\Enums\OrderStatus;
-use App\Domains\CrossSell\Enums\PlatformType;
-use App\Domains\CrossSell\Models\Order;
-use App\Domains\CrossSell\Models\OrderItem;
-use App\Domains\CrossSell\Models\Product;
-use App\Domains\CrossSell\Models\SKU;
-use App\Domains\CrossSell\Models\Tenant;
+use App\CrossSell\Order\Enums\OrderStatus;
+use App\CrossSell\Order\Models\Order;
+use App\CrossSell\Order\Models\OrderItem;
+use App\CrossSell\Product\Models\Product;
+use App\CrossSell\Product\Models\SKU;
+use App\CrossSell\Tenant\Models\Tenant;
+use App\CrossSell\Warehouse\Enums\PlatformType;
 use App\Domains\Notification\Models\AdminNotification;
 use App\Models\Admin;
 use Database\Seeders\PermissionSeeder;
