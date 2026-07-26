@@ -22,57 +22,50 @@ class AuthController extends Controller
     {
         $result = $this->authService->register($request->validated());
 
-        return response()->json([
-            'message' => '注册成功',
+        return $this->created([
             'user' => new AdminResource($result->admin),
             'token' => $result->token,
             'token_type' => 'bearer',
             'expires_in' => $result->expiresIn,
-        ], 201);
+        ], '注册成功');
     }
 
     public function login(LoginRequest $request): JsonResponse
     {
         $result = $this->authService->login($request->validated());
 
-        return response()->json([
-            'message' => '登录成功',
+        return $this->success([
             'user' => new AdminResource($result->admin),
             'token' => $result->token,
             'token_type' => 'bearer',
             'expires_in' => $result->expiresIn,
-        ]);
+        ], '登录成功');
     }
 
     public function logout(Request $request): JsonResponse
     {
         $this->authService->logout($request->user());
 
-        return response()->json([
-            'message' => '退出成功',
-        ]);
+        return $this->success(null, '退出成功');
     }
 
     public function refresh(Request $request): JsonResponse
     {
         $token = $this->authService->refresh($request->user());
 
-        return response()->json([
-            'message' => 'Token 已刷新',
+        return $this->success([
             'token' => $token,
             'token_type' => 'bearer',
             'expires_in' => config('jwt.ttl') * 60,
-        ]);
+        ], 'Token 已刷新');
     }
 
     public function me(Request $request): JsonResponse
     {
         $admin = $request->user();
 
-        return response()->json([
-            'data' => (new AdminResource($admin))->additional([
-                'roles' => $admin->getRoleNames(),
-            ]),
-        ]);
+        return $this->success((new AdminResource($admin))->additional([
+            'roles' => $admin->getRoleNames(),
+        ]));
     }
 }

@@ -12,7 +12,6 @@ use App\Models\Customer;
 use App\Services\CustomerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CustomerController extends Controller
 {
@@ -20,47 +19,37 @@ class CustomerController extends Controller
         private readonly CustomerService $customerService
     ) {}
 
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(Request $request): JsonResponse
     {
         $perPage = $request->integer('per_page', 20);
-        $customers = $this->customerService->paginate($perPage);
+        $customers = $this->customerService->paginateCustomers($perPage);
 
-        return CustomerResource::collection($customers);
+        return $this->paginated($customers);
     }
 
     public function store(StoreCustomerRequest $request): JsonResponse
     {
         $customer = $this->customerService->register($request->validated());
 
-        return response()->json([
-            'message' => '用户创建成功',
-            'data' => new CustomerResource($customer),
-        ], 201);
+        return $this->created(new CustomerResource($customer), '用户创建成功');
     }
 
     public function show(Customer $customer): JsonResponse
     {
-        return response()->json([
-            'data' => new CustomerResource($customer),
-        ]);
+        return $this->success(new CustomerResource($customer));
     }
 
     public function update(UpdateCustomerRequest $request, Customer $customer): JsonResponse
     {
-        $customer = $this->customerService->update($customer, $request->validated());
+        $customer = $this->customerService->updateCustomer($customer, $request->validated());
 
-        return response()->json([
-            'message' => '用户更新成功',
-            'data' => new CustomerResource($customer),
-        ]);
+        return $this->updated(new CustomerResource($customer), '用户更新成功');
     }
 
     public function destroy(Customer $customer): JsonResponse
     {
-        $this->customerService->delete($customer);
+        $this->customerService->deleteCustomer($customer);
 
-        return response()->json([
-            'message' => '用户删除成功',
-        ], 204);
+        return $this->deleted('用户删除成功');
     }
 }
