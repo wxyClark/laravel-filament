@@ -6,6 +6,63 @@ Laravel 12 + Filament 3.x 前后端不分离 AI 开发项目
 
 ---
 
+## 🚀 多系统部署架构
+
+本项目包含 4 个独立子系统，每个系统对应一个域名：
+
+| 系统 | 域名 | Docker 端口 | 说明 |
+|------|------|-------------|------|
+| **CrossSell 商城** | `shop.example.com` | `:8082` | 客户端商城（前台） |
+| **CrossSell 后台** | `admin.example.com` | `:8082/admin` | 管理后台（运营） |
+| **薪福通** | `hr.example.com` | `:8082/xinfutong` | HR/薪资系统 |
+| **权限管理** | `super.example.com` | `:8082/super` | 超级管理员后台 |
+
+### 域名配置
+
+#### 方式一：修改 hosts 文件（本地开发）
+
+```bash
+# 运行配置脚本
+./scripts/setup-hosts.sh
+
+# 或手动添加到 /etc/hosts
+echo "127.0.0.1 shop.example.com admin.example.com hr.example.com super.example.com" | sudo tee -a /etc/hosts
+```
+
+#### 方式二：使用 Nginx 反向代理（生产环境）
+
+```bash
+# 复制 Nginx 配置
+sudo cp docker/nginx/crosssell.conf /etc/nginx/conf.d/
+
+# 重启 Nginx
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+### Docker 环境说明
+
+| 服务 | 容器名 | 端口 | 说明 |
+|------|--------|------|------|
+| **App** | `filament-app` | `9000` | PHP-FPM 应用服务 |
+| **Nginx** | `filament-nginx` | `:8082` | Web 服务器 |
+| **MySQL** | `filament-mysql` | `:3306` | 数据库 |
+| **Redis** | `filament-redis` | `:6379` | 缓存/会话 |
+| **phpMyAdmin** | `filament-phpmyadmin` | `:8081` | 数据库管理 |
+
+### 访问地址
+
+```
+本地开发环境：
+├── 商城前端: http://shop.example.com:8082
+├── 管理后台: http://admin.example.com:8082/admin
+├── 薪福通: http://hr.example.com:8082/xinfutong
+├── 权限管理: http://super.example.com:8082/super
+├── 数据库管理: http://localhost:8081
+└── phpMyAdmin: http://localhost:8081
+```
+
+---
+
 ## 🚀 快速开始
 
 ### ⚡ 一键初始化（推荐）
