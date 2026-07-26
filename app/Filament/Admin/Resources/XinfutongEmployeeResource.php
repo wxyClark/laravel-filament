@@ -8,6 +8,7 @@ use App\Domains\Xinfutong\Enums\EmployeeStatus;
 use App\Domains\Xinfutong\Models\Employee;
 use App\Domains\Xinfutong\Services\XinfutongService;
 use App\Filament\Admin\Resources\XinfutongEmployeeResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -17,6 +18,8 @@ use Filament\Tables\Table;
 
 class XinfutongEmployeeResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = Employee::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
@@ -30,6 +33,11 @@ class XinfutongEmployeeResource extends Resource
     protected static ?string $pluralModelLabel = '员工';
 
     protected static ?int $navigationSort = 1;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'xinfutong-employee';
+    }
 
     public static function form(Form $form): Form
     {

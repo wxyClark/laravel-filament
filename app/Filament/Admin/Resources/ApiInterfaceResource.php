@@ -8,6 +8,7 @@ use App\Domains\ApiTesting\Enums\HttpMethod;
 use App\Domains\ApiTesting\Models\ApiFunction;
 use App\Domains\ApiTesting\Models\ApiInterface;
 use App\Filament\Admin\Resources\ApiInterfaceResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -16,6 +17,8 @@ use Filament\Tables\Table;
 
 class ApiInterfaceResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = ApiInterface::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-link';
@@ -29,6 +32,11 @@ class ApiInterfaceResource extends Resource
     protected static ?string $pluralModelLabel = 'API 接口';
 
     protected static ?int $navigationSort = 3;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'api-testing';
+    }
 
     public static function form(Form $form): Form
     {

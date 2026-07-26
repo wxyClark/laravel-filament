@@ -9,6 +9,7 @@ use App\Domains\ApiTesting\Models\ApiInterface;
 use App\Domains\ApiTesting\Models\ApiTestCase;
 use App\Domains\ApiTesting\Services\TestExecutorService;
 use App\Filament\Admin\Resources\ApiTestCaseResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -18,6 +19,8 @@ use Filament\Tables\Table;
 
 class ApiTestCaseResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = ApiTestCase::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-check';
@@ -31,6 +34,11 @@ class ApiTestCaseResource extends Resource
     protected static ?string $pluralModelLabel = '测试用例';
 
     protected static ?int $navigationSort = 4;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'api-testing';
+    }
 
     public static function form(Form $form): Form
     {

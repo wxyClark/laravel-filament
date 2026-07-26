@@ -6,6 +6,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Domains\Logging\Models\RequestLog;
 use App\Filament\Admin\Resources\LoggingResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists;
@@ -17,6 +18,8 @@ use Illuminate\Support\Str;
 
 class LoggingResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = RequestLog::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
@@ -30,6 +33,11 @@ class LoggingResource extends Resource
     protected static ?string $pluralModelLabel = '请求日志';
 
     protected static ?int $navigationSort = 100;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'request-log';
+    }
 
     public static function form(Form $form): Form
     {

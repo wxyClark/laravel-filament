@@ -7,6 +7,7 @@ namespace App\Filament\Admin\Resources;
 use App\Domains\Xinfutong\Enums\SyncStatus;
 use App\Domains\Xinfutong\Models\SyncLog;
 use App\Filament\Admin\Resources\XinfutongSyncLogResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -14,6 +15,8 @@ use Filament\Tables\Table;
 
 class XinfutongSyncLogResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = SyncLog::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-arrow-path';
@@ -27,6 +30,11 @@ class XinfutongSyncLogResource extends Resource
     protected static ?string $pluralModelLabel = '同步日志';
 
     protected static ?int $navigationSort = 2;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'xinfutong-sync-log';
+    }
 
     public static function form(Form $form): Form
     {

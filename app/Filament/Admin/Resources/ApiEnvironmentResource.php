@@ -6,6 +6,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Domains\ApiTesting\Models\ApiEnvironment;
 use App\Filament\Admin\Resources\ApiEnvironmentResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,6 +15,8 @@ use Filament\Tables\Table;
 
 class ApiEnvironmentResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = ApiEnvironment::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-globe-alt';
@@ -27,6 +30,11 @@ class ApiEnvironmentResource extends Resource
     protected static ?string $pluralModelLabel = '测试环境';
 
     protected static ?int $navigationSort = 1;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'api-testing';
+    }
 
     public static function form(Form $form): Form
     {

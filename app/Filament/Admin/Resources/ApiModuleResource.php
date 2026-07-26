@@ -6,6 +6,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Domains\ApiTesting\Models\ApiModule;
 use App\Filament\Admin\Resources\ApiModuleResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,6 +15,8 @@ use Filament\Tables\Table;
 
 class ApiModuleResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = ApiModule::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-folder';
@@ -27,6 +30,11 @@ class ApiModuleResource extends Resource
     protected static ?string $pluralModelLabel = '接口模块';
 
     protected static ?int $navigationSort = 2;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'api-testing';
+    }
 
     public static function form(Form $form): Form
     {

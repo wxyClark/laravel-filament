@@ -8,6 +8,7 @@ use App\Domains\Xinfutong\Enums\ApprovalStatus;
 use App\Domains\Xinfutong\Models\ApprovalRequest;
 use App\Domains\Xinfutong\Services\XinfutongService;
 use App\Filament\Admin\Resources\XinfutongApprovalResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
@@ -17,6 +18,8 @@ use Filament\Tables\Table;
 
 class XinfutongApprovalResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = ApprovalRequest::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-check';
@@ -30,6 +33,11 @@ class XinfutongApprovalResource extends Resource
     protected static ?string $pluralModelLabel = '审批单';
 
     protected static ?int $navigationSort = 3;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'xinfutong-approval';
+    }
 
     public static function form(Form $form): Form
     {

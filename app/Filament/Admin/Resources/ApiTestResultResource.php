@@ -7,6 +7,7 @@ namespace App\Filament\Admin\Resources;
 use App\Domains\ApiTesting\Enums\TestStatus;
 use App\Domains\ApiTesting\Models\ApiTestResult;
 use App\Filament\Admin\Resources\ApiTestResultResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists;
@@ -17,6 +18,8 @@ use Filament\Tables\Table;
 
 class ApiTestResultResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = ApiTestResult::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
@@ -30,6 +33,11 @@ class ApiTestResultResource extends Resource
     protected static ?string $pluralModelLabel = '测试结果';
 
     protected static ?int $navigationSort = 5;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'api-testing';
+    }
 
     public static function form(Form $form): Form
     {

@@ -7,6 +7,7 @@ namespace App\Filament\Admin\Resources;
 use App\Domains\Logging\Enums\LogLevel;
 use App\Domains\Logging\Models\BusinessLog;
 use App\Filament\Admin\Resources\BusinessLogResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists;
@@ -18,6 +19,8 @@ use Illuminate\Support\Str;
 
 class BusinessLogResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = BusinessLog::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
@@ -31,6 +34,11 @@ class BusinessLogResource extends Resource
     protected static ?string $pluralModelLabel = '业务日志';
 
     protected static ?int $navigationSort = 101;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'business-log';
+    }
 
     public static function form(Form $form): Form
     {

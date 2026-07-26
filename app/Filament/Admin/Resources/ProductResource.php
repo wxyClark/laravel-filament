@@ -8,6 +8,7 @@ use App\Domains\Catalog\Enums\ProductStatus;
 use App\Domains\Catalog\Enums\ProductType;
 use App\Domains\Catalog\Models\Product;
 use App\Filament\Admin\Resources\ProductResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -16,6 +17,8 @@ use Filament\Tables\Table;
 
 class ProductResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = Product::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
@@ -23,6 +26,11 @@ class ProductResource extends Resource
     protected static ?string $navigationGroup = '商品管理';
 
     protected static ?int $navigationSort = 1;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'product';
+    }
 
     public static function form(Form $form): Form
     {
@@ -50,6 +58,16 @@ class ProductResource extends Resource
                         Forms\Components\Textarea::make('description')
                             ->label('商品描述')
                             ->rows(3),
+
+                        Forms\Components\FileUpload::make('image')
+                            ->label('商品图片')
+                            ->image()
+                            ->directory('products')
+                            ->maxSize(1024)
+                            ->imageResizeMode('cover')
+                            ->imageCropAspectRatio('1:1')
+                            ->imagePreviewHeight('200')
+                            ->columnSpanFull(),
                     ])->columns(2),
             ]);
     }
@@ -67,18 +85,24 @@ class ProductResource extends Resource
                     ->searchable()
                     ->sortable(),
 
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('图片')
+                    ->circular()
+                    ->defaultImageUrl(asset('favicon.ico')),
+
                 Tables\Columns\TextColumn::make('type')
                     ->label('类型')
                     ->formatStateUsing(fn (string $state): string => ProductType::from($state)->label())
-                    ->badge(),
+                    ->badge()
+                    ->color(fn (string $state): string => ProductType::from($state)->color()),
 
                 Tables\Columns\TextColumn::make('status')
                     ->label('状态')
                     ->formatStateUsing(fn (string $state): string => ProductStatus::from($state)->label())
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'active' => 'success',
-                        'inactive' => 'danger',
+                    ->color(fn (string $state): string => match (ProductStatus::from($state)) {
+                        ProductStatus::ACTIVE => 'success',
+                        ProductStatus::INACTIVE => 'danger',
                     }),
 
                 Tables\Columns\TextColumn::make('created_at')

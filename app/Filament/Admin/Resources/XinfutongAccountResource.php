@@ -6,6 +6,7 @@ namespace App\Filament\Admin\Resources;
 
 use App\Domains\Xinfutong\Models\Account;
 use App\Filament\Admin\Resources\XinfutongAccountResource\Pages;
+use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,6 +15,8 @@ use Filament\Tables\Table;
 
 class XinfutongAccountResource extends Resource
 {
+    use HasResourcePermission;
+
     protected static ?string $model = Account::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
@@ -27,6 +30,11 @@ class XinfutongAccountResource extends Resource
     protected static ?string $pluralModelLabel = '账号';
 
     protected static ?int $navigationSort = 0;
+
+    protected static function getPermissionPrefix(): string
+    {
+        return 'xinfutong-account';
+    }
 
     public static function form(Form $form): Form
     {
