@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\CrossSell\Models;
+namespace App\CrossSell\Fulfillment\Models;
 
 use App\CrossSell\Database\Factories\FulfillmentFactory;
-use App\CrossSell\Enums\FulfillmentStatus;
-use App\CrossSell\Enums\FulfillmentType;
+use App\CrossSell\Fulfillment\Enums\FulfillmentStatus;
+use App\CrossSell\Fulfillment\Enums\FulfillmentType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Fulfillment extends Model
+class CoreFulfillment extends Model
 {
     use HasFactory;
 

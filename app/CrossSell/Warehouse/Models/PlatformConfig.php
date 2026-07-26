@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\CrossSell\Models;
+namespace App\CrossSell\Warehouse\Models;
 
 use App\CrossSell\Enums\PlatformType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

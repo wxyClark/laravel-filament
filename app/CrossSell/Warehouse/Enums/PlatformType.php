@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\CrossSell\Enums;
+namespace App\CrossSell\Warehouse\Enums;
 
 /**
  * 平台类型枚举

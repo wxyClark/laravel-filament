@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\CrossSell\Enums;
+namespace App\CrossSell\Order\Enums;
 
 /**
  * 退款状态枚举

@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\CrossSell\Models;
+namespace App\CrossSell\Warehouse\Models;
 
+use App\CrossSell\Product\Models\SKU;
+use App\CrossSell\Tenant\Models\Tenant;
 use App\Domains\Notification\Events\LowStockDetected;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

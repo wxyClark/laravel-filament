@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\CrossSell\Enums;
+namespace App\CrossSell\Fulfillment\Enums;
 
 /**
  * 发货状态枚举

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\CrossSell\Models;
+namespace App\CrossSell\Product\Models;
 
 use App\CrossSell\Database\Factories\ProductFactory;
 use App\CrossSell\Enums\ProductStatus;

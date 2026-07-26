@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\CrossSell\Models;
+namespace App\CrossSell\Tenant\Models;
 
-use App\CrossSell\Enums\TenantPlan;
-use App\CrossSell\Enums\TenantStatus;
+use App\CrossSell\Tenant\Enums\TenantPlan;
+use App\CrossSell\Tenant\Enums\TenantStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\CrossSell\Models;
+namespace App\CrossSell\Order\Models;
 
-use App\CrossSell\Enums\OrderStatus;
-use App\CrossSell\Enums\PlatformType;
+use App\CrossSell\Order\Enums\OrderStatus;
+use App\CrossSell\Tenant\Models\Tenant;
+use App\CrossSell\Warehouse\Enums\PlatformType;
 use App\Domains\Notification\Events\OrderStatusChanged;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

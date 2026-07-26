@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\CrossSell\Models;
+namespace App\CrossSell\Payment\Models;
 
 use App\CrossSell\Database\Factories\PaymentRecordFactory;
 use App\CrossSell\Enums\PaymentType;
