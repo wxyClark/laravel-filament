@@ -7,29 +7,30 @@ namespace App\Infrastructure\Repositories\Eloquent;
 use App\Domains\Auth\Repositories\AdminRepositoryInterface;
 use App\Models\Admin;
 
-class AdminRepository implements AdminRepositoryInterface
+class AdminRepository extends BaseRepository implements AdminRepositoryInterface
 {
-    public function __construct(
-        private readonly Admin $model
-    ) {}
+    public function __construct(Admin $model)
+    {
+        parent::__construct($model);
+    }
 
     public function findById(int $id): ?Admin
     {
-        return $this->model->find($id);
+        return $this->find($id);
     }
 
     public function findByEmail(string $email): ?Admin
     {
-        return $this->model->where('email', $email)->first();
+        return $this->findBy('email', $email);
     }
 
     public function create(array $data): Admin
     {
-        return $this->model->create($data);
+        return parent::create($data);
     }
 
     public function emailExists(string $email): bool
     {
-        return $this->model->where('email', $email)->exists();
+        return $this->exists(['email' => $email]);
     }
 }

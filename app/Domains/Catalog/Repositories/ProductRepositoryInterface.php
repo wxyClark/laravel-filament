@@ -9,7 +9,7 @@ use Illuminate\Support\Collection;
 
 interface ProductRepositoryInterface
 {
-    public function findOrFail(int $id): Product;
+    public function findProductOrFail(int $id): Product;
 
     public function allActive(): Collection;
 }
