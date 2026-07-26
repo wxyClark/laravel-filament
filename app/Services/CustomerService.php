@@ -10,11 +10,12 @@ use App\Domains\User\Events\CustomerDeleted;
 use App\Domains\User\Events\CustomerRegistered;
 use App\Domains\User\Events\CustomerUpdated;
 use App\Domains\User\Repositories\CustomerRepositoryInterface;
+use App\Infrastructure\Services\BaseService;
 use App\Models\Customer;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
 
-class CustomerService
+class CustomerService extends BaseService
 {
     public function __construct(
         private readonly CustomerRepositoryInterface $customerRepository
@@ -37,12 +38,12 @@ class CustomerService
         return $customer;
     }
 
-    public function findById(int $id): ?Customer
+    public function findCustomerById(int $id): ?Customer
     {
         return $this->customerRepository->findById($id);
     }
 
-    public function update(Customer $customer, array $data): Customer
+    public function updateCustomer(Customer $customer, array $data): Customer
     {
         $data = CustomerUpdateData::fromArray($data);
         $updateData = $data->toArray();
@@ -55,17 +56,17 @@ class CustomerService
             }
         }
 
-        $customer = $this->customerRepository->update($customer, $updateData);
+        $customer = $this->customerRepository->updateModel($customer, $updateData);
 
         event(new CustomerUpdated($customer));
 
         return $customer;
     }
 
-    public function delete(Customer $customer): bool
+    public function deleteCustomer(Customer $customer): bool
     {
         $customerId = $customer->id;
-        $result = $this->customerRepository->delete($customer);
+        $result = $this->customerRepository->deleteModel($customer);
 
         if ($result) {
             event(new CustomerDeleted($customerId));
@@ -74,7 +75,7 @@ class CustomerService
         return $result;
     }
 
-    public function paginate(int $perPage = 20): LengthAwarePaginator
+    public function paginateCustomers(int $perPage = 20): LengthAwarePaginator
     {
         return $this->customerRepository->paginate($perPage);
     }

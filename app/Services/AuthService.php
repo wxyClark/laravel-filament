@@ -9,13 +9,14 @@ use App\Domains\Auth\Data\LoginData;
 use App\Domains\Auth\Data\RegisterData;
 use App\Domains\Auth\Events\AdminRegistered;
 use App\Domains\Auth\Repositories\AdminRepositoryInterface;
+use App\Infrastructure\Services\BaseService;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class AuthService
+class AuthService extends BaseService
 {
     public function __construct(
         private readonly AdminRepositoryInterface $adminRepository
