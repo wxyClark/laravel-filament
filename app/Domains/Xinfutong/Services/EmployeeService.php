@@ -1,0 +1,64 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domains\Xinfutong\Services;
+
+use App\Domains\Xinfutong\Contracts\EmployeeRepositoryInterface;
+use App\Domains\Xinfutong\Contracts\EmployeeServiceInterface;
+use App\Domains\Xinfutong\Models\Employee;
+use App\Infrastructure\Services\BaseService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
+
+class EmployeeService extends BaseService implements EmployeeServiceInterface
+{
+    public function __construct(
+        private readonly EmployeeRepositoryInterface $employeeRepository
+    ) {}
+
+    public function create(array $data): Employee
+    {
+        return $this->employeeRepository->create($data);
+    }
+
+    public function update(Employee $employee, array $data): Employee
+    {
+        return $this->employeeRepository->update($employee, $data);
+    }
+
+    public function delete(Employee $employee): bool
+    {
+        return $this->employeeRepository->delete($employee);
+    }
+
+    public function findById(int $id): ?Employee
+    {
+        return $this->employeeRepository->findById($id);
+    }
+
+    public function findByXinfutongId(string $xinfutongId): ?Employee
+    {
+        return $this->employeeRepository->findByXinfutongId($xinfutongId);
+    }
+
+    public function paginate(int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->employeeRepository->paginate($perPage);
+    }
+
+    public function getByStatus(string $status): Collection
+    {
+        return $this->employeeRepository->getByStatus($status);
+    }
+
+    public function getByDepartment(string $department): Collection
+    {
+        return $this->employeeRepository->getByDepartment($department);
+    }
+
+    public function search(string $keyword): Collection
+    {
+        return $this->employeeRepository->search($keyword);
+    }
+}
