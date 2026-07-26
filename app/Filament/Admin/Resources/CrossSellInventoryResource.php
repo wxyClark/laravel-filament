@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Domains\CrossSell\Models\Inventory;
+use App\CrossSell\Warehouse\Models\Inventory;
+use App\CrossSell\Warehouse\Models\Warehouse;
 use App\Domains\CrossSell\Models\SKU;
-use App\Domains\CrossSell\Models\Warehouse;
 use App\Filament\Admin\Resources\CrossSellInventoryResource\Pages;
 use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;

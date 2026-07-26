@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Domains\CrossSell\Enums\OrderStatus;
-use App\Domains\CrossSell\Enums\PlatformType;
-use App\Domains\CrossSell\Models\Order;
+use App\CrossSell\Order\Enums\OrderStatus;
+use App\CrossSell\Order\Models\Order;
+use App\CrossSell\Warehouse\Enums\PlatformType;
 use App\Filament\Admin\Resources\CrossSellOrderResource\OrderExporter;
 use App\Filament\Admin\Resources\CrossSellOrderResource\Pages;
 use App\Infrastructure\Filament\Concerns\HasResourcePermission;

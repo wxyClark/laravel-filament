@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Domains\CrossSell\Enums\TenantPlan;
-use App\Domains\CrossSell\Enums\TenantStatus;
-use App\Domains\CrossSell\Models\Tenant;
+use App\CrossSell\Tenant\Enums\TenantPlan;
+use App\CrossSell\Tenant\Enums\TenantStatus;
+use App\CrossSell\Tenant\Models\Tenant;
 use App\Filament\Admin\Resources\CrossSellTenantResource\Pages;
 use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;

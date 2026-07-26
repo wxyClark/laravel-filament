@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Domains\CrossSell\Enums\ProductStatus;
-use App\Domains\CrossSell\Models\Product;
-use App\Domains\CrossSell\Models\ProductCategory;
+use App\CrossSell\Product\Enums\ProductStatus;
+use App\CrossSell\Product\Models\Product;
+use App\CrossSell\Product\Models\ProductCategory;
 use App\Filament\Admin\Resources\CrossSellProductResource\Pages;
 use App\Filament\Admin\Resources\CrossSellProductResource\ProductExporter;
 use App\Infrastructure\Filament\Concerns\HasResourcePermission;

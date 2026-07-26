@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Domains\CrossSell\Enums\ShipmentStatus;
-use App\Domains\CrossSell\Models\Shipment;
+use App\CrossSell\Fulfillment\Enums\ShipmentStatus;
+use App\CrossSell\Fulfillment\Models\Shipment;
 use App\Filament\Admin\Resources\CrossSellShipmentResource\Pages;
 use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;

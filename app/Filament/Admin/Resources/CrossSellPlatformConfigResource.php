@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Admin\Resources;
 
-use App\Domains\CrossSell\Enums\PlatformType;
-use App\Domains\CrossSell\Models\PlatformConfig;
+use App\CrossSell\Warehouse\Enums\PlatformType;
+use App\CrossSell\Warehouse\Models\PlatformConfig;
 use App\Filament\Admin\Resources\CrossSellPlatformConfigResource\Pages;
 use App\Infrastructure\Filament\Concerns\HasResourcePermission;
 use Filament\Forms;
