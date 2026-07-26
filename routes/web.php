@@ -2,27 +2,36 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\ExportController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 require __DIR__.'/auth.php';
 
-// 数据导出 API（需要 session 认证，必须在 web 中间件组下）
-Route::middleware('auth:admin')->prefix('admin/api/export')->group(function () {
-    Route::post('/address', [ExportController::class, 'exportAddress'])
-        ->name('admin.api.export.address');
+// 根据域名加载不同的路由文件
+$host = request()->getHost();
 
-    Route::get('/status', [ExportController::class, 'checkExportStatus'])
-        ->name('admin.api.export.status');
-
-    Route::get('/download/{filePath}', [ExportController::class, 'downloadExport'])
-        ->where('filePath', '.*')
-        ->name('admin.api.export.download');
-
-    Route::post('/sync', [ExportController::class, 'syncExport'])
-        ->name('admin.api.export.sync');
-});
+if (str_contains($host, 'shop.')) {
+    // 商城前端路由
+    require __DIR__.'/shop.php';
+} elseif (str_contains($host, 'admin.')) {
+    // 管理后台路由
+    require __DIR__.'/admin.php';
+} elseif (str_contains($host, 'hr.')) {
+    // 薪福通路由
+    require __DIR__.'/xinfutong.php';
+} elseif (str_contains($host, 'super.')) {
+    // 权限管理路由
+    require __DIR__.'/permission.php';
+} else {
+    // 默认路由
+    Route::get('/', function () {
+        return response()->json([
+            'message' => 'CrossSell SaaS Platform',
+            'domains' => [
+                'shop.example.com' => '商城前端',
+                'admin.example.com' => '管理后台',
+                'hr.example.com' => '薪福通',
+                'super.example.com' => '权限管理',
+            ],
+        ]);
+    });
+}
