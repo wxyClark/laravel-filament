@@ -17,22 +17,22 @@ class EmployeeService extends BaseService implements EmployeeServiceInterface
         private readonly EmployeeRepositoryInterface $employeeRepository
     ) {}
 
-    public function create(array $data): Employee
+    public function createEmployee(array $data): Employee
     {
         return $this->employeeRepository->create($data);
     }
 
-    public function update(Employee $employee, array $data): Employee
+    public function updateEmployee(Employee $employee, array $data): Employee
     {
         return $this->employeeRepository->update($employee, $data);
     }
 
-    public function delete(Employee $employee): bool
+    public function deleteEmployee(Employee $employee): bool
     {
         return $this->employeeRepository->delete($employee);
     }
 
-    public function findById(int $id): ?Employee
+    public function findEmployeeById(int $id): ?Employee
     {
         return $this->employeeRepository->findById($id);
     }
@@ -42,7 +42,7 @@ class EmployeeService extends BaseService implements EmployeeServiceInterface
         return $this->employeeRepository->findByXinfutongId($xinfutongId);
     }
 
-    public function paginate(int $perPage = 15): LengthAwarePaginator
+    public function paginateEmployees(int $perPage = 15): LengthAwarePaginator
     {
         return $this->employeeRepository->paginate($perPage);
     }

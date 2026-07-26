@@ -16,17 +16,17 @@ class AccountService extends BaseService implements AccountServiceInterface
         private readonly AccountRepositoryInterface $accountRepository
     ) {}
 
-    public function create(array $data): Account
+    public function createAccount(array $data): Account
     {
         return $this->accountRepository->create($data);
     }
 
-    public function update(Account $account, array $data): Account
+    public function updateAccount(Account $account, array $data): Account
     {
         return $this->accountRepository->update($account, $data);
     }
 
-    public function delete(Account $account): bool
+    public function deleteAccount(Account $account): bool
     {
         return $this->accountRepository->delete($account);
     }

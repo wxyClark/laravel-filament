@@ -13,17 +13,17 @@ use Illuminate\Database\Eloquent\Collection;
  */
 interface EmployeeServiceInterface
 {
-    public function create(array $data): Employee;
+    public function createEmployee(array $data): Employee;
 
-    public function update(Employee $employee, array $data): Employee;
+    public function updateEmployee(Employee $employee, array $data): Employee;
 
-    public function delete(Employee $employee): bool;
+    public function deleteEmployee(Employee $employee): bool;
 
-    public function findById(int $id): ?Employee;
+    public function findEmployeeById(int $id): ?Employee;
 
     public function findByXinfutongId(string $xinfutongId): ?Employee;
 
-    public function paginate(int $perPage = 15): LengthAwarePaginator;
+    public function paginateEmployees(int $perPage = 15): LengthAwarePaginator;
 
     public function getByStatus(string $status): Collection;
 

@@ -11,11 +11,11 @@ use App\Domains\Xinfutong\Models\ApprovalRequest;
  */
 interface ApprovalServiceInterface
 {
-    public function create(array $data): ApprovalRequest;
+    public function createApproval(array $data): ApprovalRequest;
 
-    public function update(ApprovalRequest $approval, array $data): ApprovalRequest;
+    public function updateApproval(ApprovalRequest $approval, array $data): ApprovalRequest;
 
-    public function delete(ApprovalRequest $approval): bool;
+    public function deleteApproval(ApprovalRequest $approval): bool;
 
     public function submit(ApprovalRequest $approval): ApprovalRequest;
 
@@ -23,7 +23,7 @@ interface ApprovalServiceInterface
 
     public function queryStatus(ApprovalRequest $approval): ApprovalRequest;
 
-    public function findById(int $id): ?ApprovalRequest;
+    public function findApprovalById(int $id): ?ApprovalRequest;
 
     public function findByApprovalNo(string $approvalNo): ?ApprovalRequest;
 }

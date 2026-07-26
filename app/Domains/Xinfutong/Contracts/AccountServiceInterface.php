@@ -12,11 +12,11 @@ use Illuminate\Database\Eloquent\Collection;
  */
 interface AccountServiceInterface
 {
-    public function create(array $data): Account;
+    public function createAccount(array $data): Account;
 
-    public function update(Account $account, array $data): Account;
+    public function updateAccount(Account $account, array $data): Account;
 
-    public function delete(Account $account): bool;
+    public function deleteAccount(Account $account): bool;
 
     public function getDefault(): ?Account;
 

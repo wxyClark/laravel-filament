@@ -16,17 +16,17 @@ class ApprovalService extends BaseService implements ApprovalServiceInterface
         private readonly XinfutongService $xinfutongService
     ) {}
 
-    public function create(array $data): ApprovalRequest
+    public function createApproval(array $data): ApprovalRequest
     {
         return $this->approvalRepository->create($data);
     }
 
-    public function update(ApprovalRequest $approval, array $data): ApprovalRequest
+    public function updateApproval(ApprovalRequest $approval, array $data): ApprovalRequest
     {
         return $this->approvalRepository->update($approval, $data);
     }
 
-    public function delete(ApprovalRequest $approval): bool
+    public function deleteApproval(ApprovalRequest $approval): bool
     {
         return $this->approvalRepository->delete($approval);
     }
@@ -46,7 +46,7 @@ class ApprovalService extends BaseService implements ApprovalServiceInterface
         return $this->xinfutongService->queryApprovalStatus($approval);
     }
 
-    public function findById(int $id): ?ApprovalRequest
+    public function findApprovalById(int $id): ?ApprovalRequest
     {
         return $this->approvalRepository->findById($id);
     }
