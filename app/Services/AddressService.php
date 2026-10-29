@@ -77,7 +77,9 @@ class AddressService
     public function findByCode(string $code): ?Address
     {
         return Cache::remember("addresses.code.{$code}", $this->cacheTtl, function () use ($code) {
-            return Address::where('code', $code)->first();
+            return Address::where('code', $code)
+                ->orWhere('area_code', $code)
+                ->first();
         });
     }
 
@@ -108,7 +110,7 @@ class AddressService
         });
     }
 
-    public function importAddresses(array $data): int
+    public function importAddresses(array $data, string $source = 'pcas-file'): int
     {
         Address::query()->withTrashed()->forceDelete();
         $this->clearCache();
@@ -118,7 +120,7 @@ class AddressService
         $codeToId = [];
         $count = 0;
 
-        $sorted->chunk(1000)->each(function ($chunk) use (&$codeToId, &$count) {
+        $sorted->chunk(1000)->each(function ($chunk) use (&$codeToId, &$count, $source) {
             $codes = $chunk->pluck('code')->toArray();
             $rows = [];
 
@@ -132,11 +134,14 @@ class AddressService
                     'parent_id' => $parentId,
                     'name' => $item['name'],
                     'code' => $item['code'],
+                    'area_code' => \App\Services\AddressImport\CanonicalCode::normalize($item['code'], $item['level_num']),
                     'level' => $item['level'],
                     'level_num' => $item['level_num'],
                     'pinyin' => $item['pinyin'] ?? null,
                     'merge_path' => isset($item['merge_path']) ? json_encode($item['merge_path']) : null,
                     'sort' => $item['sort'] ?? 0,
+                    'source' => $source,
+                    'synced_at' => now(),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

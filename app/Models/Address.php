@@ -36,17 +36,21 @@ class Address extends Model
         'parent_id',
         'name',
         'code',
+        'area_code',
         'level',
         'level_num',
         'pinyin',
         'merge_path',
         'sort',
+        'source',
+        'synced_at',
     ];
 
     protected $casts = [
         'merge_path' => 'array',
         'sort' => 'integer',
         'level_num' => 'integer',
+        'synced_at' => 'datetime',
     ];
 
     public function parent(): BelongsTo

@@ -39,3 +39,7 @@ auth.json
 !/backups/mysql/.gitkeep
 /backups/snapshots/*
 !/backups/snapshots/.gitkeep
+
+# Termux 本地工件
+/database/*.sqlite
+/storage/app/address-import
