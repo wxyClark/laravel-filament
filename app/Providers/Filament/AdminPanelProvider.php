@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Auth\AutoFillLogin;
 use App\Filament\Admin\Pages\ViewAddressList;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -28,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->authGuard('admin')
-            ->login()
+            ->login(AutoFillLogin::class)
             ->sidebarWidth('16rem')
             ->maxContentWidth('full')
             ->colors([
