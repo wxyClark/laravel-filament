@@ -41,5 +41,5 @@ auth.json
 !/backups/snapshots/.gitkeep
 
 # Termux 本地工件
-/database/*.sqlite
+# /database/*.sqlite 基线快照需入库（Termux 本地其他工件仍忽略）
 /storage/app/address-import
